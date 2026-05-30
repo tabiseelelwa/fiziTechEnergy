@@ -1,0 +1,64 @@
+.accueil {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 500px;
+
+    span {
+      font-weight: 700;
+    }
+
+    h2 {
+      display: flex;
+      justify-content: flex-start;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      border: 1px #09026c solid;
+      border-radius: 0.2rem;
+      outline: none;
+      padding: 0.5rem;
+    }
+
+    button {
+      background-color: #09026c;
+      color: #fff;
+      border: none;
+      border-radius: 0.2rem;
+      padding: 0.5rem;
+    }
+
+    .montant {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+
+      a {
+        color: #2e78f0;
+      }
+
+      a:hover {
+        color: #0f4b9f;
+      }
+    }
+  }
+}
+
+@media (max-width: 678px) {
+  .accueil form {
+    width: 100%;
+    padding: 1rem;
+  }
+}
