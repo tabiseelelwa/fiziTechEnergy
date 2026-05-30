@@ -19,7 +19,6 @@ const AccueilClient = () => {
                     <option value="">M-pesa</option>
                     <option value="">Airtel Money</option>
                     <option value="">Orange Money</option>
-                    <option value="">Afrimoney</option>
                 </select>
 
                 <button>Payer</button>
