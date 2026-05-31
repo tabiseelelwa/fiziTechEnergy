@@ -10,8 +10,9 @@ const AccueilClient = () => {
                 <input type="tel" placeholder="Numéro téléphone (+243 999 942 102)" required />
                 <select>
                     <option value="">Choisir le forfait</option>
-                    <option value="">Forfait 1 heure</option>
+                    <option value="">Forfait 3 heure</option>
                     <option value="">Forfait 8 heures</option>
+                    <option value="">Forfait 12 heures</option>
                     <option value="">Forfait 24 heures</option>
                 </select>
                 <select>
