@@ -1,4 +1,3 @@
-
 import mysql from 'mysql2/promise';
 
 // On crée le pool une seule fois
