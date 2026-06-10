@@ -1,32 +1,26 @@
-/* eslint-disable react/no-unescaped-entities */
-'use client'
-import style from '@/app/styles/client/acccueil.module.scss'
+import style from '@/app/styles/client/venteTicket.module.scss'
 import Link from 'next/link'
 const AccueilClient = () => {
     return (
-        <div className={style.accueil}>
-            <form className="formulaire">
-                <h2>Veuillez completer ce formulaire</h2>
-                <input type="tel" placeholder="Numéro téléphone (+243 999 942 102)" required />
-                <select>
-                    <option value="">Choisir le forfait</option>
-                    <option value="">Forfait 3 heure</option>
-                    <option value="">Forfait 8 heures</option>
-                    <option value="">Forfait 12 heures</option>
-                    <option value="">Forfait 24 heures</option>
+        <div className={style.formAchatForfait}>
+            <h2>Achat forfait</h2>
+            <form >
+                <input type="text" placeholder='Tél : 978 024 163' />
+                <select id='forfait'>
+                    <option>Choisir le forfait</option>
+                    <option value="">3 heures (1500 Fc)</option>
+                    <option value="">8 heures (3000 Fc)</option>
+                    <option value="">24 heures (5000 Fc)</option>
                 </select>
-                <select>
-                    <option value="">Choisir l'opérateur</option>
-                    <option value="">M-pesa</option>
+
+                <select id='operateur'>
+                    <option>Choisir l&apos;opérateur</option>
+                    <option value="">M-Pesa</option>
                     <option value="">Airtel Money</option>
                     <option value="">Orange Money</option>
                 </select>
-
-                <button>Payer</button>
-                <div className={style.montant}>
-                    {/* <Link href="/">Retour à l'accueil</Link> */}
-                    <Link href="/ticket">Vérifier un ticket</Link>
-                </div>
+                <button>Acheter</button>
+                <Link href={'/ticket'}>Vérifier un ticket</Link>
             </form>
         </div>
     )

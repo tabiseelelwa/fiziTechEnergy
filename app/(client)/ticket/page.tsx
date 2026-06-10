@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 const RechTicket = () => {
     const router = useRouter();
+    const tel = 1522
     const rechercher = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         router.push('');
@@ -13,8 +14,8 @@ const RechTicket = () => {
         <div className={style.rechercher}>
             <form onSubmit={rechercher}>
                 <h2>Vérifiez votre ticket</h2>
-                <input type="tel" placeholder='Entrez votre numéro de téléphone. Ne mettez pas' required />
-                <Link id={style.btnRech} href="/ticket/dddd">Rechercher</Link>
+                <input type="tel" placeholder='Entrez votre numéro de téléphone' required />
+                <Link id={style.btnRech} href={`/ticket/${tel}`}>Rechercher</Link>
                 <Link id={style.retour} href='/'>Retour</Link>
             </form>
         </div>

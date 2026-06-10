@@ -1,0 +1,14 @@
+.navbarContainer {
+  margin: 0;
+  padding: 1rem 9rem;
+  background-color: #3f68a2;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+
+  .menuItems {
+    display: flex;
+    gap: 1rem;
+  }
+}
