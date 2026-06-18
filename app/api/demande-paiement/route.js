@@ -103,13 +103,13 @@ export async function POST(request) {
                 .replace('http://', '')
                 .replace('https://', '')
                 .split('/')[0]
-                .split(':')[0]; // Sécurité pour n'avoir que l'IP pure (ex: 10.5.5.1)
+                .split(':')[0];
 
             const client = new RouterOSClient({
                 host: rawHost,
                 user: process.env.ROUTER_USER || 'admin',
-                password: process.env.ROUTER_PASS || '', // Votre mot de passe WinBox
-                timeout: 5000 
+                password: process.env.ROUTER_PASS || '',
+                timeout: 5000
             });
 
             // Connexion au socket binaire du routeur
@@ -119,14 +119,14 @@ export async function POST(request) {
             // Ajout de l'utilisateur dans le Hotspot
             await api.menu('/ip/hotspot/user').add({
                 name: codeTicketUnique,
-                password: codeTicketUnique, // 🔥 Ajouté pour correspondre à inputPassword.value du frontend !
+                password: codeTicketUnique,
                 profile: "default",
                 'limit-uptime': `${dureeMinutes}m`,
                 comment: `Paye via ${operateur} (${telephone})`
             });
 
             console.log(`[MIKROTIK API] ✅ Ticket ${codeTicketUnique} créé avec succès.`);
-            
+
             // Fermeture propre
             await client.close();
 

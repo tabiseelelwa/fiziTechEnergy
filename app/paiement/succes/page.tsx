@@ -16,7 +16,10 @@ function ContenuSucces() {
             const minuterie = setTimeout(() => {
                 const formulaireMikrotik = document.createElement('form');
                 formulaireMikrotik.method = 'POST';
-                formulaireMikrotik.action = process.env.NEXT_PUBLIC_ROUTER_HOST || 'http://10.5.5.1/login'
+
+                // 🔥 SÉCURITÉ : Forçage propre de l'adresse IP cliente pour la redirection Hotspot
+                const targetHost = process.env.NEXT_PUBLIC_ROUTER_HOST;
+                formulaireMikrotik.action = targetHost && targetHost.trim() !== "" ? targetHost : 'http://10.5.5.1/login';
 
                 const inputUser = document.createElement('input');
                 inputUser.type = 'hidden';
@@ -61,7 +64,6 @@ function ContenuSucces() {
                     </p>
                 </div>
 
-                {/* Animation discrète de chargement */}
                 <div style={{ display: 'inline-block', width: '30px', height: '30px', border: '3px solid #e5e7eb', borderTopColor: '#0070f3', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
 
                 <style jsx global>{`
