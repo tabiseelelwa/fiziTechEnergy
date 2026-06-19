@@ -1,120 +1,131 @@
 .ticketConainer {
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 20px;
+  gap: 1.5rem;
+  color: #1f2937;
+  // padding: 1rem;
+  max-width: 450px;
+
+  button {
+    background: none;
+    border: none;
+    color: #0070f3;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .ticketRecap {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 20px;
+    border-radius: 14px;
+    width: 320px;
+
+    span {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #1e40af;
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      margin: 5px 0 2px 0;
+      font-size: 20px;
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      font-size: 12px;
+      color: #60a5fa;
+    }
+
+    .ticketPrix {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0070f3;
+    }
+  }
 
   h3 {
-    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
     color: #0070f3;
   }
 
-  p {
-    text-align: center;
+  .error {
+    padding: 12px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 10px;
+    margin-bottom: 15px;
     font-size: 13px;
-    color: #666;
+    font-weight: 5px;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 500px;
+    gap: 16px;
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      outline: none;
+    .ticketTelephone {
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+    }
+
+    .ticketOperateur {
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        font-size: 15px;
+        background-color: #fff;
+        box-sizing: border-box;
+      }
     }
 
     button {
       width: 100%;
-      padding: 10px;
-      background-color: #0070f3;
-      color: white;
+      padding: 14px;
+      border-radius: 10px;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-
-      #loader {
-        color: #fff;
-      }
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      margin-top: 10px;
     }
-  }
-
-  .error {
-    padding: 10px;
-    background-color: #fee2e2;
-    color: #dc2626;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: center;
-    width: 500px;
-  }
-
-  .detailsTicket {
-    padding: 20px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background-color: #f9fafb;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-    .detailsTicketTitre {
-      text-transform: uppercase;
-      font-size: 11px;
-      color: #6b7280;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .detailsTicketCode {
-      font-size: 24px;
-      font-weight: bold;
-      color: #111827;
-      margin: 5px 0;
-    }
-
-    .detailsTicketType {
-      margin: 15px 0 5px 0;
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .detailsTicketTempsContainer {
-      padding: 10px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 5px;
-      text-align: center;
-
-      .detailsTicketTempsTitre {
-        font-size: 12px;
-        color: #1e40af;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-
-      .detailsTicketTemps {
-        font-size: 22px;
-        font-weight: bold;
-        color: #1d4ed8;
-        font-family: monospace;
-      }
-    }
-  }
-
-  a {
-    background-color: #d2d1d1;
-    color: #3f68a2;
-    width: 500px;
-    text-align: center;
-    padding: 0.5rem;
-    border-radius: 0.3rem;
   }
 }
 

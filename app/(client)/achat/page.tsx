@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BeatLoader } from 'react-spinners';
+import style from "@/app/styles/client/ticket.module.scss"
+import { BsArrowLeft } from 'react-icons/bs';
 
 // Base de données locale temporaire des forfaits pour l'affichage Front-End rapide
 const FORFAITS_CONFIG = {
@@ -24,7 +26,6 @@ function FormulaireAchat() {
     const infoForfait = FORFAITS_CONFIG[forfaitId] || FORFAITS_CONFIG['2'];
 
     // États du formulaire
-    const [nomClient, setNomClient] = useState('');
     const [telephone, setTelephone] = useState('');
     const [operateur, setOperateur] = useState('M-Pesa');
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ function FormulaireAchat() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    nomClient: nomClient || 'Client Hotspot',
+                    nomClient: 'Client Hotspot',
                     telephone: telephone.trim(),
                     codeTypeForfait: parseInt(forfaitId),
                     operateur
@@ -64,52 +65,49 @@ function FormulaireAchat() {
     };
 
     return (
-        <div style={{ maxWidth: '500px', margin: '20px auto', padding: '20px', fontFamily: 'Poppins, sans-serif', color: '#1f2937' }}>
+        <div className={style.ticketConainer}>
 
             {/* Bouton Retour */}
             <button
                 onClick={() => router.push('/')}
-                style={{ background: 'none', border: 'none', color: '#0070f3', fontSize: '14px', fontWeight: '600', cursor: 'pointer', padding: '0', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '5px' }}
             >
-                ← Modifier le forfait
+                <BsArrowLeft/> Modifier le forfait
             </button>
 
             {/* Récapitulatif du forfait sélectionné */}
-            <div style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', padding: '20px', borderRadius: '14px', marginBottom: '25px' }}>
-                <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: '#1e40af', letterSpacing: '0.5px' }}>Forfait sélectionné</span>
-                <h2 style={{ margin: '5px 0 2px 0', fontSize: '20px', fontWeight: '800', color: '#1e3a8a' }}>{infoForfait.designation}</h2>
-                <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#60a5fa' }}>{infoForfait.description}</p>
-                <div style={{ fontSize: '24px', fontWeight: '900', color: '#0070f3' }}>{infoForfait.prix}</div>
+            <div className={style.ticketRecap}>
+                <span>Forfait sélectionné</span>
+                <h2>{infoForfait.designation}</h2>
+                <p>{infoForfait.description}</p>
+                <div className={style.ticketPrix}>{infoForfait.prix}</div>
             </div>
 
             {/* Formulaire de paiement */}
-            <h3 style={{ fontSize: '18px', fontWeight: '700', margin: '0 0 15px 0' }}>Finaliser votre paiement</h3>
+            <h3>Finaliser votre paiement</h3>
 
             {error && (
-                <div style={{ padding: '12px', backgroundColor: '#fee2e2', color: '#dc2626', borderRadius: '10px', marginBottom: '15px', fontSize: '13px', fontWeight: '5px' }}>
+                <div className={style.error}>
                     ⚠️ {error}
                 </div>
             )}
 
-            <form onSubmit={handleSoumissionPaiement} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600', color: '#4b5563' }}>Numéro de téléphone Mobile Money *</label>
+            <form onSubmit={handleSoumissionPaiement}>
+                <div className={style.ticketTelephone}>
+                    <label>Numéro de téléphone Mobile Money *</label>
                     <input
                         type="tel"
                         required
                         value={telephone}
                         onChange={(e) => setTelephone(e.target.value)}
                         placeholder="Ex: 0812345678"
-                        style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #d1d5db', fontSize: '15px', boxSizing: 'border-box' }}
                     />
                 </div>
 
-                <div>
-                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600', color: '#4b5563' }}>Sélectionnez votre opérateur *</label>
+                <div className={style.ticketOperateur}>
+                    <label>Sélectionnez votre opérateur *</label>
                     <select
                         value={operateur}
                         onChange={(e) => setOperateur(e.target.value)}
-                        style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #d1d5db', fontSize: '15px', backgroundColor: '#fff', boxSizing: 'border-box' }}
                     >
                         <option value="M-Pesa">Vodacom M-Pesa</option>
                         <option value="Airtel Money">Airtel Money</option>
@@ -122,19 +120,11 @@ function FormulaireAchat() {
                     type="submit"
                     disabled={loading}
                     style={{
-                        width: '100%',
-                        padding: '14px',
-                        borderRadius: '10px',
-                        border: 'none',
                         backgroundColor: loading ? '#9ca3af' : '#0070f3',
-                        color: 'white',
-                        fontWeight: '700',
-                        fontSize: '15px',
                         cursor: loading ? 'not-allowed' : 'pointer',
-                        marginTop: '10px'
                     }}
                 >
-                    {loading ? <BeatLoader /> : `Payer ${infoForfait.prix}`}
+                    {loading ? <BeatLoader style={{ color: "#fff !important" }} /> : `Payer ${infoForfait.prix}`}
                 </button>
             </form>
         </div>

@@ -1,4 +1,104 @@
 .ticket {
   display: flex;
   flex-direction: column;
+
+  p {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+  }
+
+  form {
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      #loader {
+        color: #fff;
+      }
+    }
+  }
+
+  .error {
+    padding: 10px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    width: 500px;
+  }
+
+  .detailsTicket {
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+    .detailsTicketTitre {
+      text-transform: uppercase;
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .detailsTicketCode {
+      font-size: 24px;
+      font-weight: bold;
+      color: #111827;
+      margin: 5px 0;
+    }
+
+    .detailsTicketType {
+      margin: 15px 0 5px 0;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .detailsTicketTempsContainer {
+      padding: 10px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 5px;
+      text-align: center;
+
+      .detailsTicketTempsTitre {
+        font-size: 12px;
+        color: #1e40af;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .detailsTicketTemps {
+        font-size: 22px;
+        font-weight: bold;
+        color: #1d4ed8;
+        font-family: monospace;
+      }
+    }
+  }
+
+  a {
+    background-color: #d2d1d1;
+    color: #3f68a2;
+    width: 500px;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+  }
 }
