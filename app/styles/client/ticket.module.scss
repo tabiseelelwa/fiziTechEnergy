@@ -2,22 +2,22 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 1.5rem;
   color: #1f2937;
-  // padding: 1rem;
-  max-width: 450px;
+  height: 100vh;
+  width: 450px;
 
-  button {
-    background: none;
-    border: none;
+  .ticketHeader {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
     color: #0070f3;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
+    width: 100%;
   }
 
   .ticketRecap {
@@ -25,7 +25,7 @@
     border: 1px solid #bfdbfe;
     padding: 20px;
     border-radius: 14px;
-    width: 320px;
+    width: 100%;
 
     span {
       font-size: 11px;
@@ -75,7 +75,8 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.2rem;
+    width: 100%;
 
     .ticketTelephone {
       label {
@@ -131,7 +132,8 @@
 
 @media (max-width: 678px) {
   .ticketConainer {
-    width: 100%;
+    width: 100vw;
+    padding: 1.5rem;
 
     form {
       width: 100%;

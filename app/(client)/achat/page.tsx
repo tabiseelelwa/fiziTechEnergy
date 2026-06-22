@@ -10,8 +10,8 @@ import { BsArrowLeft } from 'react-icons/bs';
 
 // Base de données locale temporaire des forfaits pour l'affichage Front-End rapide
 const FORFAITS_CONFIG = {
-    '1': { designation: 'Forfait 1 Heure', prix: '1 000 FC', description: 'Idéal pour une vérification rapide' },
-    '2': { designation: 'Forfait 3 Heures', prix: '2 000 FC', description: 'Le meilleur compromis vitesse/prix' },
+    '1': { designation: 'Forfait 3 Heure', prix: '2 500 FC', description: 'Idéal pour une vérification rapide' },
+    '2': { designation: 'Forfait 8 Heures', prix: '3500 FC', description: 'Le meilleur compromis vitesse/prix' },
     '3': { designation: 'Forfait 24 Heures', prix: '5 000 FC', description: 'Tranquillité totale toute la journée' },
 };
 
@@ -68,12 +68,13 @@ function FormulaireAchat() {
         <div className={style.ticketConainer}>
 
             {/* Bouton Retour */}
-            <button
-                onClick={() => router.push('/')}
-            >
-                <BsArrowLeft/> Modifier le forfait
-            </button>
-
+            <div className={style.ticketHeader} onClick={() => router.push('/')}>
+                <BsArrowLeft />
+                <button
+                >
+                    Modifier le forfait
+                </button>
+            </div>
             {/* Récapitulatif du forfait sélectionné */}
             <div className={style.ticketRecap}>
                 <span>Forfait sélectionné</span>

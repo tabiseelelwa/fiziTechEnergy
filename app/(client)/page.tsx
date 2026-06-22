@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -12,9 +12,12 @@ export default function PortailCaptifFiziTech() {
         router.push(`/achat?forfait=${idForfait}`);
     };
 
+    const verifForfait = () => {
+        router.push('/ticket')
+    }
+
     return (
         <div className={style.achatForfaitContainer}>
-            {/* Header de la marque */}
             <div className={style.achatForfaitTitre}>
                 <h1>
                     FiziTech Hotspot
@@ -23,23 +26,21 @@ export default function PortailCaptifFiziTech() {
 
             {/* Message de guidage */}
             <div className={style.message}>
+
                 <h2>
                     Choisissez votre forfait
                 </h2>
-                <p>
-                    L'accès internet s'activera automatiquement après votre paiement Mobile Money.
-                </p>
             </div>
 
             {/* LA GRILLE DES FORFAITS */}
             <div className={style.listeForfaits}>
 
-                {/* Forfait 1 : 30 Min */}
+                {/* Forfait 1 : 3 heures */}
                 <div className={style.forfait1}>
                     <div>
-                        <h3>Forfait 1 Heure</h3>
+                        <h3>Forfait 3 Heures</h3>
                         <p>Idéal pour une vérification rapide</p>
-                        <span>1 000 FC</span>
+                        <span>2 500 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(1)}
@@ -48,45 +49,46 @@ export default function PortailCaptifFiziTech() {
                     </button>
                 </div>
 
-                {/* Forfait 2 : 1 Heure (Mis en valeur) */}
+                {/* Forfait 2 : 8 Heures (Mis en valeur) */}
                 <div className={style.forfait2}>
                     <span className={style.legende}>
                         Le plus vendu
                     </span>
-                    <div>
-                        <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '700' }}>Forfait 3 Heures</h3>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#6b7280' }}>Le meilleur compromis vitesse/prix</p>
-                        <span style={{ fontSize: '22px', fontWeight: '800', color: '#0070f3', display: 'block', marginTop: '6px' }}>2 000 FC</span>
+                    <div className={style.contenuForfait}>
+                        <h3>Forfait 8 Heures</h3>
+                        <p>Le meilleur compromis vitesse/prix</p>
+                        <span>3 500 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(2)}
-                        style={{ padding: '12px 20px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}
                     >
                         Choisir
                     </button>
                 </div>
 
                 {/* Forfait 3 : 24 Heures */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.01)' }}>
-                    <div>
-                        <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '700' }}>Forfait 24 Heures</h3>
-                        <p style={{ margin: '0', fontSize: '12px', color: '#6b7280' }}>Tranquillité totale toute la journée</p>
-                        <span style={{ fontSize: '22px', fontWeight: '800', color: '#0070f3', display: 'block', marginTop: '6px' }}>5 000 FC</span>
+
+                <div className={style.forfait3}>
+                    <div className={style.contenuForfait}>
+                        <h3>Forfait 24 Heures</h3>
+                        <p>Tranquillité totale toute la journée</p>
+                        <span>5 000 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(3)}
-                        style={{ padding: '12px 20px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '14px', cursor: 'pointer' }}
                     >
                         Choisir
                     </button>
                 </div>
 
             </div>
+            <button
+                onClick={() => verifForfait()}
+                className={style.btnVerifForfait}
+            >
+                Vérifier mon ticket
+            </button>
 
-            {/* Note de pied de page sur la sécurité */}
-            <p style={{ textAlign: 'center', fontSize: '11px', color: '#9ca3af', marginTop: '30px', lineHeight: '1.5' }}>
-                Réseau sécurisé. Les paiements s'effectuent via votre compte Mobile Money. Aucun échange de cash pour votre sécurité.
-            </p>
         </div>
     );
 }

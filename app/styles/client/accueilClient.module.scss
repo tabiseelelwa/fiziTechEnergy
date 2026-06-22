@@ -1,79 +1,79 @@
-.listeVentes {
-  padding: 1rem;
+// .listeVentes {
+//   padding: 1rem;
 
-  .btnAjouterVente {
-    background: linear-gradient(45deg, #053a69, #59c0f0);
-    color: #fff;
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-  }
+//   .btnAjouterVente {
+//     background: linear-gradient(45deg, #053a69, #59c0f0);
+//     color: #fff;
+//     padding: 0.2rem 0.5rem;
+//     border-radius: 0.25rem;
+//     cursor: pointer;
+//   }
 
-  .listVenteHead {
-    display: flex;
-    justify-content: space-between;
-  }
+//   .listVenteHead {
+//     display: flex;
+//     justify-content: space-between;
+//   }
 
-  h1 {
-    font-weight: 700;
-    font-size: 22px;
-    display: inline-block;
-    background: linear-gradient(90deg, #053a69, #59c0f0);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: #0000;
-    -webkit-text-fill-color: transparent;
-  }
+//   h1 {
+//     font-weight: 700;
+//     font-size: 22px;
+//     display: inline-block;
+//     background: linear-gradient(90deg, #053a69, #59c0f0);
+//     -webkit-background-clip: text;
+//     background-clip: text;
+//     color: #0000;
+//     -webkit-text-fill-color: transparent;
+//   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    border-radius: 2px 2px 0 0;
-    overflow: hidden;
+//   table {
+//     width: 100%;
+//     border-collapse: collapse;
+//     margin: 25px 0;
+//     font-size: 0.9em;
+//     min-width: 400px;
+//     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+//     border-radius: 2px 2px 0 0;
+//     overflow: hidden;
 
-    thead tr {
-      background-color: #053a69;
-      color: #ffffff;
-      text-align: left;
-      font-weight: bold;
+//     thead tr {
+//       background-color: #053a69;
+//       color: #ffffff;
+//       text-align: left;
+//       font-weight: bold;
 
-      th,
-      td {
-        padding: 8.5px;
-        font-size: 0.85em;
-      }
-    }
+//       th,
+//       td {
+//         padding: 8.5px;
+//         font-size: 0.85em;
+//       }
+//     }
 
-    thead tr th:last-child {
-      text-align: right;
-    }
+//     thead tr th:last-child {
+//       text-align: right;
+//     }
 
-    tbody tr {
-      border-bottom: 1px solid #dddddd;
-      transition: background-color 0.3s ease;
-    }
+//     tbody tr {
+//       border-bottom: 1px solid #dddddd;
+//       transition: background-color 0.3s ease;
+//     }
 
-    tbody tr:nth-of-type(even) {
-      background-color: #e9f3f8;
-    }
+//     tbody tr:nth-of-type(even) {
+//       background-color: #e9f3f8;
+//     }
 
-    tbody tr:hover {
-      background-color: #f1f1f1;
-    }
+//     tbody tr:hover {
+//       background-color: #f1f1f1;
+//     }
 
-    tbody tr:last-of-type {
-      border-bottom: 2px solid #053a69;
-    }
+//     tbody tr:last-of-type {
+//       border-bottom: 2px solid #053a69;
+//     }
 
-    tbody tr td {
-      padding: 8px;
-    }
-    tbody tr td:last-child {
-      text-align: right;
-    }
-  }
-}
+//     tbody tr td {
+//       padding: 8px;
+//     }
+//     tbody tr td:last-child {
+//       text-align: right;
+//     }
+//   }
+// }
