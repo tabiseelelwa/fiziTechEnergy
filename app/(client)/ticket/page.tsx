@@ -4,7 +4,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import style from '@/app/styles/client/ticket.module.scss'
+import style from '@/app/styles/client/detailsTicket.module.scss'
 import { PulseLoader } from 'react-spinners';
 import Link from 'next/link';
 
@@ -88,7 +88,7 @@ export default function VerifTicketPage() {
     };
 
     return (
-        <div className={style.ticketConainer}>
+        <div className={style.ticket}>
             <h3>Suivi de mon forfait</h3>
             <p>Entrez votre numéro pour voir le temps de connexion restant</p>
 

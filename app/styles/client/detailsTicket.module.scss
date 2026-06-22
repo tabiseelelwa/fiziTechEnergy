@@ -1,6 +1,17 @@
 .ticket {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 0.8rem;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    color: #0070f3;
+  }
 
   p {
     text-align: center;
@@ -9,8 +20,12 @@
   }
 
   form {
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    gap: 0.8rem;
+
     input {
-      width: 100%;
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
@@ -18,7 +33,6 @@
     }
 
     button {
-      width: 100%;
       padding: 10px;
       background-color: #0070f3;
       color: white;
@@ -95,9 +109,32 @@
   a {
     background-color: #d2d1d1;
     color: #3f68a2;
-    width: 500px;
+    width: 450px;
     text-align: center;
     padding: 0.5rem;
     border-radius: 0.3rem;
+  }
+}
+
+@media (max-width) {
+  .ticket {
+    width: 100vw;
+    padding: 1rem;
+
+    form {
+      width: 100%;
+    }
+
+    .detailsTicket {
+      width: 100%;
+    }
+
+    .error {
+      width: 100%;
+    }
+
+    a {
+      width: 100%;
+    }
   }
 }
