@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -26,7 +25,6 @@ export default function PortailCaptifFiziTech() {
 
             {/* Message de guidage */}
             <div className={style.message}>
-
                 <h2>
                     Choisissez votre forfait
                 </h2>
@@ -67,7 +65,6 @@ export default function PortailCaptifFiziTech() {
                 </div>
 
                 {/* Forfait 3 : 24 Heures */}
-
                 <div className={style.forfait3}>
                     <div className={style.contenuForfait}>
                         <h3>Forfait 24 Heures</h3>
@@ -80,15 +77,14 @@ export default function PortailCaptifFiziTech() {
                         Choisir
                     </button>
                 </div>
-
             </div>
+
             <button
                 onClick={() => verifForfait()}
                 className={style.btnVerifForfait}
             >
                 Vérifier mon ticket
             </button>
-
         </div>
     );
 }

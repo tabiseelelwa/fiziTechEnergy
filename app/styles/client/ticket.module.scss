@@ -58,8 +58,8 @@
   h3 {
     font-size: 18px;
     font-weight: 700;
-    margin: 0 0 15px 0;
     color: #0070f3;
+    text-align: left;
   }
 
   .error {
@@ -94,6 +94,7 @@
         border: 1px solid #d1d5db;
         font-size: 15px;
         box-sizing: border-box;
+        outline: none;
       }
     }
 
@@ -114,6 +115,7 @@
         font-size: 15px;
         background-color: #fff;
         box-sizing: border-box;
+        outline: none;
       }
     }
 

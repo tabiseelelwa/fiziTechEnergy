@@ -70,10 +70,9 @@ function FormulaireAchat() {
             {/* Bouton Retour */}
             <div className={style.ticketHeader} onClick={() => router.push('/')}>
                 <BsArrowLeft />
-                <button
-                >
+                <div>
                     Modifier le forfait
-                </button>
+                </div>
             </div>
             {/* Récapitulatif du forfait sélectionné */}
             <div className={style.ticketRecap}>
@@ -111,8 +110,8 @@ function FormulaireAchat() {
                         onChange={(e) => setOperateur(e.target.value)}
                     >
                         <option value="M-Pesa">Vodacom M-Pesa</option>
-                        <option value="Airtel Money">Airtel Money</option>
-                        <option value="Orange Money">Orange Money</option>
+                        <option value="Airtel-Money">Airtel Money</option>
+                        <option value="Orange-Money">Orange Money</option>
                         <option value="Afrimoney">Afrimoney</option>
                     </select>
                 </div>
@@ -125,7 +124,7 @@ function FormulaireAchat() {
                         cursor: loading ? 'not-allowed' : 'pointer',
                     }}
                 >
-                    {loading ? <BeatLoader style={{ color: "#fff !important" }} /> : `Payer ${infoForfait.prix}`}
+                    {loading ? <BeatLoader style={{ color: "#fff" }} /> : `Payer ${infoForfait.prix}`}
                 </button>
             </form>
         </div>
