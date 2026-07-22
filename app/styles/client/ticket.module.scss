@@ -9,19 +9,17 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
   backdrop-filter: blur(4px);
 
   .modalWrapper {
     background: #ffffff;
     border-radius: 16px;
-    max-width: 420px;
+    max-width: 500px;
     width: 100%;
-    padding: 25px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
     position: relative;
     text-align: center;
     color: #1f2937;
+    animation: fadeModalIn 200ms;
 
     .codeTicket {
       background: #f3f4f6;
@@ -61,17 +59,16 @@
   justify-content: center;
   align-items: center;
   color: #1f2937;
-  height: 100vh;
+  padding: 2rem;
 
   .ticket {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 450px;
 
     .ticketHeader {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       gap: 0.5rem;
       align-items: center;
       color: #0070f3;
@@ -79,6 +76,12 @@
       font-weight: 600;
       cursor: pointer;
       width: 100%;
+
+      .btnRet {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
     }
 
     .ticketRecap {
@@ -137,7 +140,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
-      width: 100%;
+      width: 450px;
 
       .ticketTelephone {
         label {
@@ -194,19 +197,29 @@
   }
 }
 
-// MODAL
-
 @media (max-width: 678px) {
-  .ticketConainer {
-    width: 100vw;
-    padding: 1.5rem;
+  .modal {
+    width: 100%;
+    padding: 1rem;
+  }
 
-    form {
+  .ticketContainer {
+    .ticket {
       width: 100%;
-    }
 
-    a {
-      width: 100%;
+      form {
+        width: 100%;
+      }
+
+      a {
+        width: 100%;
+      }
     }
+  }
+}
+
+@keyframes fadeModalIn {
+  0% {
+    transform: translateY(-200%);
   }
 }

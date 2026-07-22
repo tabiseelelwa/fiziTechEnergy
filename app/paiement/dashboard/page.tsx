@@ -3,25 +3,26 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  BsPlusCircleFill, 
-  BsCashCoin, 
-  BsTicketPerforated, 
-  BsCheckCircle, 
+import { VendeurPage } from '@/app/components/modals/VenteTickets';
+import {
+  BsPlusCircleFill,
+  BsCashCoin,
+  BsTicketPerforated,
+  BsCheckCircle,
   BsSearch,
   BsBoxArrowRight,
   BsBarChartLine
 } from 'react-icons/bs';
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  PieChart, 
-  Pie, 
-  Cell 
+import {
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line
 } from 'recharts';
 
 // --- Données factices pour la démonstration ---
@@ -51,6 +52,9 @@ export default function VendeurDashboard() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Etat d'affichage du modal de vente des tickets
+  const [modalVenteTicket, setModalVenteTicket] = useState(false)
+
   // Filtrage des transactions pour la recherche
   const filteredTransactions = RECENT_TRANSACTIONS.filter((t) =>
     t.client.includes(searchTerm) || t.id.toLowerCase().includes(searchTerm.toLowerCase())
@@ -58,6 +62,9 @@ export default function VendeurDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 p-4 md:p-8">
+      {
+        modalVenteTicket ? <VendeurPage setModalVenteTicket={setModalVenteTicket} /> : ""
+      }
       {/* ---------------- BARRE SUPÉRIEURE / EN-TÊTE ---------------- */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
@@ -67,7 +74,7 @@ export default function VendeurDashboard() {
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
-            onClick={() => router.push('/vendeur/ticket')}
+            onClick={() => setModalVenteTicket(true)}
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm transition"
           >
             <BsPlusCircleFill size={18} />
@@ -139,21 +146,27 @@ export default function VendeurDashboard() {
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={DATA_VENTES_HEURES}>
-                <defs>
-                  <linearGradient id="colorVentes" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <LineChart data={DATA_VENTES_HEURES}>
                 <XAxis dataKey="heure" stroke="#94a3b8" fontSize={12} tickLine={false} />
                 <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} />
-                <Tooltip 
+                <Tooltip
                   formatter={(value) => [`${value} FC`, 'Ventes']}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', borderColor: '#e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                  contentStyle={{
+                    backgroundColor: '#fff',
+                    borderRadius: '12px',
+                    borderColor: '#e2e8f0',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  }}
                 />
-                <Area type="monotone" dataKey="ventes" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorVentes)" />
-              </AreaChart>
+                <Line
+                  type="monotone"
+                  dataKey="ventes"
+                  stroke="#10b981"
+                  strokeWidth={3}
+                  dot={{ fill: '#10b981', r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>

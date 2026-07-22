@@ -7,6 +7,7 @@ import { BeatLoader } from 'react-spinners';
 import style from "@/app/styles/client/ticket.module.scss";
 import { BsArrowLeft, BsCheckCircleFill } from 'react-icons/bs';
 
+
 // Configuration des forfaits disponibles au guichet
 const FORFAITS_CONFIG = {
   '1': { designation: 'Forfait 3 Heures', prix: '2 500 FC', durationMins: 180, priceNum: 2500 },
@@ -81,6 +82,8 @@ export default function VendeurPage() {
 
   return (
     <div className={style.ticketContainer}>
+      
+
       <div className={style.ticket}>
         {/* Header Vendeur / Bouton Retour */}
         <div className={style.ticketHeader} onClick={() => router.push('/paiement/dashboard')}>
