@@ -131,7 +131,6 @@ export default function VerifTicketPage() {
                     </div>
                 </div>
             )}
-
             <Link href={"/"}>Retour à l'accueil</Link>
         </div>
     );

@@ -1,136 +1,200 @@
-.ticketConainer {
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+
+  .modalWrapper {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 420px;
+    width: 100%;
+    padding: 25px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: center;
+    color: #1f2937;
+
+    .codeTicket {
+      background: #f3f4f6;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px dashed #3b82f6;
+      margin: 15px 0;
+    }
+
+    .detailsTicket {
+      text-align: left;
+      font-size: 14px;
+      background: #f9fafb;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btnRetour {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  }
+}
+
+.ticketContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
   color: #1f2937;
   height: 100vh;
-  width: 450px;
 
-  .ticketHeader {
-    display: flex;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    align-items: center;
-    color: #0070f3;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  .ticketRecap {
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
-    padding: 20px;
-    border-radius: 14px;
-    width: 100%;
-
-    span {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #1e40af;
-      letter-spacing: 0.5px;
-    }
-
-    h2 {
-      margin: 5px 0 2px 0;
-      font-size: 20px;
-      font-weight: 800;
-      color: #1e3a8a;
-    }
-
-    p {
-      margin: 0 0 10px 0;
-      font-size: 12px;
-      color: #60a5fa;
-    }
-
-    .ticketPrix {
-      font-size: 24px;
-      font-weight: 900;
-      color: #0070f3;
-    }
-  }
-
-  h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0070f3;
-    text-align: left;
-  }
-
-  .error {
-    padding: 12px;
-    background-color: #fee2e2;
-    color: #dc2626;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    font-size: 13px;
-    font-weight: 5px;
-  }
-
-  form {
+  .ticket {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    width: 100%;
+    gap: 1.5rem;
+    width: 450px;
 
-    .ticketTelephone {
-      label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #4b5563;
-      }
-
-      input {
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        font-size: 15px;
-        box-sizing: border-box;
-        outline: none;
-      }
-    }
-
-    .ticketOperateur {
-      label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #4b5563;
-      }
-
-      select {
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        font-size: 15px;
-        background-color: #fff;
-        box-sizing: border-box;
-        outline: none;
-      }
-    }
-
-    button {
+    .ticketHeader {
+      display: flex;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      align-items: center;
+      color: #0070f3;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
       width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      color: white;
+    }
+
+    .ticketRecap {
+      background-color: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 20px;
+      border-radius: 14px;
+      width: 100%;
+
+      span {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #1e40af;
+        letter-spacing: 0.5px;
+      }
+
+      h2 {
+        margin: 5px 0 2px 0;
+        font-size: 20px;
+        font-weight: 800;
+        color: #1e3a8a;
+      }
+
+      p {
+        margin: 0 0 10px 0;
+        font-size: 12px;
+        color: #60a5fa;
+      }
+
+      .ticketPrix {
+        font-size: 24px;
+        font-weight: 900;
+        color: #0070f3;
+      }
+    }
+
+    h3 {
+      font-size: 18px;
       font-weight: 700;
-      font-size: 15px;
-      margin-top: 10px;
+      color: #0070f3;
+      text-align: left;
+    }
+
+    .error {
+      padding: 12px;
+      background-color: #fee2e2;
+      color: #dc2626;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      font-weight: 5px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+
+      .ticketTelephone {
+        label {
+          display: block;
+          margin-bottom: 6px;
+          font-size: 13px;
+          font-weight: 600;
+          color: #4b5563;
+        }
+
+        input {
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          border: 1px solid #d1d5db;
+          font-size: 15px;
+          box-sizing: border-box;
+          outline: none;
+        }
+      }
+
+      .ticketOperateur {
+        label {
+          display: block;
+          margin-bottom: 6px;
+          font-size: 13px;
+          font-weight: 600;
+          color: #4b5563;
+        }
+
+        select {
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          border: 1px solid #d1d5db;
+          font-size: 15px;
+          background-color: #fff;
+          box-sizing: border-box;
+          outline: none;
+        }
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        color: white;
+        font-weight: 700;
+        font-size: 15px;
+        margin-top: 10px;
+      }
     }
   }
 }
+
+// MODAL
 
 @media (max-width: 678px) {
   .ticketConainer {
