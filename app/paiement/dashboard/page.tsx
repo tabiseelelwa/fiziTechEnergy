@@ -61,7 +61,7 @@ export default function VendeurDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 p-4 md:p-8">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-800 p-4 md:p-8">
       {
         modalVenteTicket ? <VendeurPage setModalVenteTicket={setModalVenteTicket} /> : ""
       }
