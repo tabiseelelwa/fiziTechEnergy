@@ -2,10 +2,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { BeatLoader } from 'react-spinners';
 import style from "@/app/styles/client/ticket.module.scss";
-import { BsArrowLeft, BsCheckCircleFill, BsX } from 'react-icons/bs';
+import { BsCheckCircleFill, BsX } from 'react-icons/bs';
 
 // Configuration des forfaits disponibles au guichet
 const FORFAITS_CONFIG = {
@@ -21,7 +20,6 @@ interface VenteTickets {
 }
 
 export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
-    const router = useRouter();
 
     // États du formulaire
     const [telephone, setTelephone] = useState('');
@@ -88,18 +86,12 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
             <div className={style.modalWrapper}>
                 <div className={style.ticketContainer}>
                     <div className={style.ticket}>
-                        {/* Header Vendeur / Bouton Retour */}
-                        <div className={style.ticketHeader} onClick={() => router.push('/paiement/dashboard')}>
-                            <div className={style.btnRet}>
-                                <BsArrowLeft />
-                                <div>Retour au Dashboard</div>
-                            </div>
-                            <div>
-                                <BsX onClick={() => setModalVenteTicket(false)} />
-                            </div>
+                        <div className={style.ticketHeader}>
+                            <button onClick={() => setModalVenteTicket(false)}>
+                                <BsX  />
+                            </button>
                         </div>
 
-                        {/* Titre Comptoir */}
                         <h3>PAIEMENT CASH</h3>
 
                         {error && (
@@ -110,7 +102,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
 
                         {/* Formulaire de Vente */}
                         <form onSubmit={handleVendreTicket}>
-                            {/* Champ Téléphone */}
                             <div className={style.ticketTelephone}>
                                 <label>Numéro de téléphone du client *</label>
                                 <input
@@ -122,7 +113,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 />
                             </div>
 
-                            {/* Sélection du Forfait */}
                             <div className={style.ticketOperateur}>
                                 <label>Forfait sélectionné *</label>
                                 <select
@@ -135,7 +125,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 </select>
                             </div>
 
-                            {/* Sélection de la méthode de règlement */}
                             <div className={style.ticketOperateur}>
                                 <label>Mode de règlement *</label>
                                 <select
@@ -148,7 +137,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 </select>
                             </div>
 
-                            {/* Bouton de validation */}
                             <button
                                 type="submit"
                                 disabled={loading}
@@ -166,8 +154,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                         </form>
                     </div>
 
-                    {/* MODAL / POPUP DE CONFIRMATION DE TICKET */}
-
                     {ticketGenere && (
                         <div className={style.modal}>
                             <div className={style.modalWrapper}>
@@ -180,21 +166,18 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
 
                                     <p style={{ fontSize: '14px', color: '#4b5563', margin: '8px 0' }}>Code du ticket à remettre au client :</p>
 
-                                    {/* Affichage central du Ticket */}
                                     <div className={style.codeTicket}>
                                         <h2 style={{ fontSize: '38px', color: '#1d4ed8', letterSpacing: '3px', margin: 0, fontWeight: 'bold' }}>
                                             {ticketGenere.code}
                                         </h2>
                                     </div>
 
-                                    {/* Récapitulatif des infos */}
                                     <div className={style.detailsTicket}>
                                         <div style={{ marginBottom: '6px' }}><strong>Client :</strong> {ticketGenere.telephone}</div>
                                         <div style={{ marginBottom: '6px' }}><strong>Forfait :</strong> {ticketGenere.designation}</div>
                                         <div><strong>Montant payé :</strong> {ticketGenere.prix}</div>
                                     </div>
 
-                                    {/* Bouton Fermer */}
                                     <button
                                         onClick={() => setTicketGenere(null)}
                                         className={style.btnRetour}

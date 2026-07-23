@@ -5,7 +5,7 @@
 import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BeatLoader } from 'react-spinners';
-import style from "@/app/styles/client/ticket.module.scss"
+import style from "@/app/styles/client/ticketClient.module.scss"
 import { BsArrowLeft } from 'react-icons/bs';
 
 // Base de données locale temporaire des forfaits pour l'affichage Front-End rapide
@@ -67,7 +67,6 @@ function FormulaireAchat() {
     return (
         <div className={style.ticketContainer}>
             <div className={style.ticket}>
-
                 {/* Bouton Retour */}
                 <div className={style.ticketHeader} onClick={() => router.push('/')}>
                     <BsArrowLeft />
@@ -75,6 +74,7 @@ function FormulaireAchat() {
                         Modifier le forfait
                     </div>
                 </div>
+
                 {/* Récapitulatif du forfait sélectionné */}
                 <div className={style.ticketRecap}>
                     <span>Forfait sélectionné</span>
@@ -83,14 +83,14 @@ function FormulaireAchat() {
                     <div className={style.ticketPrix}>{infoForfait.prix}</div>
                 </div>
 
-                {/* Formulaire de paiement */}
-                <h3>Finaliser votre paiement</h3>
-
                 {error && (
                     <div className={style.error}>
                         ⚠️ {error}
                     </div>
                 )}
+
+                {/* Formulaire de paiement */}
+                <h3>Finaliser votre paiement</h3>
 
                 <form onSubmit={handleSoumissionPaiement}>
                     <div className={style.ticketTelephone}>
@@ -110,7 +110,7 @@ function FormulaireAchat() {
                             value={operateur}
                             onChange={(e) => setOperateur(e.target.value)}
                         >
-                            <option value="M-Pesa">Vodacom M-Pesa</option>
+                            <option value="M-Pesa">M-Pesa</option>
                             <option value="Airtel-Money">Airtel Money</option>
                             <option value="Orange-Money">Orange Money</option>
                             <option value="Afrimoney">Afrimoney</option>

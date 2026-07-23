@@ -82,16 +82,12 @@ export default function VendeurPage() {
 
   return (
     <div className={style.ticketContainer}>
-      
-
       <div className={style.ticket}>
-        {/* Header Vendeur / Bouton Retour */}
         <div className={style.ticketHeader} onClick={() => router.push('/paiement/dashboard')}>
           <BsArrowLeft />
           <div>Retour au Dashboard</div>
         </div>
 
-        {/* Titre Comptoir */}
         <h3>PAIEMENT CASH</h3>
 
         {error && (
@@ -100,9 +96,7 @@ export default function VendeurPage() {
           </div>
         )}
 
-        {/* Formulaire de Vente */}
         <form onSubmit={handleVendreTicket}>
-          {/* Champ Téléphone */}
           <div className={style.ticketTelephone}>
             <label>Numéro de téléphone du client *</label>
             <input
@@ -114,7 +108,6 @@ export default function VendeurPage() {
             />
           </div>
 
-          {/* Sélection du Forfait */}
           <div className={style.ticketOperateur}>
             <label>Forfait sélectionné *</label>
             <select
@@ -126,8 +119,6 @@ export default function VendeurPage() {
               <option value="3">Forfait 24 Heures — 5 000 FC</option>
             </select>
           </div>
-
-          {/* Sélection de la méthode de règlement */}
           <div className={style.ticketOperateur}>
             <label>Mode de règlement *</label>
             <select
@@ -140,7 +131,6 @@ export default function VendeurPage() {
             </select>
           </div>
 
-          {/* Bouton de validation */}
           <button
             type="submit"
             disabled={loading}
@@ -150,7 +140,7 @@ export default function VendeurPage() {
             }}
           >
             {loading ? (
-              <BeatLoader style={{ color: "#fff" }} />
+              <BeatLoader style={{ color: '#fff' }} />
             ) : (
               `Valider la vente (${FORFAITS_CONFIG[forfaitId].prix})`
             )}
@@ -158,13 +148,10 @@ export default function VendeurPage() {
         </form>
       </div>
 
-      {/* MODAL / POPUP DE CONFIRMATION DE TICKET */}
-
       {ticketGenere && (
         <div className={style.modal}>
           <div className={style.modalWrapper}>
 
-            {/* En-tête Succès */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#22c55e', marginBottom: '12px' }}>
               <BsCheckCircleFill size={28} />
               <span style={{ fontWeight: 'bold', fontSize: '18px', textTransform: 'uppercase' }}>Vente Enregistrée</span>
@@ -172,21 +159,18 @@ export default function VendeurPage() {
 
             <p style={{ fontSize: '14px', color: '#4b5563', margin: '8px 0' }}>Code du ticket à remettre au client :</p>
 
-            {/* Affichage central du Ticket */}
             <div className={style.codeTicket}>
               <h2 style={{ fontSize: '38px', color: '#1d4ed8', letterSpacing: '3px', margin: 0, fontWeight: 'bold' }}>
                 {ticketGenere.code}
               </h2>
             </div>
 
-            {/* Récapitulatif des infos */}
             <div className={style.detailsTicket}>
               <div style={{ marginBottom: '6px' }}><strong>Client :</strong> {ticketGenere.telephone}</div>
               <div style={{ marginBottom: '6px' }}><strong>Forfait :</strong> {ticketGenere.designation}</div>
               <div><strong>Montant payé :</strong> {ticketGenere.prix}</div>
             </div>
 
-            {/* Bouton Fermer */}
             <button
               onClick={() => setTicketGenere(null)}
               className={style.btnRetour}
