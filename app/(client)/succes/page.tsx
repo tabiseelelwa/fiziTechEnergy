@@ -16,7 +16,7 @@ function ContenuSucces() {
                 const formulaireMikrotik = document.createElement('form');
                 formulaireMikrotik.method = 'POST';
 
-                // 🔥 SÉCURITÉ : Forçage propre de l'adresse IP cliente pour la redirection Hotspot
+                //La redirection Hotspot
                 const targetHost = process.env.NEXT_PUBLIC_ROUTER_HOST;
                 formulaireMikrotik.action = targetHost && targetHost.trim() !== "" ? targetHost : 'http://10.5.5.1/login';
 
@@ -40,8 +40,7 @@ function ContenuSucces() {
 
                 document.body.appendChild(formulaireMikrotik);
                 formulaireMikrotik.submit();
-            }, 3000); // 3 secondes suffisent largement
-
+            }, 3000);
             return () => clearTimeout(minuterie);
         }
     }, [code]);
@@ -56,7 +55,7 @@ function ContenuSucces() {
 
                 <div style={{ margin: '25px 0' }}>
                     <p style={{ fontSize: '16px', fontWeight: '600', color: '#1f2937', margin: '0 0 10px 0' }}>
-                        Génération de votre accès en cours...
+                        Connexion en cours...
                     </p>
                     <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>
                         Vous allez être connecté automatiquement au Wi-Fi FiziTech dans un instant.
