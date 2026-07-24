@@ -1,10 +1,12 @@
+import { AuthProvider } from "@/app/context/AuthContext";
+import Providers from "./providers";
 import type { Metadata } from "next";
-import { Poppins} from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"], // Choisissez les poids dont vous avez besoin
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-poppins",
 });
 
@@ -20,10 +22,16 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${poppins.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="font-poppins min-h-full">
+        <Providers>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </Providers>
+      </body>
     </html>
   );
 }

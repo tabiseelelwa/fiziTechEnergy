@@ -55,7 +55,7 @@ function FormulaireAchat() {
             }
 
             // Redirection vers la page succès avec les paramètres du ticket
-            router.push(`/paiement/succes?code=${donnees.ticket.code}&expiration=${donnees.ticket.expiration}&forfait=${encodeURIComponent(donnees.ticket.forfait)}`);
+            router.push(`/succes?code=${donnees.ticket.code}&expiration=${donnees.ticket.expiration}&forfait=${encodeURIComponent(donnees.ticket.forfait)}`);
 
         } catch (err: any) {
             setError(err.message);
