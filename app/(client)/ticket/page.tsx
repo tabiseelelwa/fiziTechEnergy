@@ -4,9 +4,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import style from '@/app/styles/client/detailsTicket.module.scss'
 import { PulseLoader } from 'react-spinners';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface TicketInfos {
     codeTicket: string;
@@ -20,6 +19,8 @@ export default function VerifTicketPage() {
     const [tempsRestant, setTempsRestant] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const router = useRouter()
 
     // Fonction qui calcule l'écart entre maintenant et la date d'expiration
     const calculerTempsRestant = (dateExpirationStr: string) => {
@@ -43,7 +44,7 @@ export default function VerifTicketPage() {
     useEffect(() => {
         if (!ticket) return;
 
-        // Calcul initial immédiat
+        // Calcul initial du temps restant
         setTempsRestant(calculerTempsRestant(ticket.dateExpiration));
 
         const intervalle = setInterval(() => {
@@ -88,12 +89,16 @@ export default function VerifTicketPage() {
     };
 
     return (
-        <div className={style.ticket}>
-            <h3>Suivi de mon forfait</h3>
-            <p>Entrez votre numéro pour voir le temps de connexion restant</p>
+        <div className="min-h-screen max-w-[500px] mx-auto flex flex-col justify-center items-center gap-[0.8rem] p-4">
+            <h3 className='text-[18px] font-bold text-[#0070f3] '>Suivi de mon forfait</h3>
+            <p className='text-center text-[13px] text-[#666]'>Entrez votre numéro pour voir le temps de connexion restant</p>
 
-            <form onSubmit={handleVerifier}>
+            <form
+                onSubmit={handleVerifier}
+                className='flex flex-col gap-[0.8rem] w-full'
+            >
                 <input
+                    className='p-[10px] border-[1px] border-[#ccc] rounded-[7px] outline-0'
                     type="tel"
                     required
                     placeholder="Ex: 0812345678"
@@ -101,37 +106,43 @@ export default function VerifTicketPage() {
                     onChange={(e) => setTelephone(e.target.value)}
                 />
                 <button
+                    className='text-white bg-[#0070f3] border-0 p-[10px] rounded-[7px] cursor-pointer'
                     type="submit"
                     disabled={loading}
                 >
-                    {loading ? <PulseLoader style={{ color: "#fff" }} /> : 'Vérifier mon statut'}
+                    {loading ? <PulseLoader className='text-white' /> : 'Vérifier mon statut'}
                 </button>
             </form>
 
             {error && (
-                <div className={style.error}>
+                <div className="text-[#dc2626] bg-[#fee2e2] w-full text-[14px] text-center p-[10px] rounded-[7px]">
                     ❌ {error}
                 </div>
             )}
 
             {ticket && (
-                <div className={style.detailsTicket}>
-                    <div className={style.detailsTicketTitre}>Ticket Trouvé</div>
-                    <div className={style.detailsTicketCode}>{ticket.codeTicket}</div>
+                <div className="p-[20px] border-[1px]  border-[#e5e7eb] rounded-[8px] bg-[#f9fafb] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] w-full">
+                    <div className="uppercase text-[#6b7280] text-[11px] font-bold tracking-wide-[1px]">Ticket Trouvé</div>
+                    <div className="text-[24px] font-bold text-[#111827] mt-[5px] mb-[#5px]">{ticket.codeTicket}</div>
 
-                    <div className={style.detailsTicketType}>
+                    <div className="text-[#374151] text-[14px] mt-[15px] mb-[5px]">
                         <strong>Forfait :</strong> {ticket.forfait}
                     </div>
 
-                    <div className={style.detailsTicketTempsContainer}>
-                        <div className={style.detailsTicketTempsTitre} >Temps restant</div>
-                        <div className={style.detailsTicketTemps}>
+                    <div className="p-[10px] bg-[#eff6ff] border-[1px] border-[#bfdbfe] text-center rounded-[7px]">
+                        <div className="text-[12px] text-[#1e40af] font-bold uppercase "  >Temps restant</div>
+                        <div className="text-[22px] font-bold text-[#1d4ed8]">
                             {tempsRestant}
                         </div>
                     </div>
                 </div>
             )}
-            <Link href={"/"}>Retour à l'accueil</Link>
+            <button
+                onClick={() => router.push('/')}
+                className='border-0 bg-[#d2d1d1] text-[#3f68a2] w-full rounded-[0.3rem] p-[0.5rem]'
+            >
+                Retour à l'accueil
+            </button>
         </div>
     );
 }

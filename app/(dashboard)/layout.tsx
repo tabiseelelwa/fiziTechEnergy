@@ -2,6 +2,7 @@
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { CircleLoader } from 'react-spinners'
 
 
 export default function CustomerLayout({
@@ -17,12 +18,12 @@ export default function CustomerLayout({
         }
     }, [user, loading, router]);
 
-    if (loading) return <div className="p-6">Chargement FiziTech...</div>;
+    if (loading) return <div className="flex justify-center items-center p-6 absolute z-[1000] h-screen bg-white inset-0 text-[60px]"><CircleLoader/></div>;
     if (!user) return null;
 
     return (
         <div>
-            <main className="min-h-screen w-full p-4">
+            <main className="w-full">
                 <div>{children}</div>
             </main>
         </div>

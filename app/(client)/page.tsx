@@ -37,7 +37,7 @@ export default function PortailCaptifFiziTech() {
                     <div>
                         <h3 className='font-bold text-[16px]'>Forfait 3 Heures</h3>
                         <p className='text-[12px] text-[#6b7280]'>Idéal pour une vérification rapide</p>
-                        <span className='text[22px] font-extrabold block'>2 500 FC</span>
+                        <span className='text-[22px] font-extrabold block'>2 500 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(1)}
@@ -55,7 +55,7 @@ export default function PortailCaptifFiziTech() {
                     <div className="inline gap-16">
                         <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 8 Heures</h3>
                         <p className='text-[12px] text-[#6b7280]'>Le meilleur compromis vitesse/prix</p>
-                        <span className='text[22px] font-extrabold block'>3 500 FC</span>
+                        <span className='text-[22px] font-extrabold block'>3 500 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(2)}
@@ -70,7 +70,7 @@ export default function PortailCaptifFiziTech() {
                     <div className="inline gap-8">
                         <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 24 Heures</h3>
                         <p className='text-[12px] text-[#6b7280]'>Tranquillité totale toute la journée</p>
-                        <span className='text[22px] font-extrabold block'>5 000 FC</span>
+                        <span className='text-[22px] font-extrabold block'>5 000 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(3)}

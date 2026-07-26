@@ -61,12 +61,12 @@ export default function VendeurDashboard() {
   );
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-50 text-slate-800 p-4 md:p-8">
+    <div className="min-h-screen w-full flex flex-col justify-center bg-slate-50 text-slate-800 p-4 md:p-8">
       {
         modalVenteTicket ? <VendeurPage setModalVenteTicket={setModalVenteTicket} /> : ""
       }
       {/* ---------------- BARRE SUPÉRIEURE / EN-TÊTE ---------------- */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Dashboard Vendeur</h1>
           <p className="text-sm text-slate-500">Comptoir de vente et suivi en temps réel</p>

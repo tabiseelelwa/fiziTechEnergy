@@ -5,8 +5,7 @@
 import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BeatLoader } from 'react-spinners';
-import style from "@/app/styles/client/ticketClient.module.scss"
-import { BsArrowLeft } from 'react-icons/bs';
+import { BsArrowLeft, BsX } from 'react-icons/bs';
 
 // Base de données locale temporaire des forfaits pour l'affichage Front-End rapide
 const FORFAITS_CONFIG = {
@@ -65,10 +64,10 @@ function FormulaireAchat() {
     };
 
     return (
-        <div className={style.ticketContainer}>
-            <div className={style.ticket}>
+        <div className='min-h-screen max-w-[500px] text-[#1f2937] mx-auto flex flex-col items-center gap-2 justify-center px-4'>
+            <div className="w-full flex flex-col gap-4">
                 {/* Bouton Retour */}
-                <div className={style.ticketHeader} onClick={() => router.push('/')}>
+                <div className="flex items-center gap-2 text-[16px] font-semibold text-[#2563eb] cursor-pointer" onClick={() => router.push('/')}>
                     <BsArrowLeft />
                     <div>
                         Modifier le forfait
@@ -76,26 +75,27 @@ function FormulaireAchat() {
                 </div>
 
                 {/* Récapitulatif du forfait sélectionné */}
-                <div className={style.ticketRecap}>
-                    <span>Forfait sélectionné</span>
-                    <h2>{infoForfait.designation}</h2>
-                    <p>{infoForfait.description}</p>
-                    <div className={style.ticketPrix}>{infoForfait.prix}</div>
+                <div className="bg-[#eff6ff] border-[1px] border-[#bfdbfe] p-2 rounded-[14px]">
+                    <span className='text-[11px] font-bold tracking-wide-[0.5px]'>Forfait sélectionné</span>
+                    <h2 className='font-extrabold text-[20px] mt-[5px] mr-0 mb-[2px] ml-0 text-[#1e40af] '>{infoForfait.designation}</h2>
+                    <p className='mt-0 mb-[5px] text-[12px] text-[#0070f3]'>{infoForfait.description}</p>
+                    <div className="text-[24px] text-[#0070f3] font-[900]">{infoForfait.prix}</div>
                 </div>
 
                 {error && (
-                    <div className={style.error}>
-                        ⚠️ {error}
+                    <div className="flex justify-center items-center gap-2 p-[12px] text-[13px] text-[#dc2626] rounded-[15px] mb-[10px] bg-[#fee2e2]">
+                        <BsX className='text-[22px] font-extrabold ' /> {error}
                     </div>
                 )}
 
                 {/* Formulaire de paiement */}
-                <h3>Finaliser votre paiement</h3>
+                <h3 className='text-center tex-[18px] font-bold text-[#0070f3]'>Finaliser votre paiement</h3>
 
-                <form onSubmit={handleSoumissionPaiement}>
-                    <div className={style.ticketTelephone}>
-                        <label>Numéro de téléphone Mobile Money *</label>
+                <form onSubmit={handleSoumissionPaiement} className='flex flex-col gap-4'>
+                    <div>
+                        <label className="block mb-[6px] text-[13px] text-[#4b5563] font-semibold">Numéro de téléphone Mobile Money *</label>
                         <input
+                            className='p-[10px] border-[1px] border-[#d1d5db] w-full rounded-[10px] outline-0 box-border'
                             type="tel"
                             required
                             value={telephone}
@@ -104,9 +104,10 @@ function FormulaireAchat() {
                         />
                     </div>
 
-                    <div className={style.ticketOperateur}>
-                        <label>Sélectionnez votre opérateur *</label>
+                    <div>
+                        <label className="block mb-[6px] text-[13px] text-[#4b5563] font-semibold">Sélectionnez votre opérateur *</label>
                         <select
+                            className='w-full p-[10px] border-[1px] border-[#d1d5db] rounded-[10px] outline-0'
                             value={operateur}
                             onChange={(e) => setOperateur(e.target.value)}
                         >
@@ -118,6 +119,7 @@ function FormulaireAchat() {
                     </div>
 
                     <button
+                        className='p-[14px] text-white font-bold text-[18px] rounded-[10px] mt-[10px]'
                         type="submit"
                         disabled={loading}
                         style={{
@@ -125,7 +127,7 @@ function FormulaireAchat() {
                             cursor: loading ? 'not-allowed' : 'pointer',
                         }}
                     >
-                        {loading ? <BeatLoader style={{ color: "#fff" }} /> : `Payer ${infoForfait.prix}`}
+                        {loading ? <BeatLoader className='text-white' /> : `Payer ${infoForfait.prix}`}
                     </button>
                 </form>
             </div>

@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import style from '@/app/styles/client/succesPaiement.module.scss';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 
 function ContenuSucces() {
@@ -40,29 +39,30 @@ function ContenuSucces() {
 
                 document.body.appendChild(formulaireMikrotik);
                 formulaireMikrotik.submit();
-            }, 3000);
+            }, 3000
+            );
             return () => clearTimeout(minuterie);
         }
     }, [code]);
 
     return (
-        <div className={style.container}>
-            <div className={style.successContainer} style={{ textAlign: 'center', padding: '40px 20px' }}>
-                <div className={style.successHeader}>
-                    <span style={{ fontSize: '60px', color: '#10b981' }}><IoIosCheckmarkCircleOutline /></span>
-                    <h2 style={{ marginTop: '10px' }}>Paiement Validé !</h2>
+        <div className="flex justify-center items-center min-h-screen max-w-[500px] mx-auto mb-[50] mr-auto ml-auto p-4">
+            <div className="border-[2px] border-[#10b981] bg-[#f0fdf4] p-[30px] text-center mt-[50px] rounded-[10px]">
+                <div className="flex flex-col justify-center items-center">
+                    <span className="text-[60px] text-[#10b981] text-center"><IoIosCheckmarkCircleOutline /></span>
+                    <h2 className='mt-[10px]'>Paiement Validé !</h2>
                 </div>
 
-                <div style={{ margin: '25px 0' }}>
-                    <p style={{ fontSize: '16px', fontWeight: '600', color: '#1f2937', margin: '0 0 10px 0' }}>
+                <div className='mt-[25px] mb-[25px]'>
+                    <p className='text-[16px] font-semibold text-[#1f2937] mb-[10px]'>
                         Connexion en cours...
                     </p>
-                    <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>
+                    <p className='text-[14px] text-[#6b7280]'>
                         Vous allez être connecté automatiquement au Wi-Fi FiziTech dans un instant.
                     </p>
                 </div>
 
-                <div style={{ display: 'inline-block', width: '30px', height: '30px', border: '3px solid #e5e7eb', borderTopColor: '#0070f3', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                <div className='inline-block w-[30px] h-[30px] border-[3px] border-[#e5e7eb] border-t-[#0070f3] rounded-[50%]' style={{ animation: 'spin 1s linear infinite' }} />
 
                 <style jsx global>{`
                     @keyframes spin {

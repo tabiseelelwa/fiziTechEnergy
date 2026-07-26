@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
-import style from "@/app/styles/client/ticket.module.scss";
 import { BsCheckCircleFill, BsX } from 'react-icons/bs';
 
 // Configuration des forfaits disponibles au guichet
@@ -82,29 +81,36 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
     };
 
     return (
-        <div className={style.modal}>
-            <div className={style.modalWrapper}>
-                <div className={style.ticketContainer}>
-                    <div className={style.ticket}>
-                        <div className={style.ticketHeader}>
-                            <button onClick={() => setModalVenteTicket(false)}>
-                                <BsX  />
+        <div className="fixed inset-0 flex justify-center items-center bg-black/70 z-[1000] backdrop-blur-sm p-4">
+            <div className="bg-white w-full max-w-[500px] rounded-[16px] relative text-center text-[#1f2937] animate-[fadeModalIn_250ms_ease-out]">
+                <div className="p-4">
+                    <div className="flex flex-col gap-[1rem] w-full">
+                        <div className="flex items-center justify-end items-center gap-[0.5rem] text-[16px] font-semibold cursor-pointer w-full">
+                            <button
+                                onClick={() => setModalVenteTicket(false)}
+                                className='flex items-center gap-[0.5rem] bg-[#ff0000] p-[5px] text-[28px] text-white rounded-[0.5rem] font-bold cursor-pointer'
+                            >
+                                <BsX />
                             </button>
                         </div>
 
-                        <h3>PAIEMENT CASH</h3>
+                        <h3 className='text-[18px] text-[#0070f3] font-[900]'>PAIEMENT CASH</h3>
 
                         {error && (
-                            <div className={style.error}>
+                            <div className="p-[12px] bg-[#fee2e2] text-[#dc2626] mb-[15px] font-tin text-[13px] rounded-[10px]">
                                 ⚠️ {error}
                             </div>
                         )}
 
                         {/* Formulaire de Vente */}
-                        <form onSubmit={handleVendreTicket}>
-                            <div className={style.ticketTelephone}>
-                                <label>Numéro de téléphone du client *</label>
+                        <form
+                            onSubmit={handleVendreTicket}
+                            className='flex flex-col gap-[1.2rem]'
+                        >
+                            <div>
+                                <label className='block mb-[6px] text-[13px] font-semibold text-[#4b5563]'>Numéro de téléphone du client *</label>
                                 <input
+                                    className='p-[12px] rounded-[10px] border-1 border-[#d1d5db] text-[15px] box-border outline-0 w-full'
                                     type="tel"
                                     required
                                     value={telephone}
@@ -113,9 +119,10 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 />
                             </div>
 
-                            <div className={style.ticketOperateur}>
-                                <label>Forfait sélectionné *</label>
+                            <div>
+                                <label className='block mb-[6px] text-[13px] font-semibold text-[#4b5563]'>Forfait sélectionné *</label>
                                 <select
+                                    className='p-[12px] rounded-[10px] border-1 border-[#d1d5db] text-[15px] box-border outline-0 w-full'
                                     value={forfaitId}
                                     onChange={(e) => setForfaitId(e.target.value as ForfaitKey)}
                                 >
@@ -125,9 +132,10 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 </select>
                             </div>
 
-                            <div className={style.ticketOperateur}>
-                                <label>Mode de règlement *</label>
+                            <div>
+                                <label className='block mb-[6px] text-[13px] font-semibold text-[#4b5563]'>Mode de règlement *</label>
                                 <select
+                                    className='p-[12px] rounded-[10px] border-1 border-[#d1d5db] text-[15px] box-border outline-0 w-full'
                                     value={modePaiement}
                                     onChange={(e) => setModePaiement(e.target.value)}
                                 >
@@ -138,6 +146,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                             </div>
 
                             <button
+                                className='w-full p-[14px] rounded-[10px] border-0 texte-white mt-[10px] text-[15px] font-bold text-white'
                                 type="submit"
                                 disabled={loading}
                                 style={{
@@ -146,7 +155,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                                 }}
                             >
                                 {loading ? (
-                                    <BeatLoader style={{ color: "#fff" }} />
+                                    <BeatLoader style={{ color: "#fff" }} color={"#fff"} />
                                 ) : (
                                     `Valider la vente (${FORFAITS_CONFIG[forfaitId].prix})`
                                 )}
@@ -155,32 +164,31 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                     </div>
 
                     {ticketGenere && (
-                        <div className={style.modal}>
-                            <div className={style.modalWrapper}>
-                                <div className={style.ticketContainer}>
-                                    {/* En-tête Succès */}
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#22c55e', marginBottom: '12px' }}>
-                                        <BsCheckCircleFill size={28} />
-                                        <span style={{ fontWeight: 'bold', fontSize: '18px', textTransform: 'uppercase' }}>Vente Enregistrée</span>
+                        <div className="fixed inset-0 flex justify-center items-center bg-black/70 z-[1000] backdrop-blur-sm p-4">
+                            <div className="bg-white max-w-[500px] rounded-[16px] w-full relative text-center text-[#1f2937] animate-[fadeModalIn_300ms_ease-out]">
+                                <div className="flex flex-col items-center justify-center text-[#1f2937] p-[1rem]">
+                                    <div className="flex items-center justify-center gap-[8px] text-[#22c55e] mb-[12px]">
+                                        <BsCheckCircleFill size={28}/>
+                                        <span className="font-bold text-[18px] uppercase">Vente Enregistrée</span>
                                     </div>
 
-                                    <p style={{ fontSize: '14px', color: '#4b5563', margin: '8px 0' }}>Code du ticket à remettre au client :</p>
+                                    <p className="14px text-[#4b5563] my-[8px] mx-0">Code du ticket à remettre au client :</p>
 
-                                    <div className={style.codeTicket}>
-                                        <h2 style={{ fontSize: '38px', color: '#1d4ed8', letterSpacing: '3px', margin: 0, fontWeight: 'bold' }}>
+                                    <div className="bg-[#f3f4f6] p-[15px] rounded-[12px] border-2 border-dashed border-blue-500 mt-[15px] mb-[15px]">
+                                        <h2 className="text-[38px] text-[#1d4ed8] tracking-wide-[3px] m-0 font-bold">
                                             {ticketGenere.code}
                                         </h2>
                                     </div>
 
-                                    <div className={style.detailsTicket}>
-                                        <div style={{ marginBottom: '6px' }}><strong>Client :</strong> {ticketGenere.telephone}</div>
-                                        <div style={{ marginBottom: '6px' }}><strong>Forfait :</strong> {ticketGenere.designation}</div>
+                                    <div className="text-left text-[14px] bg-[#f9fafb] py-[16px] px-[12px] rounded-[8px] border-1 border-[#e5e7eb]">
+                                        <div className='mt-[6px]'><strong>Client :</strong> {ticketGenere.telephone}</div>
+                                        <div className='mt-[6px]'><strong>Forfait :</strong> {ticketGenere.designation}</div>
                                         <div><strong>Montant payé :</strong> {ticketGenere.prix}</div>
                                     </div>
 
                                     <button
                                         onClick={() => setTicketGenere(null)}
-                                        className={style.btnRetour}
+                                        className="mt-[20px] w-full p-[12px] bg-[#2563eb] text-white border-0 rounded-[8px] text-[15px] font-bold cursor pointer"
                                     >
                                         Fermer et effectuer une autre vente
                                     </button>

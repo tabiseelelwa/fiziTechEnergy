@@ -12,3 +12,9 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
+@keyframes fadeModalIn {
+  0% {
+    transform: translateY(-200%);
+  }
+}

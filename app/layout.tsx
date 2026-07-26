@@ -25,7 +25,7 @@ export default function RootLayout({
       lang="fr"
       className={`${poppins.variable} h-full antialiased`}
     >
-      <body className="font-poppins min-h-full">
+      <body className="font-poppins min-h-full w-full">
         <Providers>
           <AuthProvider>
             {children}
