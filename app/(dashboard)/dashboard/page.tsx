@@ -66,7 +66,7 @@ export default function VendeurDashboard() {
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
-          <p className="text-sm text-slate-500">Comptoir de vente et suivi en temps réel</p>
+          <p className="text-sm text-slate-500 mt-4">Comptoir de vente et suivi en temps réel</p>
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">

@@ -44,7 +44,7 @@ export default function ProfilPage() {
       {/* 1. EN-TÊTE DE LA PAGE */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Mon Profil</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 mt-4">
           Gérez vos informations personnelles, préférences de compte et paramètres de sécurité.
         </p>
       </div>
