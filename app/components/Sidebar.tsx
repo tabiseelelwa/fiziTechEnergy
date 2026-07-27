@@ -31,7 +31,7 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
         onClick={toggleSidebar}
         aria-label="Ouvrir le menu"
         className={`
-          md:hidden fixed top-2 right-4 z-50 p-2 rounded-lg bg-white text-gray-800 shadow-md border border-gray-200
+          md:hidden fixed top-4 right-4 z-50 p-2 rounded-lg bg-white text-gray-800 shadow-md border border-gray-200
           hover:bg-gray-50 focus:outline-none transition-all duration-300 ease-in-out
         ${showToggle && !isOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
@@ -45,7 +45,6 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
       {/* 2. OVERLAY SOMBRE */}
       {isOpen && (
         <div
-          onClick={closeSidebar}
           className="md:hidden fixed inset-0 z-30 bg-black/50 backdrop-blur-sm transition-opacity"
         />
       )}
@@ -82,8 +81,8 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
                   href={item.href}
                   onClick={closeSidebar}
                   className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                 >
                   {item.label}

@@ -96,7 +96,7 @@ export async function POST(request) {
         );
 
         // =========================================================================
-        // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE (PORT 8728)
+        // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE)                        //
         // =========================================================================
         try {
             const rawHost = (process.env.ROUTER_HOST || '10.5.5.1')

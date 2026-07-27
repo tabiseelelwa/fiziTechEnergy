@@ -1,6 +1,6 @@
 import { getConnection } from "@/app/lib/db";
 import { NextResponse } from "next/server";
-import { RouterOSClient } from 'routeros-client'; // 🔌 Retour à la bibliothèque native ultra-stable
+import { RouterOSClient } from 'routeros-client';
 
 export async function POST(request) {
     try {
@@ -80,14 +80,14 @@ export async function POST(request) {
         const dateExpirationFrontend = new Date();
         dateExpirationFrontend.setMinutes(dateExpirationFrontend.getMinutes() + dureeMinutes);
 
-        // Insertion du ticket en BDD locale
+        // Insertion du ticket en BDD
         const queryInsertTicket = `
             INSERT INTO ticket (codeTicket, dateExpiration, statut) 
             VALUES (?, DATE_ADD(NOW(), INTERVAL ? MINUTE), ?)
         `;
         await pool.execute(queryInsertTicket, [codeTicketUnique, dureeMinutes, 'Actif']);
 
-        // Insertion du Paiement en BDD locale
+        // Insertion du Paiement en BDD
         await pool.execute(
             `INSERT INTO Paiement (idClient, codeTypeForfait, codeTicket, referenceAbonnement, montantPaye, operateur, statutPaiement) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -95,8 +95,9 @@ export async function POST(request) {
         );
 
         // =========================================================================
-        // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE (PORT 8728)
+        // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE                         //
         // =========================================================================
+
         try {
             // Extraction de l'adresse IP pure sans http:// ni rien d'autre
             const rawHost = (process.env.ROUTER_HOST || '10.5.5.1')
@@ -114,7 +115,7 @@ export async function POST(request) {
 
             // Connexion au socket binaire du routeur
             const api = await client.connect();
-            console.log(`[MIKROTIK API] 🔌 Connecté avec succès au routeur sur l'IP ${rawHost}`);
+            console.log(`[MIKROTIK API] Connecté avec succès au routeur`);
 
             // Ajout de l'utilisateur dans le Hotspot
             await api.menu('/ip/hotspot/user').add({

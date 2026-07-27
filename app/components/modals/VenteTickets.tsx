@@ -44,7 +44,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
         const infoForfait = FORFAITS_CONFIG[forfaitId];
 
         try {
-            const reponse = await fetch('/api/cash', {
+            const reponse = await fetch('/api/vente', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -74,7 +74,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
             setTelephone('');
 
         } catch (err: any) {
-            setError(err.message || 'Impossible de contacter le serveur local.');
+            setError(err.message || 'Impossible de contacter le serveur.');
         } finally {
             setLoading(false);
         }
@@ -168,7 +168,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                             <div className="bg-white max-w-[500px] rounded-[16px] w-full relative text-center text-[#1f2937] animate-[fadeModalIn_300ms_ease-out]">
                                 <div className="flex flex-col items-center justify-center text-[#1f2937] p-[1rem]">
                                     <div className="flex items-center justify-center gap-[8px] text-[#22c55e] mb-[12px]">
-                                        <BsCheckCircleFill size={28}/>
+                                        <BsCheckCircleFill size={28} />
                                         <span className="font-bold text-[18px] uppercase">Vente Enregistrée</span>
                                     </div>
 
