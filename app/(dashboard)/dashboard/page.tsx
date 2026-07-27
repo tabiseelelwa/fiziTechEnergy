@@ -51,24 +51,21 @@ const RECENT_TRANSACTIONS = [
 export default function VendeurDashboard() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
+  const [modalVenteTicket, setModalVenteTicket] = useState(false);
 
-  // Etat d'affichage du modal de vente des tickets
-  const [modalVenteTicket, setModalVenteTicket] = useState(false)
-
-  // Filtrage des transactions pour la recherche
   const filteredTransactions = RECENT_TRANSACTIONS.filter((t) =>
     t.client.includes(searchTerm) || t.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center bg-slate-50 text-slate-800 p-4 md:p-8">
-      {
-        modalVenteTicket ? <VendeurPage setModalVenteTicket={setModalVenteTicket} /> : ""
-      }
+    // CORRECTION MAJEURE ICI : On retire min-h-screen et flex-col justify-center
+    <div className="w-full bg-slate-50 text-slate-800">
+      {modalVenteTicket && <VendeurPage setModalVenteTicket={setModalVenteTicket} />}
+
       {/* ---------------- BARRE SUPÉRIEURE / EN-TÊTE ---------------- */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard Vendeur</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
           <p className="text-sm text-slate-500">Comptoir de vente et suivi en temps réel</p>
         </div>
 
@@ -93,7 +90,6 @@ export default function VendeurDashboard() {
 
       {/* ---------------- CARTES STATISTIQUES ---------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        {/* Recette Totale */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Encaissé (Aujourd'hui)</p>
@@ -107,7 +103,6 @@ export default function VendeurDashboard() {
           </div>
         </div>
 
-        {/* Tickets Vendus */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tickets Générés</p>
@@ -121,7 +116,6 @@ export default function VendeurDashboard() {
           </div>
         </div>
 
-        {/* Mode de Paiement Dominant */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Mode Principal</p>
@@ -138,7 +132,6 @@ export default function VendeurDashboard() {
 
       {/* ---------------- GRAPHIQUES RECHARTS ---------------- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Graphique de Ventes par heure */}
         <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-base font-bold text-slate-900">Évolution des Recettes (FC)</h2>
@@ -171,7 +164,6 @@ export default function VendeurDashboard() {
           </div>
         </div>
 
-        {/* PieChart Répartition des Forfaits */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
           <h2 className="text-base font-bold text-slate-900 mb-2">Répartition des Forfaits</h2>
           <div className="h-48 w-full">
@@ -209,8 +201,7 @@ export default function VendeurDashboard() {
       </div>
 
       {/* ---------------- TABLEAU DES DERNIÈRES VENTES ---------------- */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-        {/* En-tête du tableau + Recherche */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden mb-8">
         <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-base font-bold text-slate-900">Dernières Ventes Enregistrées</h2>
@@ -229,7 +220,6 @@ export default function VendeurDashboard() {
           </div>
         </div>
 
-        {/* Structure du tableau Tailwind */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

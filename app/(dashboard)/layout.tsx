@@ -1,31 +1,29 @@
-'use client'
-import { useAuth } from '../context/AuthContext'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { CircleLoader } from 'react-spinners'
+'use client';
 
+import React, { useState } from 'react';
+import Sidebar from "@/app/components/Sidebar";
 
-export default function CustomerLayout({
-    children
+export default function AdminLayout({
+  children
 }: Readonly<{ children: React.ReactNode }>) {
+  const [showToggle, setShowToggle] = useState(true);
 
-    const { user, loading } = useAuth()
-    const router = useRouter()
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const isAtTop = e.currentTarget.scrollTop <= 10;
+    setShowToggle(isAtTop);
+  };
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push('/login');
-        }
-    }, [user, loading, router]);
+  return (
+    <div className="flex h-[100dvh] w-full min-h-0 overflow-hidden bg-gray-50">
+      {/* Sidebar et son bouton toggle */}
+      <Sidebar showToggle={showToggle} />
 
-    if (loading) return <div className="flex justify-center items-center p-6 absolute z-[1000] h-screen bg-white inset-0 text-[60px]"><CircleLoader/></div>;
-    if (!user) return null;
-
-    return (
-        <div>
-            <main className="w-full">
-                <div>{children}</div>
-            </main>
-        </div>
-    )
+      <main 
+        onScroll={handleScroll}
+        className="flex-1 min-h-0 h-full overflow-y-auto p-4 md:p-6"
+      >
+        {children}
+      </main>
+    </div>
+  );
 }

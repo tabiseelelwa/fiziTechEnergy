@@ -29,21 +29,7 @@ export default function LoginPage() {
       const mockToken = 'eyJhbGciOiJIUzI1Ni...';
 
       login(mockUserData, mockToken);
-
-      // Redirection intelligente selon le rôle
-      switch (mockUserData.role) {
-        case 'vendeur':
-          router.push('/vendeur/ventes');
-          break;
-        case 'admin1':
-          router.push('/paiement/dashboard');
-          break;
-        case 'admin_sup':
-          router.push('/admin/dashboard');
-          break;
-        default:
-          router.push('/');
-      }
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Identifiants incorrects.');
     } finally {
@@ -52,8 +38,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
-      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6">
+    <div className="w-full flex items-center justify-center bg-gray-50 p-4 font-sans overflow-y-auto">
+      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm my-auto">
 
         {/* En-tête */}
         <div className="text-center space-y-1">

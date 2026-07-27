@@ -127,7 +127,7 @@ function FormulaireAchat() {
                             cursor: loading ? 'not-allowed' : 'pointer',
                         }}
                     >
-                        {loading ? <BeatLoader className='text-white' /> : `Payer ${infoForfait.prix}`}
+                        {loading ? <BeatLoader color={"#fff"} /> : `Payer ${infoForfait.prix}`}
                     </button>
                 </form>
             </div>

@@ -110,7 +110,7 @@ export default function VerifTicketPage() {
                     type="submit"
                     disabled={loading}
                 >
-                    {loading ? <PulseLoader className='text-white' /> : 'Vérifier mon statut'}
+                    {loading ? <PulseLoader color={'#fff'}/> : 'Vérifier mon statut'}
                 </button>
             </form>
 

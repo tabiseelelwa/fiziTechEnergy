@@ -41,7 +41,7 @@ export default function PortailCaptifFiziTech() {
                     </div>
                     <button
                         onClick={() => selectionnerForfait(1)}
-                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] py-[12px] text-white rounded-[10px]'
+                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] py-[12px] cursor-pointer text-white rounded-[10px]'
                     >
                         Choisir
                     </button>
@@ -59,7 +59,7 @@ export default function PortailCaptifFiziTech() {
                     </div>
                     <button
                         onClick={() => selectionnerForfait(2)}
-                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] py-[12px] text-white rounded-[10px]'
+                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] py-[12px] cursor-pointer text-white rounded-[10px]'
                     >
                         Choisir
                     </button>
@@ -74,7 +74,7 @@ export default function PortailCaptifFiziTech() {
                     </div>
                     <button
                         onClick={() => selectionnerForfait(3)}
-                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] py-[12px] text-white rounded-[10px]'
+                        className='text-[18px] font-bold bg-[#0070f3] px-[10px] cursor-pointer py-[12px] text-white rounded-[10px]'
                     >
                         Choisir
                     </button>
@@ -83,7 +83,7 @@ export default function PortailCaptifFiziTech() {
 
             <button
                 onClick={() => verifForfait()}
-                className="bg-[#0070f3] w-full py-[0.5rem] px-0 text-white rounded-[0.35rem]"
+                className="bg-[#0070f3] w-full py-[0.5rem] px-0 text-white rounded-[0.35rem] mt-[10px]"
             >
                 Vérifier mon ticket
             </button>
