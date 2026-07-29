@@ -96,7 +96,7 @@ export default function TarifsPage() {
       {/* 1. EN-TÊTE DE LA PAGE */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des Tarifs</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Tarifs</h1>
           <p className="text-sm text-gray-500 mt-4">
             Configurez les forfaits Hotspot, les durées et les tarifs associés.
           </p>

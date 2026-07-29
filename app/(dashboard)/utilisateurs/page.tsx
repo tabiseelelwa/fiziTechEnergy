@@ -143,8 +143,8 @@ export default function UtilisateursPage() {
       {/* 1. EN-TÊTE DE LA PAGE */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des Utilisateurs</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900">Utilisateurs</h1>
+          <p className="text-sm text-gray-500 mt-4">
             Gérez les accès du personnel, attribuez les rôles et contrôlez les permissions.
           </p>
         </div>
