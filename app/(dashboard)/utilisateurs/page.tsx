@@ -2,36 +2,36 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  HiPlus, 
-  HiPencil, 
-  HiTrash, 
-  HiUserGroup, 
-  HiShieldCheck, 
+import {
+  HiPlus,
+  HiPencil,
+  HiTrash,
+  HiUserGroup,
+  HiShieldCheck,
   HiSearch,
   HiFilter,
   HiKey,
   HiCheckCircle,
-  // HiXCircle
 } from 'react-icons/hi';
-
-interface Utilisateur {
-  id: number;
-  nom: string;
-  email: string;
-  telephone: string;
-  role: 'Admin' | 'Gérant' | 'Caissier';
-  siteAttribue: string;
-  statut: 'actif' | 'inactif';
-  derniereConnexion: string;
-}
+import { ModifierUtilisateur, UtilisateurData } from '@/app/components/modals/utilisateurs/modifUser';
+import { SupprimerUtilisateur } from '@/app/components/modals/utilisateurs/supprUser';
+import { AjouterUtilisateur } from '@/app/components/modals/utilisateurs/ajoutUser';
 
 export default function UtilisateursPage() {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('tous');
 
-  // Exemples d'utilisateurs
-  const [utilisateurs] = useState<Utilisateur[]>([
+  // État Modal Modification
+  const [modalAjoutUser, setModalAjoutUser] = useState<boolean>(false);
+  const [modalModifUser, setModalModifUser] = useState<boolean>(false);
+  const [userAEditer, setUserAEditer] = useState<UtilisateurData | null>(null);
+
+  // État Modal Suppression
+  const [modalSupprUser, setModalSupprUser] = useState<boolean>(false);
+  const [userASupprimer, setUserASupprimer] = useState<UtilisateurData | null>(null);
+
+  // Liste des utilisateurs
+  const [utilisateurs, setUtilisateurs] = useState<UtilisateurData[]>([
     {
       id: 1,
       nom: 'Jean-Marc Ramazani',
@@ -40,7 +40,7 @@ export default function UtilisateursPage() {
       role: 'Admin',
       siteAttribue: 'Tous les sites',
       statut: 'actif',
-      derniereConnexion: 'Aujourd\'hui à 14:32',
+      derniereConnexion: "Aujourd'hui à 14:32",
     },
     {
       id: 2,
@@ -50,7 +50,7 @@ export default function UtilisateursPage() {
       role: 'Gérant',
       siteAttribue: 'Site Central - Gombe',
       statut: 'actif',
-      derniereConnexion: 'Aujourd\'hui à 10:15',
+      derniereConnexion: "Aujourd'hui à 10:15",
     },
     {
       id: 3,
@@ -74,30 +74,85 @@ export default function UtilisateursPage() {
     },
   ]);
 
+  // Handlers Modals
+  const handleEditClick = (u: UtilisateurData) => {
+    setUserAEditer(u);
+    setModalModifUser(true);
+  };
+
+  const handleDeleteClick = (u: UtilisateurData) => {
+    setUserASupprimer(u);
+    setModalSupprUser(true);
+  };
+
+  // Traitement réel de la suppression dans le tableau React
+  const handleUserDeleted = (userId: number) => {
+    setUtilisateurs((prev) => prev.filter((u) => u.id !== userId));
+  };
+
+  const handleUserAdded = (newUser: UtilisateurData) => {
+    setUtilisateurs((prev) => [newUser, ...prev]);
+  };
+
   // Filtrage des utilisateurs
   const filteredUtilisateurs = utilisateurs.filter((u) => {
-    const matchesSearch = 
+    const matchesSearch =
       u.nom.toLowerCase().includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase()) ||
       u.telephone.includes(search);
-    
-    const matchesRole = roleFilter === 'tous' || u.role.toLowerCase() === roleFilter.toLowerCase();
+
+    const matchesRole =
+      roleFilter === 'tous' || u.role.toLowerCase() === roleFilter.toLowerCase();
 
     return matchesSearch && matchesRole;
   });
 
   return (
     <div className="space-y-6">
+
+      {/* MODAL D'AJOUT */}
+
+      {modalAjoutUser ?
+        <AjouterUtilisateur
+          setModalAjouterUtilisateur={setModalAjoutUser}
+          onUserAdded={handleUserAdded} /> : ""
+      }
+
+      {/* MODAL DE MODIFICATION */}
+      {modalModifUser && userAEditer && (
+        <ModifierUtilisateur
+          utilisateur={userAEditer}
+          setModalModifierUtilisateur={setModalModifUser}
+          onUserUpdated={(updatedUser) => {
+            setUtilisateurs((prev) =>
+              prev.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+            );
+          }}
+        />
+      )}
+
+      {/* MODAL DE SUPPRESSION */}
+      {modalSupprUser && userASupprimer && (
+        <SupprimerUtilisateur
+          utilisateur={userASupprimer}
+          setModalSupprimerUtilisateur={setModalSupprUser}
+          onUserDeleted={handleUserDeleted}
+        />
+      )}
+
       {/* 1. EN-TÊTE DE LA PAGE */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Utilisateurs</h1>
-          <p className="text-sm text-gray-500 mt-4">
+          <p className="text-sm text-gray-500 mt-1">
             Gérez les accès du personnel, attribuez les rôles et contrôlez les permissions.
           </p>
         </div>
 
-        <button className="flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
+        <button
+          className="flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
+          onClick={() => setModalAjoutUser(true)}
+        >
           <HiPlus className="w-5 h-5" />
           <span>Nouvel Utilisateur</span>
         </button>
@@ -140,9 +195,8 @@ export default function UtilisateursPage() {
         </div>
       </div>
 
-      {/* 3. BARRE DE RECHERCHE ET FILTRES */}
+      {/* 3. RECHERCHE ET FILTRES */}
       <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row gap-3 justify-between items-center">
-        {/* Champ de recherche */}
         <div className="relative w-full sm:w-80">
           <HiSearch className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -154,7 +208,6 @@ export default function UtilisateursPage() {
           />
         </div>
 
-        {/* Filtre de Rôle */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <HiFilter className="w-4 h-4 text-gray-400 hidden sm:block" />
           <select
@@ -192,7 +245,6 @@ export default function UtilisateursPage() {
             <tbody className="divide-y divide-gray-100">
               {filteredUtilisateurs.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50/50 transition-colors">
-                  {/* Nom & Contact */}
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm flex items-center justify-center shrink-0">
@@ -205,59 +257,54 @@ export default function UtilisateursPage() {
                     </div>
                   </td>
 
-                  {/* Rôle Badge */}
                   <td className="py-3.5 px-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                      u.role === 'Admin'
-                        ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                        : u.role === 'Gérant'
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${u.role === 'Admin'
+                      ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                      : u.role === 'Gérant'
                         ? 'bg-blue-50 text-blue-700 border border-blue-200'
                         : 'bg-gray-100 text-gray-700 border border-gray-200'
-                    }`}>
+                      }`}>
                       {u.role}
                     </span>
                   </td>
 
-                  {/* Site */}
                   <td className="py-3.5 px-4 text-xs font-medium text-gray-700">
                     {u.siteAttribue}
                   </td>
 
-                  {/* Dernière connexion */}
                   <td className="py-3.5 px-4 text-xs text-gray-500">
                     {u.derniereConnexion}
                   </td>
 
-                  {/* Statut */}
                   <td className="py-3.5 px-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                      u.statut === 'actif'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-red-50 text-red-600 border border-red-200'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${u.statut === 'actif'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-red-50 text-red-600 border border-red-200'
+                      }`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${u.statut === 'actif' ? 'bg-emerald-500' : 'bg-red-500'}`} />
                       {u.statut === 'actif' ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
 
-                  {/* Actions */}
                   <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button 
+                      <button
                         title="Réinitialiser le mot de passe"
                         className="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                       >
                         <HiKey className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         title="Modifier"
                         className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        onClick={() => handleEditClick(u)}
                       >
                         <HiPencil className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         title="Supprimer"
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        onClick={() => handleDeleteClick(u)}
                       >
                         <HiTrash className="w-4 h-4" />
                       </button>
