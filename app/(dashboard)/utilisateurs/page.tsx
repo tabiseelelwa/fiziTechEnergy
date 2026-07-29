@@ -97,7 +97,7 @@ export default function UtilisateursPage() {
           </p>
         </div>
 
-        <button className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-colors shadow-sm">
+        <button className="flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
           <HiPlus className="w-5 h-5" />
           <span>Nouvel Utilisateur</span>
         </button>

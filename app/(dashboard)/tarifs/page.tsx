@@ -1,15 +1,18 @@
 'use client';
 
+import { AjoutTarif } from '@/app/components/modals/tarifs/ajoutTarif';
+import { ModifierTarif } from '@/app/components/modals/tarifs/modifTarif';
+import { SupprimerTarif } from '@/app/components/modals/tarifs/supprTarif';
 import React, { useState } from 'react';
-import { 
-  HiPlus, 
-  HiPencil, 
-  HiTrash, 
-  HiClock, 
-  HiWifi, 
+import {
+  HiPlus,
+  HiPencil,
+  HiTrash,
+  HiClock,
+  HiWifi,
   HiTag,
   HiCheckCircle,
-  HiXCircle 
+  HiXCircle
 } from 'react-icons/hi';
 
 interface Tarif {
@@ -24,8 +27,12 @@ interface Tarif {
 }
 
 export default function TarifsPage() {
+  const [modalAjoutTarif, setModalAjoutTarif] = useState<boolean>(false);
+  const [modalModifTarif, setModalModifTarif] = useState<boolean>(false);
+  const [modalSupprTarif, setModalSupprTarif] = useState<boolean>(false);
+
   // Exemples de données de forfaits HotSpot
-  const [tarifs] = useState<Tarif[]>([
+  const [tarifs, setTarifs] = useState<Tarif[]>([
     {
       id: 1,
       nom: 'Forfait Flash',
@@ -74,8 +81,18 @@ export default function TarifsPage() {
     },
   ]);
 
+  const handleTarifAdded = (newTarif: Tarif) => {
+    setTarifs((prev) => [...prev, newTarif]);
+  };
+
   return (
     <div className="space-y-6">
+      {modalAjoutTarif ? <AjoutTarif setModalAjoutTarif={setModalAjoutTarif} onTarifAdded={handleTarifAdded} /> : ""}
+
+      {modalModifTarif ? <ModifierTarif setModalModifierTarif={setModalModifTarif} /> : ""}
+
+      {modalSupprTarif ? <SupprimerTarif setModalSupprimerTarif={setModalSupprTarif} /> : ""}
+
       {/* 1. EN-TÊTE DE LA PAGE */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -85,7 +102,10 @@ export default function TarifsPage() {
           </p>
         </div>
 
-        <button className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
+        <button
+          className="flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
+          onClick={() => setModalAjoutTarif(true)}
+        >
           <HiPlus className="w-5 h-5" />
           <span>Nouveau Tarif</span>
         </button>
@@ -94,11 +114,10 @@ export default function TarifsPage() {
       {/* 2. CARTES DES FORFAITS (Aperçu visuel) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {tarifs.slice(0, 4).map((tarif) => (
-          <div 
+          <div
             key={tarif.id}
-            className={`relative bg-white border rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between transition-all hover:shadow-md ${
-              tarif.popularite ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-gray-200'
-            }`}
+            className={`relative bg-white border rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between transition-all hover:shadow-md ${tarif.popularite ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-gray-200'
+              }`}
           >
             {tarif.popularite && (
               <span className="absolute -top-3 right-4 bg-emerald-600 text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -111,16 +130,15 @@ export default function TarifsPage() {
                 <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
                   {tarif.duree}
                 </span>
-                <span className={`inline-flex items-center gap-1 text-xs font-medium ${
-                  tarif.statut === 'actif' ? 'text-emerald-600' : 'text-gray-400'
-                }`}>
+                <span className={`inline-flex items-center gap-1 text-xs font-medium ${tarif.statut === 'actif' ? 'text-emerald-600' : 'text-gray-400'
+                  }`}>
                   {tarif.statut === 'actif' ? <HiCheckCircle className="w-4 h-4" /> : <HiXCircle className="w-4 h-4" />}
                   {tarif.statut}
                 </span>
               </div>
 
               <h3 className="text-lg font-bold text-gray-900">{tarif.nom}</h3>
-              
+
               <div className="text-2xl font-extrabold text-gray-900">
                 {tarif.prixFC.toLocaleString('fr-FR')} <span className="text-sm font-normal text-gray-500">FC</span>
               </div>
@@ -178,25 +196,26 @@ export default function TarifsPage() {
                   <td className="py-3.5 px-4">{item.vitesse}</td>
                   <td className="py-3.5 px-4">{item.dataLimit}</td>
                   <td className="py-3.5 px-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                      item.statut === 'actif'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-gray-100 text-gray-600 border border-gray-200'
-                    }`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${item.statut === 'actif'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-gray-100 text-gray-600 border border-gray-200'
+                      }`}>
                       {item.statut === 'actif' ? 'Actif' : 'Inactif'}
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button 
+                      <button
                         aria-label="Modifier"
                         className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        onClick={() => setModalModifTarif(true)}
                       >
                         <HiPencil className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         aria-label="Supprimer"
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        onClick={() => setModalSupprTarif(true)}
                       >
                         <HiTrash className="w-4 h-4" />
                       </button>

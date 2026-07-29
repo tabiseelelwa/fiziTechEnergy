@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full flex items-center justify-center bg-gray-50 p-4 font-sans overflow-y-auto">
+    <div className="w-full flex h-full items-center justify-center bg-gray-50 p-4 font-sans overflow-y-auto">
       <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm my-auto">
 
         {/* En-tête */}

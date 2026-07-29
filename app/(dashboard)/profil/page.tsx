@@ -152,7 +152,7 @@ export default function ProfilPage() {
                 )}
                 <button
                   type="submit"
-                  className="ml-auto flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors shadow-sm"
+                  className="ml-auto flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
                 >
                   <HiSave className="w-4 h-4" />
                   <span>Enregistrer</span>
