@@ -58,11 +58,9 @@ export default function VendeurDashboard() {
   );
 
   return (
-    // CORRECTION MAJEURE ICI : On retire min-h-screen et flex-col justify-center
     <div className="w-full bg-slate-50 text-slate-800">
       {modalVenteTicket && <VendeurPage setModalVenteTicket={setModalVenteTicket} />}
 
-      {/* ---------------- BARRE SUPÉRIEURE / EN-TÊTE ---------------- */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
@@ -72,7 +70,8 @@ export default function VendeurDashboard() {
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
             onClick={() => setModalVenteTicket(true)}
-            className="flex-1 sm:flex-none flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm transition"
+            className="flex-1 sm:flex-none flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 
+                       hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm transition"
           >
             <BsPlusCircleFill size={18} />
             Nouvelle Vente
@@ -215,7 +214,8 @@ export default function VendeurDashboard() {
               placeholder="Rechercher par code ou tél..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 
+                         focus:ring-blue-500/20 focus:border-blue-500 transition"
             />
           </div>
         </div>

@@ -135,7 +135,7 @@ export const AjouterUtilisateur = ({
                     </div>
 
                     {/* Rôle & Statut */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
                         <div className="space-y-1.5">
                             <label className="text-xs font-semibold text-gray-700 block">Rôle d'accès</label>
                             <div className="relative">

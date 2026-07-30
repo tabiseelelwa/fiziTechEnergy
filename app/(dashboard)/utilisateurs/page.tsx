@@ -35,7 +35,7 @@ export default function UtilisateursPage() {
     {
       id: 1,
       nom: 'Jean-Marc Ramazani',
-      email: 'jm.ramazani@fizitech.com',
+      email: 'jm.ramazani@empire-tech-lab.com',
       telephone: '+243 810 000 001',
       role: 'Admin',
       siteAttribue: 'Tous les sites',
@@ -45,7 +45,7 @@ export default function UtilisateursPage() {
     {
       id: 2,
       nom: 'Patrick Kabeya',
-      email: 'p.kabeya@fizitech.com',
+      email: 'p.kabeya@empire-tech-lab.com',
       telephone: '+243 990 123 456',
       role: 'Gérant',
       siteAttribue: 'Site Central - Gombe',
@@ -55,7 +55,7 @@ export default function UtilisateursPage() {
     {
       id: 3,
       nom: 'Sarah Ilunga',
-      email: 's.ilunga@fizitech.com',
+      email: 's.ilunga@empire-tech-lab.com',
       telephone: '+243 850 987 654',
       role: 'Caissier',
       siteAttribue: 'Agence Victoire',
@@ -65,7 +65,7 @@ export default function UtilisateursPage() {
     {
       id: 4,
       nom: 'Alain Tshilombo',
-      email: 'a.tshilombo@fizitech.com',
+      email: 'a.tshilombo@empire-tech-lab.com',
       telephone: '+243 820 456 789',
       role: 'Caissier',
       siteAttribue: 'Agence Kintambo',

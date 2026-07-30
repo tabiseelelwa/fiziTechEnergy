@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-export default function PortailCaptifFiziTech() {
+export default function PortailCaptifEmpireLab() {
     const router = useRouter();
 
     // Redirection directe vers la page de paiement en passant l'ID du forfait
@@ -18,7 +18,7 @@ export default function PortailCaptifFiziTech() {
         <div className="min-h-screen max-w-[500px] mx-auto flex flex-col items-center gap-2 justify-center px-4">
             <div className="bg-[#0070f3] px-1.5 py-1 w-full rounded-[0.5rem]">
                 <h1 className='text-white text-[28px] text-center font-bold'>
-                    FiziTech Hotspot
+                    Empire-Lab Hotspot
                 </h1>
             </div>
 

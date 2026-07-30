@@ -6,10 +6,7 @@ import React, { useState, useEffect } from 'react';
 import {
   HiX,
   HiUser,
-  HiMail,
-  HiPhone,
   HiShieldCheck,
-  HiLockClosed,
   HiOfficeBuilding
 } from 'react-icons/hi';
 
@@ -116,39 +113,6 @@ export const ModifierUtilisateur = ({
             </div>
           </div>
 
-          {/* Email & Téléphone */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-700 block">
-                Adresse Email <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <HiMail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-700 block">Téléphone</label>
-              <div className="relative">
-                <HiPhone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="tel"
-                  placeholder="+243..."
-                  value={formData.telephone}
-                  onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                  className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Rôle & Statut */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
@@ -193,23 +157,6 @@ export const ModifierUtilisateur = ({
                 type="text"
                 value={formData.siteAttribue}
                 onChange={(e) => setFormData({ ...formData, siteAttribue: e.target.value })}
-                className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-              />
-            </div>
-          </div>
-
-          {/* Nouveau mot de passe (Optionnel) */}
-          <div className="space-y-1.5 pt-2 border-t border-gray-100">
-            <label className="text-xs font-semibold text-gray-700 block">
-              Nouveau mot de passe <span className="text-gray-400 font-normal">(Laisser vide pour garder l'actuel)</span>
-            </label>
-            <div className="relative">
-              <HiLockClosed className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
               />
             </div>

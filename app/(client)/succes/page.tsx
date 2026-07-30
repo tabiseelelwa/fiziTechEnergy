@@ -58,7 +58,7 @@ function ContenuSucces() {
                         Connexion en cours...
                     </p>
                     <p className='text-[14px] text-[#6b7280]'>
-                        Vous allez être connecté automatiquement au Wi-Fi FiziTech dans un instant.
+                        Vous allez être connecté automatiquement au Wi-Fi Empire-Lab dans un instant.
                     </p>
                 </div>
 

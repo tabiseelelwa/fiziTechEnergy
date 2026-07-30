@@ -21,7 +21,8 @@
     "recharts": "^3.10.0",
     "routeros-client": "^1.1.1",
     "source-map-support": "^0.5.21",
-    "ssh2": "^1.17.0"
+    "ssh2": "^1.17.0",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

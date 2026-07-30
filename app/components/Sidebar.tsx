@@ -61,7 +61,7 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">
-              HotSpot FiziTech
+              HotSpot Empire-Lab
             </h2>
             <button
               onClick={closeSidebar}
@@ -94,7 +94,7 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
 
         {/* Pied de la Sidebar */}
         <div className="pt-4 border-t border-gray-100 text-xs text-gray-400">
-          © 2026 FiziTech
+          © 2026 Empire-Lab
         </div>
       </aside>
     </>

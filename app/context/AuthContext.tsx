@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('fizitech_user');
-        const storedToken = localStorage.getItem('fizitech_token');
+        const storedUser = localStorage.getItem('Empire-Lab_user');
+        const storedToken = localStorage.getItem('Empire-Lab_token');
 
         if (storedUser && storedToken) {
             try {
@@ -48,15 +48,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = (userData: User, userToken: string) => {
         setUser(userData);
         setToken(userToken);
-        localStorage.setItem('fizitech_user', JSON.stringify(userData));
-        localStorage.setItem('fizitech_token', userToken);
+        localStorage.setItem('Empire-Lab_user', JSON.stringify(userData));
+        localStorage.setItem('Empire-Lab_token', userToken);
     };
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('fizitech_user');
-        localStorage.removeItem('fizitech_token');
+        localStorage.removeItem('Empire-Lab_user');
+        localStorage.removeItem('Empire-Lab_token');
     };
 
     return (

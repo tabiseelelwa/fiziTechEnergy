@@ -2,14 +2,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  HiUser, 
-  HiMail, 
-  HiPhone, 
-  HiShieldCheck, 
-  HiKey, 
-  HiSave, 
-  HiCheck, 
+import {
+  HiUser,
+  HiMail,
+  HiPhone,
+  HiShieldCheck,
+  HiKey,
+  HiSave,
+  HiCheck,
   HiClock,
   HiLocationMarker
 } from 'react-icons/hi';
@@ -20,7 +20,7 @@ export default function ProfilPage() {
   // État du formulaire Profil
   const [formData, setFormData] = useState({
     nom: 'Jean-Marc Ramazani',
-    email: 'jm.ramazani@fizitech.com',
+    email: 'jm.ramazani@empire-tech-lab.com',
     telephone: '+243 810 000 001',
     role: 'Administrateur Principal',
     sitePrincipal: 'Site Central - Gombe',
@@ -50,7 +50,7 @@ export default function ProfilPage() {
       </div>
 
       {/* 2. CARTE D'EN-TÊTE PROFIL */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center gap-6">
+      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm flex flex-col sm:flex-row items-center gap-6">
         <div className="relative">
           <div className="w-24 h-24 rounded-full bg-emerald-600 text-white font-extrabold text-3xl flex items-center justify-center shadow-md">
             {formData.nom.split(' ').map(n => n[0]).join('')}
@@ -84,7 +84,7 @@ export default function ProfilPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 3. FORMULAIRE INFOS PERSONNELLES (2/3 de l'écran) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-6">
             <div className="border-b border-gray-100 pb-4">
               <h3 className="text-base font-bold text-gray-900">Informations Générales</h3>
               <p className="text-xs text-gray-500">Mettez à jour vos données de contact.</p>
@@ -100,7 +100,7 @@ export default function ProfilPage() {
                       type="text"
                       value={formData.nom}
                       onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                     />
                   </div>
                 </div>
@@ -113,7 +113,7 @@ export default function ProfilPage() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                     />
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function ProfilPage() {
                       type="text"
                       value={formData.telephone}
                       onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                      className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                     />
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default function ProfilPage() {
                     type="text"
                     disabled
                     value={formData.sitePrincipal}
-                    className="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-xl text-sm text-gray-500 cursor-not-allowed"
+                    className="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-500 cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -162,7 +162,7 @@ export default function ProfilPage() {
           </div>
 
           {/* SÉCURITÉ & MOT DE PASSE */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-6">
             <div className="border-b border-gray-100 pb-4">
               <h3 className="text-base font-bold text-gray-900">Sécurité du compte</h3>
               <p className="text-xs text-gray-500">Changer votre mot de passe d'accès au HotSpot Admin.</p>
@@ -178,7 +178,7 @@ export default function ProfilPage() {
                     placeholder="••••••••"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                    className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                   />
                 </div>
               </div>
@@ -191,7 +191,7 @@ export default function ProfilPage() {
                     placeholder="••••••••"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                   />
                 </div>
 
@@ -202,7 +202,7 @@ export default function ProfilPage() {
                     placeholder="••••••••"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                   />
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function ProfilPage() {
               <div className="pt-2 text-right">
                 <button
                   type="button"
-                  className="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors shadow-sm"
+                  className="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
                 >
                   Mettre à jour le mot de passe
                 </button>
@@ -220,7 +220,7 @@ export default function ProfilPage() {
         </div>
 
         {/* 4. HISTORIQUE D'ACTIVITÉ (1/3 de l'écran) */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4 h-fit">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4 h-fit">
           <div className="border-b border-gray-100 pb-3">
             <h3 className="text-base font-bold text-gray-900">Journal d'accès</h3>
             <p className="text-xs text-gray-500">Dernières connexions enregistrées</p>

@@ -44,7 +44,7 @@ export default function LoginPage() {
         {/* En-tête */}
         <div className="text-center space-y-1">
           <h1 className="text-xl font-bold text-gray-900">
-            HotSpot FiziTech
+            HotSpot Empire-Lab
           </h1>
         </div>
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
 
         {/* Pied de page */}
         <div className="pt-2 text-center text-xs text-gray-400 border-t border-gray-100">
-          © 2026 FiziTech
+          © 2026 Empire-Lab
         </div>
       </div>
     </div>
