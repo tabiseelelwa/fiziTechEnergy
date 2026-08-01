@@ -1,8 +1,10 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable react/no-unescaped-entities */
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { modifUser } from '@/app/services/utilisateur/userService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import React, { useState } from 'react';
 import {
   HiX,
   HiUser,
@@ -11,62 +13,53 @@ import {
 } from 'react-icons/hi';
 
 export interface UtilisateurData {
-  id: number;
+  idUser: number;
   nom: string;
-  email: string;
+  prenom: string;
   telephone: string;
-  role: 'Admin' | 'Gérant' | 'Caissier';
-  siteAttribue: string;
-  statut: 'actif' | 'inactif';
-  derniereConnexion: string;
+  email: string;
+  designation: string;
+  designSite: string;
+  idRole: number;
+  idSite: number;
 }
 
 interface ModifierUtilisateurProps {
-  utilisateur: UtilisateurData | null;
+  user: UtilisateurData;
   setModalModifierUtilisateur: (value: boolean) => void;
-  onUserUpdated?: (updatedUser: UtilisateurData) => void;
 }
 
 export const ModifierUtilisateur = ({
-  utilisateur,
   setModalModifierUtilisateur,
-  onUserUpdated,
+  user
 }: ModifierUtilisateurProps) => {
   const [formData, setFormData] = useState<UtilisateurData>({
-    id: 0,
-    nom: '',
-    email: '',
-    telephone: '',
-    role: 'Caissier',
-    siteAttribue: '',
-    statut: 'actif',
-    derniereConnexion: '',
+    idUser: user.idUser,
+    nom: user.nom,
+    prenom: user.prenom,
+    telephone: user.telephone,
+    email: user.email,
+    designation: user.designation,
+    designSite: user.designSite,
+    idRole: user.idRole,
+    idSite: user.idSite,
   });
 
-  const [password, setPassword] = useState('');
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    if (utilisateur) {
-      setFormData({ ...utilisateur });
-      setPassword('');
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: (data: UtilisateurData) => modifUser(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setModalModifierUtilisateur(false);
     }
-  }, [utilisateur]);
-
+  })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (onUserUpdated) {
-      onUserUpdated(formData);
-    }
-
-    if (password) {
-      console.log(`Nouveau mot de passe défini pour l'utilisateur ${formData.id}`);
-    }
-
-    setModalModifierUtilisateur(false);
+    mutate(formData);
   };
 
-  if (!utilisateur) return null;
+  if (!user) return null;
 
   return (
     <div className="fixed inset-0 flex h-full justify-center items-center bg-black/60 z-[1000] backdrop-blur-sm p-4 overflow-y-auto">
@@ -96,10 +89,17 @@ export const ModifierUtilisateur = ({
 
         {/* FORMULAIRE */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-left">
+          {isError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
+              {axios.isAxiosError(error)
+                ? error.response?.data?.message || 'Erreur lors de la modification.'
+                : 'Une erreur inattendue est survenue.'}
+            </div>
+          )}
           {/* Nom complet */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-gray-700 block">
-              Nom complet <span className="text-red-500">*</span>
+              Nom <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <HiUser className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -112,38 +112,36 @@ export const ModifierUtilisateur = ({
               />
             </div>
           </div>
-
-          {/* Rôle & Statut */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-700 block">Rôle d'accès</label>
-              <div className="relative">
-                <HiShieldCheck className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <select
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value as UtilisateurData['role'] })
-                  }
-                  className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-                >
-                  <option value="Admin">Admin</option>
-                  <option value="Gérant">Gérant</option>
-                  <option value="Caissier">Caissier</option>
-                </select>
-              </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-gray-700 block">
+              Prénom <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <HiUser className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                required
+                value={formData.prenom}
+                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+              />
             </div>
+          </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-700 block">Statut du compte</label>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-gray-700 block">Rôle d'accès</label>
+            <div className="relative">
+              <HiShieldCheck className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
               <select
-                value={formData.statut}
+                value={formData.idRole}
                 onChange={(e) =>
-                  setFormData({ ...formData, statut: e.target.value as UtilisateurData['statut'] })
+                  setFormData({ ...formData, idRole: Number(e.target.value) })
                 }
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
               >
-                <option value="actif">Actif</option>
-                <option value="inactif">Inactif</option>
+                <option value={1}>Admin</option>
+                <option value={2}>Gérant</option>
+                <option value={3}>Caissier</option>
               </select>
             </div>
           </div>
@@ -153,12 +151,17 @@ export const ModifierUtilisateur = ({
             <label className="text-xs font-semibold text-gray-700 block">Site Affecté</label>
             <div className="relative">
               <HiOfficeBuilding className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                value={formData.siteAttribue}
-                onChange={(e) => setFormData({ ...formData, siteAttribue: e.target.value })}
-                className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
-              />
+              <select
+                value={formData.idSite}
+                onChange={(e) =>
+                  setFormData({ ...formData, idSite: Number(e.target.value) })
+                }
+                className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+              >
+                <option value={1}>Durba</option>
+                <option value={2}>Tshikapa</option>
+                <option value={3}>Misisi</option>
+              </select>
             </div>
           </div>
 
@@ -166,6 +169,7 @@ export const ModifierUtilisateur = ({
           <div className="pt-4 flex items-center justify-end gap-3 border-t border-gray-100 mt-6">
             <button
               type="button"
+              disabled={isPending}
               onClick={() => setModalModifierUtilisateur(false)}
               className="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors"
             >
@@ -173,6 +177,7 @@ export const ModifierUtilisateur = ({
             </button>
             <button
               type="submit"
+              disabled={isPending}
               className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm transition-colors shadow-sm"
             >
               Enregistrer

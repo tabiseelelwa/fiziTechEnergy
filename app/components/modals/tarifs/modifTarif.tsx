@@ -23,7 +23,6 @@ export interface TarifData {
 interface ModifierTarifProps {
     setModalModifierTarif: (value: boolean) => void;
     tarif: TarifData;
-    onTarifUpdated?: (updatedTarif: TarifData) => void;
 }
 
 export const ModifierTarif = ({
@@ -36,9 +35,10 @@ export const ModifierTarif = ({
         dureeMinutes: tarif.dureeMinutes,
         prixFC: tarif.prixFC,
     });
+
     const queryClient = useQueryClient();
 
-    // Mutation React Query pour la suppression
+    // Mutation React Query pour la Modification
     const { mutate, isPending, isError, error } = useMutation({
         mutationFn: (data: TarifData) => updateTarif(data),
         onSuccess: () => {

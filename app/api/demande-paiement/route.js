@@ -99,12 +99,7 @@ export async function POST(request) {
         // =========================================================================
 
         try {
-            // Extraction de l'adresse IP pure sans http:// ni rien d'autre
-            const rawHost = (process.env.ROUTER_HOST || '10.5.5.1')
-                .replace('http://', '')
-                .replace('https://', '')
-                .split('/')[0]
-                .split(':')[0];
+            const rawHost = (process.env.ROUTER_HOST || '10.5.5.1');
 
             const client = new RouterOSClient({
                 host: rawHost,
