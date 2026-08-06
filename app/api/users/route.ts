@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { getConnection } from "@/app/lib/db";
 import { RowDataPacket } from "mysql2/promise";
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
 
     const pass = "12345";
 
-    const [result]: any = await getConnection().execute(
+    const [result] = await getConnection().execute(
       `INSERT INTO user(nom, prenom, telephone, email, pass, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?, ?)`,
       [nom, prenom, telephone, email, pass, idRole, idSite],
     );

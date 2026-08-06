@@ -4,6 +4,10 @@
 import { AjoutSite } from '@/app/components/modals/sites/ajoutSite';
 import { ModifierSite } from '@/app/components/modals/sites/modifSite';
 import { SupprimerSite } from '@/app/components/modals/sites/supprSite';
+// import { SupprimerSite } from '@/app/components/modals/sites/supprSite';
+// import { SupprimerSite } from '@/app/components/modals/sites/supprSite';
+import { getSites, SiteData } from '@/app/services/sites/sitesService';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
   HiPlus,
@@ -12,73 +16,28 @@ import {
   HiServer,
   HiUsers,
   HiLocationMarker,
-  HiDotsVertical,
   HiCheckCircle,
-  HiExclamationCircle
+  HiExclamationCircle,
+  HiRefresh
 } from 'react-icons/hi';
-
-export interface SiteData {
-  id: number;
-  nom: string;
-  localisation: string;
-  ipAddress: string;
-  equipements: string;
-  statut: 'en_ligne' | 'hors_ligne';
-  clientsActifs: number;
-  consommation: string;
-}
 
 export default function SitesPage() {
   const [modalAjoutSite, setModalAjoutSite] = useState<boolean>(false);
   const [modalModifSite, setModalModifSite] = useState<boolean>(false);
-  const [siteAEditer, setSiteAEditer] = useState<SiteData | null>(null);
-
-  const [sites, setSites] = useState<SiteData[]>([
-    {
-      id: 1,
-      nom: 'Site Central - Gombe',
-      localisation: 'Avenue du Commerce, Kinshasa',
-      ipAddress: '192.168.88.1',
-      equipements: 'MikroTik RB1100AHx4 + Starlink Business',
-      statut: 'en_ligne',
-      clientsActifs: 42,
-      consommation: '18.4 Mbps',
-    },
-    {
-      id: 2,
-      nom: 'Agence Victoire',
-      localisation: 'Place Victoire, Kalamu',
-      ipAddress: '192.168.89.1',
-      equipements: 'MikroTik hAP ac³',
-      statut: 'en_ligne',
-      clientsActifs: 28,
-      consommation: '9.1 Mbps',
-    },
-    {
-      id: 3,
-      nom: 'Point Kintambo',
-      localisation: 'Magasin, Kintambo',
-      ipAddress: '192.168.90.1',
-      equipements: 'MikroTik hAP mini',
-      statut: 'hors_ligne',
-      clientsActifs: 0,
-      consommation: '0 Mbps',
-    },
-  ]);
-
-  // Ajouter l'état dans SitesPage
   const [modalSupprSite, setModalSupprSite] = useState<boolean>(false);
+
+  const [siteAEditer, setSiteAEditer] = useState<SiteData | null>(null);
   const [siteASupprimer, setSiteASupprimer] = useState<SiteData | null>(null);
+
+  const { data: sites = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['sites'],
+    queryFn: getSites
+  })
 
   // Fonction déclenchée lors du clic sur l'icône Corbeille
   const handleDeleteClick = (site: SiteData) => {
     setSiteASupprimer(site);
     setModalSupprSite(true);
-  };
-
-  // Fonction d'exécution de la suppression
-  const handleSiteDeleted = (siteId: number) => {
-    setSites((prev) => prev.filter((s) => s.id !== siteId));
   };
 
   // Fonction pour déclencher la modification au clic
@@ -87,7 +46,8 @@ export default function SitesPage() {
     setModalModifSite(true);
   };
 
-  const totalClients = sites.reduce((acc, s) => acc + s.clientsActifs, 0);
+  // const totalClients = sites.reduce((acc, s) => acc + s.clientsActifs, 0);
+  const totalClients = 6
   const sitesEnLigne = sites.filter(s => s.statut === 'en_ligne').length;
 
   return (
@@ -96,7 +56,6 @@ export default function SitesPage() {
       {modalAjoutSite && (
         <AjoutSite
           setModalAjoutSite={setModalAjoutSite}
-        // onSiteAdded={handleSiteAdded}
         />
       )}
 
@@ -105,7 +64,6 @@ export default function SitesPage() {
         <ModifierSite
           site={siteAEditer}
           setModalModifierSite={setModalModifSite}
-        // onSiteUpdated={handleSiteUpdated}
         />
       )}
 
@@ -114,7 +72,6 @@ export default function SitesPage() {
         <SupprimerSite
           site={siteASupprimer}
           setModalSupprimerSite={setModalSupprSite}
-          handleSiteDeleted={handleSiteDeleted}
         />
       )}
 
@@ -135,6 +92,28 @@ export default function SitesPage() {
           <span>Ajouter un Site</span>
         </button>
       </div>
+
+      {isLoading && (
+        <div className="flex items-center justify-center p-12 bg-white rounded-2xl border border-gray-100">
+          <div className="flex items-center gap-3 text-emerald-600 font-medium text-sm">
+            <span className="w-5 h-5 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin" />
+            <span>Chargement des sites depuis la base de données...</span>
+          </div>
+        </div>
+      )}
+
+
+      {isError && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between text-xs text-red-600 font-medium">
+          <span>Impossible de charger la liste des sites.</span>
+          <button
+            onClick={() => refetch()}
+            className="flex items-center gap-1 text-red-700 hover:underline font-bold"
+          >
+            <HiRefresh className="w-4 h-4" /> Réessayer
+          </button>
+        </div>
+      )}
 
       {/* STATISTIQUES RAPIDES */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -170,63 +149,62 @@ export default function SitesPage() {
       </div>
 
       {/* CARTES DES SITES (Aperçu temps réel) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {sites.map((site) => (
           <div
-            key={site.id}
+            key={site.idSite}
             className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4 hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-gray-900">{site.nom}</h3>
-                  <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${site.statut === 'en_ligne'
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-red-50 text-red-600 border border-red-200'
-                    }`}>
-                    {site.statut === 'en_ligne' ? (
-                      <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        En ligne
-                      </>
-                    ) : (
-                      <>
-                        <HiExclamationCircle className="w-3.5 h-3.5" />
-                        Hors ligne
-                      </>
-                    )}
-                  </span>
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-lg font-bold text-gray-900">{site.designSite}</h3>
+
                 </div>
                 <p className="text-xs text-gray-500 flex items-center gap-1">
                   <HiLocationMarker className="w-4 h-4 text-gray-400" />
                   {site.localisation}
                 </p>
               </div>
-
-              <button className="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
-                <HiDotsVertical className="w-5 h-5" />
-              </button>
+              <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${site.statut === 'en_ligne'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-red-50 text-red-600 border border-red-200'
+                }`}>
+                {site.statut === 'en_ligne' ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    En ligne
+                  </>
+                ) : (
+                  <>
+                    <HiExclamationCircle className="w-3.5 h-3.5" />
+                    Hors ligne
+                  </>
+                )}
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl text-xs">
               <div>
                 <span className="text-gray-400 block">Adresse RouterOS</span>
-                <span className="font-mono font-semibold text-gray-800">{site.ipAddress}</span>
+                <span className="font-mono font-semibold text-gray-800">{site.equipement}</span>
               </div>
               <div>
                 <span className="text-gray-400 block">Bande passante actuelle</span>
-                <span className="font-semibold text-gray-800">{site.consommation}</span>
+                <span className="font-semibold text-gray-800">{"18 Mbps"}</span>
+                {/* <span className="font-semibold text-gray-800">{site.consommation}</span> */}
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2 text-xs text-gray-500 border-t border-gray-100">
               <span className="flex items-center gap-1">
                 <HiServer className="w-4 h-4 text-gray-400" />
-                {site.equipements}
+                {site.equipement}
               </span>
               <span className="flex items-center gap-1 font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
                 <HiUsers className="w-4 h-4" />
-                {site.clientsActifs} clients
+                {/* {site.clientsActifs} clients */}
+                {58} clients
               </span>
             </div>
           </div>
@@ -254,17 +232,18 @@ export default function SitesPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {sites.map((site) => (
-                <tr key={site.id} className="hover:bg-gray-50/50 transition-colors">
+                <tr key={site.idSite} className="hover:bg-gray-50/50 transition-colors">
                   <td className="py-3.5 px-4">
-                    <div className="font-semibold text-gray-900">{site.nom}</div>
+                    <div className="font-semibold text-gray-900">{site.designSite}</div>
                     <div className="text-xs text-gray-400">{site.localisation}</div>
                   </td>
                   <td className="py-3.5 px-4 font-mono text-xs text-gray-800">
-                    {site.ipAddress}
+                    {site.equipement}
                   </td>
-                  <td className="py-3.5 px-4 text-xs">{site.equipements}</td>
+                  <td className="py-3.5 px-4 text-xs">{'198.162.1.2/26'}</td>
+                  {/* <td className="py-3.5 px-4 text-xs">{site.equipements}</td> */}
                   <td className="py-3.5 px-4 font-bold text-gray-900">
-                    {site.clientsActifs}
+                    {58}
                   </td>
                   <td className="py-3.5 px-4">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${site.statut === 'en_ligne'
@@ -287,7 +266,7 @@ export default function SitesPage() {
                       <button
                         aria-label="Supprimer"
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        onClick={() => handleDeleteClick(site)}
+                      onClick={() => handleDeleteClick(site)}
                       >
                         <HiTrash className="w-4 h-4" />
                       </button>

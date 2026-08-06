@@ -11,7 +11,6 @@ import {
     HiOfficeBuilding,
     HiUserAdd,
 } from "react-icons/hi";
-import { UtilisateurData } from "./modifUser";
 import {
     createUser,
     UserPayload,
@@ -21,7 +20,6 @@ import axios from "axios";
 
 interface AjouterUtilisateurProps {
     setModalAjouterUtilisateur: (value: boolean) => void;
-    onUserAdded: (newUser: UtilisateurData) => void;
 }
 
 export const AjouterUtilisateur = ({
@@ -210,7 +208,7 @@ export const AjouterUtilisateur = ({
                                 }
                                 className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                             >
-                                <option value="1">Durbas</option>
+                                <option value="1">Durba</option>
                                 <option value="2">TShikapa</option>
                                 <option value="3">Misisi</option>
                             </select>

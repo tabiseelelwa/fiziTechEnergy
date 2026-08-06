@@ -1,41 +1,45 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client';
 
+import { supprSite } from '@/app/services/sites/sitesService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { HiExclamation, HiX, HiTrash } from 'react-icons/hi';
 
 interface SiteData {
-  id: number;
-  nom: string;
+  idSite: number;
+  designSite: string;
   localisation: string;
-  ipAddress: string;
-  equipements: string;
-  statut: 'en_ligne' | 'hors_ligne';
+  equipement: string;
+  statut: string;
+  idVille: number
 }
 
 interface SupprimerSiteProps {
-  site: SiteData | null;
+  site: SiteData;
   setModalSupprimerSite: (value: boolean) => void;
-  handleSiteDeleted?: (siteId: number) => void;
 }
 
 export const SupprimerSite = ({
   site,
   setModalSupprimerSite,
-  handleSiteDeleted,
 }: SupprimerSiteProps) => {
-  if (!site) return null;
 
-  const handleConfirmDelete = () => {
-    if (handleSiteDeleted) {
-      handleSiteDeleted(site.id);
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: () => supprSite(site.idSite),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sites'] });
+      setModalSupprimerSite(false);
     }
-    setModalSupprimerSite(false);
-  };
+  })
+
 
   return (
     <div className="fixed inset-0 flex h-full justify-center items-center bg-black/60 z-[1000] backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-white w-full max-w-[440px] rounded-2xl shadow-xl border border-gray-100 overflow-hidden text-gray-800 animate-[fadeModalIn_250ms_ease-out]">
-        
+
         {/* BOUTON FERMER EN HAUT À DROITE */}
         <div className="flex justify-end p-4 pb-0">
           <button
@@ -55,6 +59,14 @@ export const SupprimerSite = ({
             <HiExclamation className="w-8 h-8" />
           </div>
 
+          {isError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-left text-xs font-medium text-red-600">
+              {axios.isAxiosError(error)
+                ? error.response?.data?.message || 'Erreur lors de la suppression.'
+                : 'Une erreur inattendue est survenue.'}
+            </div>
+          )}
+
           {/* Titre et message */}
           <div className="space-y-1.5">
             <h3 className="text-lg font-bold text-gray-900">
@@ -62,17 +74,13 @@ export const SupprimerSite = ({
             </h3>
             <p className="text-xs text-gray-500 leading-relaxed">
               Êtes-vous sûr de vouloir supprimer le site{' '}
-              <span className="font-semibold text-gray-800">"{site.nom}"</span> ? 
+              <span className="font-semibold text-gray-800">"{site.designSite}"</span> ?
               Cette action est irréversible et retirera la passerelle de votre tableau de bord.
             </p>
           </div>
 
           {/* Rappel technique du site */}
           <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-left space-y-1 text-xs">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Adresse IP :</span>
-              <span className="font-mono text-gray-700 font-semibold">{site.ipAddress}</span>
-            </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Localisation :</span>
               <span className="text-gray-700 truncate max-w-[200px]">{site.localisation}</span>
@@ -84,13 +92,15 @@ export const SupprimerSite = ({
             <button
               type="button"
               onClick={() => setModalSupprimerSite(false)}
+              disabled={isPending}
               className="w-1/2 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors"
             >
               Annuler
             </button>
             <button
               type="button"
-              onClick={handleConfirmDelete}
+              onClick={() => mutate()}
+              disabled={isPending}
               className="w-1/2 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium text-sm transition-colors shadow-sm"
             >
               <HiTrash className="w-4 h-4" />

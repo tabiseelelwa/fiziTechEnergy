@@ -3,11 +3,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type Role = 'vendeur' | 'admin1' | 'admin_sup';
+export type Role = 'Admin' | 'Gerant' | 'Vendeur';
 
 // 1. Définition du type de l'utilisateur
 export interface User {
-    id: number | string;
+    id: number;
     name: string;
     role: Role;
     siteId?: string;

@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery} from '@tanstack/react-query';
 import {
   HiPlus,
   HiPencil,
@@ -23,7 +23,7 @@ import { SupprimerUtilisateur } from '@/app/components/modals/utilisateurs/suppr
 import { AjouterUtilisateur } from '@/app/components/modals/utilisateurs/ajoutUser';
 
 export default function UtilisateursPage() {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('tous');
@@ -54,9 +54,9 @@ export default function UtilisateursPage() {
   };
 
   // Callback en cas de mise à jour / suppression / ajout réussi
-  const handleSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['users'] });
-  };
+  // const handleSuccess = () => {
+  //   queryClient.invalidateQueries({ queryKey: ['users'] });
+  // };
 
   // Filtrage des utilisateurs
   const filteredUtilisateurs = utilisateurs.filter((u) => {
@@ -79,7 +79,6 @@ export default function UtilisateursPage() {
       {modalAjoutUser && (
         <AjouterUtilisateur
           setModalAjouterUtilisateur={setModalAjoutUser}
-          onUserAdded={handleSuccess}
         />
       )}
 
