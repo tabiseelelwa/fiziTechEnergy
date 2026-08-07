@@ -31,7 +31,7 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
         onClick={toggleSidebar}
         aria-label="Ouvrir le menu"
         className={`
-          md:hidden fixed top-4 right-4 z-50 p-2 rounded-lg bg-white text-gray-800 shadow-md border border-gray-200
+          md:hidden fixed top-2 right-4 z-50 p-2 rounded-lg bg-white text-gray-800 shadow-md border border-gray-200
           hover:bg-gray-50 focus:outline-none transition-all duration-300 ease-in-out
         ${showToggle && !isOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'

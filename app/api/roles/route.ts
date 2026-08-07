@@ -9,7 +9,7 @@ export async function GET(){
         )
         return NextResponse.json({roles, status: 200})
     } catch (error: unknown) {
-        console.error('Erreur GET /api/role:', error);
+        console.error('Erreur GET', error);
         return NextResponse.json(
       { message: 'Erreur lors de la récupération des roles.' },
       { status: 500 }
