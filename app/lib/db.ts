@@ -1,8 +1,8 @@
 import mysql from 'mysql2/promise';
 
-let pool;
+let pool: mysql.Pool;
 
-export const getConnection = () => {
+export const getConnection = (): mysql.Pool => {
     if (!pool) {
         pool = mysql.createPool({
             host: process.env.DB_HOST,
