@@ -29,7 +29,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Recherche de l'utilisateur dans la table BDD
     const [rows] = await getConnection().execute<UserRow[]>(
       `SELECT 
         u.idUser, 
@@ -87,10 +86,8 @@ export async function POST(request: Request) {
       designRole: user.designRole,
     };
 
-    // Génération du token JWT
     const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "8h" });
 
-    // Création de la réponse avec stockage sécurisé dans un Cookie HTTP-Only
     const response = NextResponse.json(
       {
         message: "Connexion réussie",
@@ -105,14 +102,21 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 8, // 8 heures
+      maxAge: 60 * 60 * 8,
     });
 
     return response;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Erreur API Login:", error);
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Erreur inconnue";
+
     return NextResponse.json(
-      { message: "Erreur interne du serveur" },
+      {
+        message: "Erreur interne du serveur",
+        details: errorMessage,
+      },
       { status: 500 },
     );
   }
