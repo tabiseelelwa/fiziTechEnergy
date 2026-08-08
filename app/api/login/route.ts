@@ -1,0 +1,119 @@
+import { NextResponse } from "next/server";
+import { getConnection } from "@/app/lib/db";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { RowDataPacket } from "mysql2/promise";
+
+const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
+
+interface UserRow extends RowDataPacket {
+  idUser: number;
+  nom: string;
+  prenom: string;
+  email: string;
+  pass: string;
+  idSite: number;
+  idRole: number;
+  designSite: string;
+  designRole: string;
+}
+
+export async function POST(request: Request) {
+  try {
+    const { email, pass } = await request.json();
+
+    if (!email || !pass) {
+      return NextResponse.json(
+        { message: "Veuillez remplir tous les champs." },
+        { status: 400 },
+      );
+    }
+
+    // Recherche de l'utilisateur dans la table BDD
+    const [rows] = await getConnection().execute<UserRow[]>(
+      `SELECT 
+        u.idUser, 
+        u.nom, 
+        u.prenom, 
+        u.Telephone as telephone, 
+        u.email, 
+        u.idSite, 
+        u.pass, 
+        u.idRole, 
+        s.designSite, 
+        r.designRole 
+      FROM user u
+      LEFT JOIN site s ON u.idSite = s.idSite
+      LEFT JOIN role r ON u.idRole = r.idRole
+      WHERE u.email = ?`,
+      [email],
+    );
+
+    if (rows.length === 0) {
+      return NextResponse.json(
+        { message: "Identifiants incorrects." },
+        { status: 401 },
+      );
+    }
+
+    const user = rows[0];
+
+    console.log("=== DIAGNOSTIC LOGIN ===");
+    console.log("Email saisi :", email);
+    console.log("Email BDD :", user.email);
+    console.log("Mot de passe saisi :", pass);
+    console.log("Hash BDD :", user.pass);
+    console.log("Longueur du Hash BDD :", user.pass?.length);
+
+    const isPasswordValid = await bcrypt.compare(pass, user.pass);
+    console.log("Résultat bcrypt.compare :", isPasswordValid);
+    console.log("========================");
+
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { message: "Identifiants incorrects." },
+        { status: 401 },
+      );
+    }
+
+    const payloadUser = {
+      idUser: user.idUser,
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      idSite: user.idSite,
+      idRole: user.idRole,
+      designSite: user.designSite,
+      designRole: user.designRole,
+    };
+
+    // Génération du token JWT
+    const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "8h" });
+
+    // Création de la réponse avec stockage sécurisé dans un Cookie HTTP-Only
+    const response = NextResponse.json(
+      {
+        message: "Connexion réussie",
+        user: payloadUser,
+        token,
+      },
+      { status: 200 },
+    );
+
+    response.cookies.set("Empire-Lab_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 8, // 8 heures
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Erreur API Login:", error);
+    return NextResponse.json(
+      { message: "Erreur interne du serveur" },
+      { status: 500 },
+    );
+  }
+}

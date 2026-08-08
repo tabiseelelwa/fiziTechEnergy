@@ -32,7 +32,7 @@ export const AjouterUtilisateur = ({
         telephone: "",
         email: "",
         idSite: 1,
-        idRole: 3,
+        idRole: 1,
     });
 
     const { mutate, isPending, isError, error } = useMutation({
@@ -186,9 +186,9 @@ export const AjouterUtilisateur = ({
                                     }
                                     className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                                 >
-                                    <option value="1">Admin</option>
-                                    <option value="2">Gérant</option>
-                                    <option value="3">Caissier</option>
+                                    <option value={1}>Admin</option>
+                                    <option value={2}>Gérant</option>
+                                    <option value={3}>Caissier</option>
                                 </select>
                             </div>
                         </div>
@@ -208,9 +208,9 @@ export const AjouterUtilisateur = ({
                                 }
                                 className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                             >
-                                <option value="1">Durba</option>
-                                <option value="2">TShikapa</option>
-                                <option value="3">Misisi</option>
+                                <option value={1}>Durba</option>
+                                <option value={2}>TShikapa</option>
+                                <option value={3}>Misisi</option>
                             </select>
                         </div>
                     </div>

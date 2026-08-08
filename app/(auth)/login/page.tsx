@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Role, useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/app/context/AuthContext';
 import { PulseLoader } from 'react-spinners';
+import axios from 'axios';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,17 +21,30 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      if (!username || !password) {
+      if (!email || !pass) {
         throw new Error('Veuillez remplir tous les champs.');
       }
 
-      const mockUserData = { id: 1, name: username, role: 'admin1' as Role };
-      const mockToken = 'eyJhbGciOiJIUzI1Ni...';
+      const response = await axios.post('/api/login', {
+        email,
+        pass,
+      });
 
-      login(mockUserData, mockToken);
+      const { user, token } = response.data;
+
+      // Enregistrement de l'utilisateur dans le contexte
+      login(user, token);
+
+      // Redirection vers le dashboard
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Identifiants incorrects.');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Identifiants incorrects.');
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Une erreur est survenue lors de la connexion.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -39,12 +52,12 @@ export default function LoginPage() {
 
   return (
     <div className="w-full flex h-full items-center justify-center bg-gray-50 p-4 font-sans overflow-y-auto">
-      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm my-auto">
+      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm my-auto space-y-4">
 
         {/* En-tête */}
         <div className="text-center space-y-1">
           <h1 className="text-xl font-bold text-gray-900">
-            HotSpot Empire-Lab
+            HotSpot Empire
           </h1>
         </div>
 
@@ -59,13 +72,13 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-1">
             <label className="text-xs font-medium text-gray-700">
-              Identifiant
+              Adresse e-mail
             </label>
             <input
-              type="text"
-              placeholder="Nom d'utilisateur"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              placeholder="ex: admin@empirelab.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
@@ -78,8 +91,8 @@ export default function LoginPage() {
             <input
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
               required
               className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
@@ -88,7 +101,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-sm rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center"
           >
             {isSubmitting ? (
               <PulseLoader color="#ffffff" size={8} />

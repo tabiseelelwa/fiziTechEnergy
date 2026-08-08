@@ -18,7 +18,7 @@ export interface UtilisateurData {
   prenom: string;
   telephone: string;
   email: string;
-  designation: string;
+  designRole: string;
   designSite: string;
   idRole: number;
   idSite: number;
@@ -39,7 +39,7 @@ export const ModifierUtilisateur = ({
     prenom: user.prenom,
     telephone: user.telephone,
     email: user.email,
-    designation: user.designation,
+    designRole: user.designRole,
     designSite: user.designSite,
     idRole: user.idRole,
     idSite: user.idSite,

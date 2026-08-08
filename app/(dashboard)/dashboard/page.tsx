@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { VendeurPage } from '@/app/components/modals/VenteTickets';
 import {
   BsPlusCircleFill,
@@ -10,7 +9,6 @@ import {
   BsTicketPerforated,
   BsCheckCircle,
   BsSearch,
-  BsBoxArrowRight,
   BsBarChartLine
 } from 'react-icons/bs';
 import {
@@ -49,7 +47,6 @@ const RECENT_TRANSACTIONS = [
 ];
 
 export default function VendeurDashboard() {
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [modalVenteTicket, setModalVenteTicket] = useState(false);
 
@@ -75,14 +72,6 @@ export default function VendeurDashboard() {
           >
             <BsPlusCircleFill size={18} />
             Nouvelle Vente
-          </button>
-
-          <button
-            onClick={() => router.push('/login')}
-            className="p-2.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-xl transition"
-            title="Déconnexion"
-          >
-            <BsBoxArrowRight size={20} />
           </button>
         </div>
       </div>

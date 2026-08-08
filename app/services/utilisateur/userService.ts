@@ -18,7 +18,7 @@ export interface UserData {
   telephone: string;
   email: string;
   designSite: string;
-  designation: string;
+  designRole: string;
   idSite: number;
   idRole: number;
 }

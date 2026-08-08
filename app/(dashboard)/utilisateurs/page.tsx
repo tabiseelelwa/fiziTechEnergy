@@ -15,7 +15,6 @@ import {
 } from 'react-icons/hi';
 import { BeatLoader } from 'react-spinners';
 
-// Import du service qu'on a créé précédemment
 import { getUsers, UserData } from '@/app/services/utilisateur/userService';
 
 import { ModifierUtilisateur } from '@/app/components/modals/utilisateurs/modifUser';
@@ -23,7 +22,6 @@ import { SupprimerUtilisateur } from '@/app/components/modals/utilisateurs/suppr
 import { AjouterUtilisateur } from '@/app/components/modals/utilisateurs/ajoutUser';
 
 export default function UtilisateursPage() {
-  // const queryClient = useQueryClient();
 
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('tous');
@@ -36,7 +34,7 @@ export default function UtilisateursPage() {
   const [modalSupprUser, setModalSupprUser] = useState<boolean>(false);
   const [userASupprimer, setUserASupprimer] = useState<UserData | null>(null);
 
-  // 1. CHARGEMENT DES DONNÉES VIA REACT QUERY
+  // 1. CHARGEMENT DES DONNÉES VIA REACT-QUERY
   const { data: utilisateurs = [], isLoading, isError, error } = useQuery<UserData[]>({
     queryKey: ['users'],
     queryFn: getUsers,
@@ -53,11 +51,6 @@ export default function UtilisateursPage() {
     setModalSupprUser(true);
   };
 
-  // Callback en cas de mise à jour / suppression / ajout réussi
-  // const handleSuccess = () => {
-  //   queryClient.invalidateQueries({ queryKey: ['users'] });
-  // };
-
   // Filtrage des utilisateurs
   const filteredUtilisateurs = utilisateurs.filter((u) => {
     const matchesSearch =
@@ -67,7 +60,7 @@ export default function UtilisateursPage() {
 
     const matchesRole =
       roleFilter === 'tous' ||
-      u.designation?.toLowerCase() === roleFilter.toLowerCase();
+      u.designRole?.toLowerCase() === roleFilter.toLowerCase();
 
     return matchesSearch && matchesRole;
   });
@@ -132,7 +125,7 @@ export default function UtilisateursPage() {
           <div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Administrateurs</p>
             <p className="text-2xl font-extrabold text-purple-600 mt-1">
-              {utilisateurs.filter((u) => u.designation === 'Admin').length}
+              {utilisateurs.filter((u) => u.designRole === 'Admin').length}
             </p>
           </div>
           <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
@@ -223,13 +216,13 @@ export default function UtilisateursPage() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${u.designation === 'Admin'
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${u.designRole === 'Admin'
                         ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                        : u.designation === 'Gérant'
+                        : u.designRole === 'Gérant'
                           ? 'bg-blue-50 text-blue-700 border border-blue-200'
                           : 'bg-gray-100 text-gray-700 border border-gray-200'
                         }`}>
-                        {u.designation || 'Non attribué'}
+                        {u.designRole || 'Non attribué'}
                       </span>
                     </td>
 
