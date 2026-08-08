@@ -39,11 +39,12 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Identifiants incorrects.');
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Une erreur est survenue lors de la connexion.');
+        const serverDetails = err.response?.data?.details;
+        setError(
+          serverDetails
+            ? `Erreur: ${serverDetails}`
+            : err.response?.data?.message || 'Erreur lors de la connexion.'
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -70,6 +71,8 @@ export default function LoginPage() {
 
         {/* Formulaire */}
         <form onSubmit={handleLogin} className="space-y-4">
+
+
           <div className="space-y-1">
             <label className="text-xs font-medium text-gray-700">
               Adresse e-mail
