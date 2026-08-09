@@ -54,7 +54,7 @@ function FormulaireAchat() {
             }
 
             // Redirection vers la page succès avec les paramètres du ticket
-            router.push(`/succes`);
+            router.push(`/client/succes`);
 
         } catch (err: any) {
             setError(err.message);
@@ -67,7 +67,7 @@ function FormulaireAchat() {
         <div className='min-h-screen max-w-[500px] text-[#1f2937] mx-auto flex flex-col items-center gap-2 justify-center px-4'>
             <div className="w-full flex flex-col gap-4">
                 {/* Bouton Retour */}
-                <div className="flex items-center gap-2 text-[16px] font-semibold text-[#2563eb] cursor-pointer" onClick={() => router.push('/')}>
+                <div className="flex items-center gap-2 text-[16px] font-semibold text-[#2563eb] cursor-pointer" onClick={() => router.push('/client')}>
                     <BsArrowLeft />
                     <div>
                         Modifier le forfait

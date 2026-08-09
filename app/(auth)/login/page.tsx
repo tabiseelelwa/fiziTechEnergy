@@ -36,7 +36,7 @@ export default function LoginPage() {
       login(user, token);
 
       // Redirection vers le dashboard
-      router.push('/dashboard');
+      router.push('/');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const serverDetails = err.response?.data?.details;

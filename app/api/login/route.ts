@@ -57,16 +57,7 @@ export async function POST(request: Request) {
 
     const user = rows[0];
 
-    console.log("=== DIAGNOSTIC LOGIN ===");
-    console.log("Email saisi :", email);
-    console.log("Email BDD :", user.email);
-    console.log("Mot de passe saisi :", pass);
-    console.log("Hash BDD :", user.pass);
-    console.log("Longueur du Hash BDD :", user.pass?.length);
-
     const isPasswordValid = await bcrypt.compare(pass, user.pass);
-    console.log("Résultat bcrypt.compare :", isPasswordValid);
-    console.log("========================");
 
     if (!isPasswordValid) {
       return NextResponse.json(

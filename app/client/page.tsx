@@ -7,11 +7,11 @@ export default function PortailCaptifEmpireLab() {
 
     // Redirection directe vers la page de paiement en passant l'ID du forfait
     const selectionnerForfait = (idForfait: number) => {
-        router.push(`/achat?forfait=${idForfait}`);
+        router.push(`/client/achat?forfait=${idForfait}`);
     };
 
     const verifForfait = () => {
-        router.push('/ticket')
+        router.push('/client/ticket')
     }
 
     return (

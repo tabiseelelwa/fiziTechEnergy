@@ -17,7 +17,7 @@ export default function Sidebar({ showToggle = true }: SidebarProps) {
   const closeSidebar = () => setIsOpen(false);
 
   const navItems = [
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Dashboard', href: '/' },
     { label: 'Tarifs', href: '/tarifs' },
     { label: 'Sites', href: '/sites' },
     { label: 'Utilisateurs', href: '/utilisateurs' },

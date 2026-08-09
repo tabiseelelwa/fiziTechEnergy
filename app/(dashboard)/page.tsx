@@ -68,7 +68,7 @@ export default function VendeurDashboard() {
           <button
             onClick={() => setModalVenteTicket(true)}
             className="flex-1 sm:flex-none flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 
-                       hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm transition"
+                       hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-lg shadow-sm transition"
           >
             <BsPlusCircleFill size={18} />
             Nouvelle Vente
@@ -78,7 +78,7 @@ export default function VendeurDashboard() {
 
       {/* ---------------- CARTES STATISTIQUES ---------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Encaissé (Aujourd'hui)</p>
             <h3 className="text-2xl font-extrabold text-slate-900">248 000 FC</h3>
@@ -86,12 +86,12 @@ export default function VendeurDashboard() {
               +12% vs hier
             </span>
           </div>
-          <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
+          <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl">
             <BsCashCoin size={28} />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tickets Générés</p>
             <h3 className="text-2xl font-extrabold text-slate-900">68 Tickets</h3>

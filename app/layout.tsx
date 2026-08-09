@@ -25,7 +25,6 @@ export default function RootLayout({
       lang="fr"
       className={`${poppins.variable} h-full antialiased`}
     >
-      {/* On utilise min-h-screen et h-full pour garantir la flexibilité sur tous les écrans */}
       <body className="font-poppins h-full min-h-screen w-full bg-gray-50 text-gray-900">
         <Providers>
           <AuthProvider>
