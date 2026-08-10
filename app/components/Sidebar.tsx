@@ -41,7 +41,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">
-              HotSpot Empire-Lab
+              Empire Hotspot 
             </h2>
             <button
               onClick={onClose}
@@ -75,7 +75,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Pied de la Sidebar */}
         <div className="pt-4 border-t border-gray-100 text-xs text-gray-400">
-          © 2026 Empire-Lab
+          © 2026 Empire hotspot
         </div>
       </aside>
     </>

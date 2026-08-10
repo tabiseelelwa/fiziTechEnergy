@@ -38,9 +38,17 @@ export default function TarifsPage() {
   // Formatage de l'affichage des minutes en Heures / Minutes
   const formatDuree = (minutes: number) => {
     if (minutes < 60) return `${minutes} Min`;
-    const heures = Math.floor(minutes / 60);
+
+    const jours = Math.floor(minutes / 1440);
+    const heures = Math.floor((minutes % 1440) / 60);
     const minsRestantes = minutes % 60;
-    return minsRestantes > 0 ? `${heures}h ${minsRestantes}m` : `${heures} Heures`;
+
+    const parts: string[] = []
+    if (jours > 0) parts.push(`${jours} jour${jours > 1 ? 's' : ""}`);
+    if (heures > 0) parts.push(`${heures} heure${heures > 1 ? 's' : ""}`);
+    if (minsRestantes > 0) parts.push(`${minsRestantes} m`);
+
+    return parts.join(' ');
   };
 
   return (
