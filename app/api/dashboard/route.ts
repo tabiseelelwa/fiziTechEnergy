@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // Extraction des filtres depuis l'URL
     const dateDebut = searchParams.get("dateDebut");
     const dateFin = searchParams.get("dateFin");
     const userEmail = searchParams.get("userEmail");
@@ -16,7 +15,6 @@ export async function GET(request: NextRequest) {
 
     const pool = getConnection();
 
-    // 1. Construction dynamique des clauses WHERE et des paramètres SQL
     const whereConditions: string[] = ["1=1"];
     const queryParams: any[] = [];
 
@@ -47,66 +45,45 @@ export async function GET(request: NextRequest) {
 
     const whereClause = whereConditions.join(" AND ");
 
-    // Jointures de base nécessaires pour appliquer tous les filtres
     const baseJoins = `
       FROM paiement p
       LEFT JOIN typeforfait tf ON p.codeTypeForfait = tf.codeTypeForfait
       LEFT JOIN client c ON p.idClient = c.idClient
       LEFT JOIN user u ON p.idUser = u.idUser
       LEFT JOIN site s ON u.idSite = s.idSite
-      LEFT JOIN ville v ON s.idSite = v.idVille
     `;
 
-    // 2. Requête Statistiques Globales (Total & Nombre de tickets)
+    // 1. Stats Globales
     const [statsRows] = await pool.execute<RowDataPacket[]>(
-      `
-      SELECT 
-        COALESCE(SUM(p.montantPaye), 0) AS totalEncaisse,
-        COUNT(p.idPaiement) AS ticketsGeneres
-      ${baseJoins}
-      WHERE ${whereClause}
-      `,
+      `SELECT COALESCE(SUM(p.montantPaye), 0) AS totalEncaisse, COUNT(p.idPaiement) AS ticketsGeneres ${baseJoins} WHERE ${whereClause}`,
       queryParams,
     );
 
-    // 3. Mode de paiement le plus utilisé sur la période / filtres
+    // 2. Mode de paiement principal
     const [modeRows] = await pool.execute<RowDataPacket[]>(
-      `
-      SELECT p.operateur, COUNT(*) as count
-      ${baseJoins}
-      WHERE ${whereClause}
-      GROUP BY p.operateur
-      ORDER BY count DESC
-      LIMIT 1
-      `,
+      `SELECT p.operateur, COUNT(*) as count ${baseJoins} WHERE ${whereClause} GROUP BY p.operateur ORDER BY count DESC LIMIT 1`,
       queryParams,
     );
 
-    // 4. Évolution des ventes (groupée par jour ou par heure selon si un filtre de date est présent)
-    const dateFormat = dateDebut || dateFin ? "%Y-%m-%d" : "%d/%m %H:00";
-    const groupByFormat =
-      dateDebut || dateFin
-        ? "DATE(p.datePaiement)"
-        : "DATE(p.datePaiement), HOUR(p.datePaiement)";
-
+    // 3. Évolution des recettes
     const [evolutionRows] = await pool.execute<RowDataPacket[]>(
       `
       SELECT 
-        DATE_FORMAT(p.datePaiement, '${dateFormat}') AS heure,
+        DATE_FORMAT(p.datePaiement, '%d/%m %H:00') AS heure,
         SUM(p.montantPaye) AS ventes
       ${baseJoins}
       WHERE ${whereClause}
-      GROUP BY ${groupByFormat}
-      ORDER BY p.datePaiement ASC
+      GROUP BY DATE_FORMAT(p.datePaiement, '%d/%m %H:00')
+      ORDER BY MIN(p.datePaiement) ASC
       `,
       queryParams,
     );
 
-    // 5. Répartition des ventes par type de forfait
+    // 4. Répartition des forfaits
     const [repartitionRows] = await pool.execute<RowDataPacket[]>(
       `
       SELECT 
-        tf.designation,
+        COALESCE(tf.designation, 'Inconnu') AS designation,
         COUNT(p.idPaiement) AS total
       ${baseJoins}
       WHERE ${whereClause}
@@ -116,7 +93,7 @@ export async function GET(request: NextRequest) {
       queryParams,
     );
 
-    // 6. Historique complet de toutes les transactions filtrées
+    // 5. Historique des transactions récentes
     const [recentRows] = await pool.execute<RowDataPacket[]>(
       `
       SELECT 
@@ -137,11 +114,10 @@ export async function GET(request: NextRequest) {
       queryParams,
     );
 
-    // 7. Récupération des villes et sites uniques et non nuls
+    // 6. Options Villes et Sites
     const [villesRows] = await pool.execute<RowDataPacket[]>(
       "SELECT DISTINCT idVille FROM site WHERE idVille IS NOT NULL AND idVille != '' ORDER BY idVille ASC",
     );
-
     const [sitesRows] = await pool.execute<RowDataPacket[]>(
       "SELECT DISTINCT designSite AS site FROM site WHERE designSite IS NOT NULL AND designSite != '' ORDER BY designSite ASC",
     );
@@ -156,7 +132,7 @@ export async function GET(request: NextRequest) {
         evolutionHeures: evolutionRows,
         repartitionForfaits: repartitionRows,
         recentVentes: recentRows,
-        villesOptions: villesRows.map((r) => r.ville).filter(Boolean),
+        villesOptions: villesRows.map((r) => r.idVille).filter(Boolean),
         sitesOptions: sitesRows.map((r) => r.site).filter(Boolean),
       },
       { status: 200 },
@@ -166,8 +142,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         message: "Erreur lors du chargement des données filtrées",
-        error: error?.message || error,
-        code: error?.code,
+        error: error?.message || String(error),
       },
       { status: 500 },
     );
