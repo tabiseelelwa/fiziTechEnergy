@@ -60,7 +60,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
     code: string;
     telephone: string;
     designation: string;
-    prix: string;
+    prixFC: string;
   } | null>(null);
 
   // 1. Récupération des forfaits depuis la BDD
@@ -91,7 +91,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
         code: data.ticket.code,
         telephone: telephone.trim(),
         designation: selectedForfait ? selectedForfait.designation : 'Forfait',
-        prix: selectedForfait ? `${selectedForfait.prixFC.toLocaleString()} FC` : '',
+        prixFC: selectedForfait ? `${selectedForfait.prixFC.toLocaleString()} FC` : '',
       });
 
       setTelephone('');
@@ -259,7 +259,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                       <strong>Forfait :</strong> {ticketGenere.designation}
                     </div>
                     <div className="mt-[6px]">
-                      <strong>Montant payé :</strong> {ticketGenere.prix}
+                      <strong>Montant payé :</strong> {ticketGenere.prixFC}
                     </div>
                   </div>
 
@@ -267,7 +267,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                     type="button"
                     onClick={() => {
                       setTicketGenere(null);
-                      setModalVenteTicket(false);
                     }}
                     className="mt-[20px] w-full p-[12px] bg-[#2563eb] text-white border-0 rounded-[8px] text-[15px] font-bold cursor-pointer"
                   >
