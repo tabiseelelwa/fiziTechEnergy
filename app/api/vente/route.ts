@@ -209,7 +209,7 @@ export async function POST(request: Request) {
 }
 
 
-const JWT_SECRET = process.env.JWT_SECRET || "";
+const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
 
 export async function GET(request: Request) {
   try {
