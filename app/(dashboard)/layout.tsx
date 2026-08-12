@@ -43,7 +43,7 @@ export default function AdminLayout({
         <Header
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
         />
-        <main className="flex-1 min-h-0 h-full overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 min-h-0 h-full overflow-y-auto p-2 md:p-6">
           {children}
         </main>
       </div>

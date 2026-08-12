@@ -30,17 +30,17 @@ export async function POST(request: Request) {
     }
 
     const [rows] = await getConnection().execute<UserRow[]>(
-      `SELECT 
-        u.idUser, 
-        u.nom, 
-        u.prenom, 
-        u.Telephone as telephone, 
-        u.email, 
-        u.idSite, 
-        u.pass, 
-        u.idRole, 
-        s.designSite, 
-        r.designRole 
+      `SELECT
+        u.idUser,
+        u.nom,
+        u.prenom,
+        u.Telephone as telephone,
+        u.email,
+        u.idSite,
+        u.pass,
+        u.idRole,
+        s.designSite,
+        r.designRole
       FROM user u
       LEFT JOIN site s ON u.idSite = s.idSite
       LEFT JOIN role r ON u.idRole = r.idRole

@@ -31,3 +31,4 @@ export const affichPaiement = async (): Promise<void> => {
   const response = await axios.get<void>("api/demande-paiement");
   return response.data
 };
+

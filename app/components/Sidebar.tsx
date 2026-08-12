@@ -9,15 +9,22 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+interface NavItems {
+  label: string;
+  href: string;
+  role: string[]
+}
+
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
 
-  const navItems = [
-    { label: 'Dashboard', href: '/' },
-    { label: 'Tarifs', href: '/tarifs' },
-    { label: 'Sites', href: '/sites' },
-    { label: 'Utilisateurs', href: '/utilisateurs' },
-    { label: 'Profil', href: '/profil' },
+  const navItems: NavItems[] = [
+    { label: 'Dashboard', href: '/', role: ['Admin', 'Gerant'] },
+    { label: 'Mes Ventes', href: '/ventes', role: []},
+    { label: 'Tarifs', href: '/tarifs', role: ['Admin', 'Gerant'] },
+    { label: 'Sites', href: '/sites', role: ['Admin', 'Gerant'] },
+    { label: 'Utilisateurs', href: '/utilisateurs', role: [] },
+    { label: 'Profil', href: '/profil', role: [] },
   ];
 
   return (
@@ -41,7 +48,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">
-              Empire Hotspot 
+              Empire Hotspot
             </h2>
             <button
               onClick={onClose}
