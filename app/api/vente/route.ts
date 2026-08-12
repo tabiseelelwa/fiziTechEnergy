@@ -227,7 +227,7 @@ export async function GET(request: Request) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
     const codeTypeForfait = searchParams.get("codeTypeForfait");
-    const codeTicket = searchParams.get("codeTicket"); // Extraction du code ticket
+    const codeTicket = searchParams.get("codeTicket");
 
     let query = `
       SELECT 
@@ -237,8 +237,7 @@ export async function GET(request: Request) {
         p.operateur,
         p.datePaiement,
         p.idClient,
-        tf.designation AS designation,
-        tf.designation AS typeForfait,
+        tf.designation,
         c.Telephone
       FROM paiement p
       LEFT JOIN typeForfait tf ON p.codeTypeForfait = tf.codeTypeForfait
