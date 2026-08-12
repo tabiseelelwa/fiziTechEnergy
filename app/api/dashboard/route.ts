@@ -161,10 +161,14 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erreur Backend Dashboard:", error);
     return NextResponse.json(
-      { message: "Erreur lors du chargement des données filtrées", error },
+      {
+        message: "Erreur lors du chargement des données filtrées",
+        error: error?.message || error,
+        code: error?.code,
+      },
       { status: 500 },
     );
   }
