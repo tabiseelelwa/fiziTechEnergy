@@ -94,13 +94,10 @@ const formatDateTime = (dateIsoString: string) => {
   }
 };
 
-// Fonction d'extraction des données avec transmission des filtres au backend
 const fetchDashboardData = async (
   filters: FilterParams
 ): Promise<DashboardApiResponse> => {
-  const { data } = await axios.get("/api/dashboard", {
-    params: filters,
-  });
+  const { data } = await axios.get("/api/dashboard", { params: filters });
 
   return {
     stats: {
@@ -141,6 +138,7 @@ const fetchDashboardData = async (
         mode: item.operateur || "Cash",
         date: formatDateTime(item.datePaiement),
         utilisateur: item.email || "N/A",
+        ville: item.designVille || "N/A",
         site: item.designSite || "Non défini",
         statut: "Réussi",
       })
@@ -152,8 +150,7 @@ const fetchDashboardData = async (
 
 export default function VendeurDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
-  
-  // États des filtres
+
   const [filters, setFilters] = useState<FilterParams>({
     dateDebut: "",
     dateFin: "",
@@ -180,10 +177,10 @@ export default function VendeurDashboard() {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["dashboard-data", filters],
+    queryKey: ["ventes"],
     queryFn: () => fetchDashboardData(filters),
     refetchInterval: 30000,
-    staleTime: 10000,
+    staleTime: 5000,
   });
 
   const filteredTransactions = (data?.recentVentes || []).filter(
@@ -194,7 +191,7 @@ export default function VendeurDashboard() {
   );
 
   return (
-    <div className="w-full bg-slate-50 text-slate-800 p-4 sm:p-6">
+    <div className="w-full bg-slate-50 text-slate-800 sm:p-6">
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
@@ -204,7 +201,7 @@ export default function VendeurDashboard() {
         </div>
       </div>
 
-      {/* ---------------- BARRE DE FILTRES MULTIPLES ---------------- */}
+      {/* FILTRES */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm mb-8">
         <div className="flex items-center gap-2 mb-4 text-slate-700 font-bold text-sm">
           <BsFilter size={18} />
@@ -244,7 +241,7 @@ export default function VendeurDashboard() {
             <input
               type="text"
               name="userEmail"
-              placeholder="ex: sadi@empire-hs.site"
+              placeholder="ex: user@domaine.com"
               value={filters.userEmail}
               onChange={handleFilterChange}
               className="w-full p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20"
@@ -275,7 +272,7 @@ export default function VendeurDashboard() {
           <button
             type="button"
             onClick={resetFilters}
-            className="text-xs font-semibold text-slate-500 hover:text-slate-800 underline transition"
+            className="text-xs font-semibold text-slate-500 hover:text-slate-800 underline transition cursor-pointer"
           >
             Réinitialiser tous les filtres
           </button>
@@ -288,7 +285,7 @@ export default function VendeurDashboard() {
         </div>
       )}
 
-      {/* ---------------- CARTES STATISTIQUES ---------------- */}
+      {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
@@ -346,7 +343,7 @@ export default function VendeurDashboard() {
         </div>
       </div>
 
-      {/* ---------------- GRAPHIQUES RECHARTS ---------------- */}
+      {/* GRAPHIQUES */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
           <div className="flex justify-between items-center mb-6">
@@ -421,8 +418,8 @@ export default function VendeurDashboard() {
                     paddingAngle={4}
                     dataKey="value"
                   >
-                    {data.repartitionForfaits.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    {data.repartitionForfaits.map((entry) => (
+                      <Cell key={`cell-${entry.name}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -431,9 +428,9 @@ export default function VendeurDashboard() {
             )}
           </div>
           <div className="space-y-2 mt-4 max-h-36 overflow-y-auto">
-            {data?.repartitionForfaits.map((f, index) => (
+            {data?.repartitionForfaits.map((f) => (
               <div
-                key={index}
+                key={f.name}
                 className="flex justify-between items-center text-xs"
               >
                 <div className="flex items-center gap-2">
@@ -452,7 +449,7 @@ export default function VendeurDashboard() {
         </div>
       </div>
 
-      {/* ---------------- TABLEAU DES VENTES GLOBAL ---------------- */}
+      {/* TABLEAU */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden mb-8">
         <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -485,7 +482,7 @@ export default function VendeurDashboard() {
                 <th className="py-3.5 px-6">Forfait</th>
                 <th className="py-3.5 px-6">Montant</th>
                 <th className="py-3.5 px-6">Utilisateur</th>
-                <th className="py-3.5 px-6">Ville / Site</th>
+                <th className="py-3.5 px-6">Site</th>
                 <th className="py-3.5 px-6">Date & Heure</th>
                 <th className="py-3.5 px-6 text-center">Statut</th>
               </tr>
@@ -514,7 +511,6 @@ export default function VendeurDashboard() {
                       {tx.utilisateur}
                     </td>
                     <td className="py-4 px-6 text-slate-500">
-                      <div>{tx.ville}</div>
                       <div className="text-[10px] text-slate-400">{tx.site}</div>
                     </td>
                     <td className="py-4 px-6 text-slate-400">{tx.date}</td>

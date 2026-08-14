@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import { getConnection } from "@/app/lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2/promise";
+import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
 
@@ -110,5 +112,19 @@ export async function POST(request: Request) {
       },
       { status: 500 },
     );
+  }
+}
+
+export async function getUserIdFromSession(request: Request): Promise<number | string | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('Empire-Lab_token')?.value;
+
+  if (!token) return null;
+
+  try {
+    const decoded = jwt.verify(token,JWT_SECRET) as {idUser : number};
+    return decoded.idUser
+  } catch (err) {
+    return null;
   }
 }

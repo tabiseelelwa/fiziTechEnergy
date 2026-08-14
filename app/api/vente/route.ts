@@ -6,9 +6,11 @@ import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
+const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
+
 export async function POST(request: Request) {
   try {
-    const { codeTypeForfait, modePaiement, telephone, nomClient } =
+    const { codeTypeForfait, operateur, telephone, nomClient } =
       await request.json();
     const cookieStore = await cookies();
     const token = cookieStore.get("Empire-Lab_token")?.value;
@@ -31,12 +33,12 @@ export async function POST(request: Request) {
 
     // Anti-cumul : vérifier si le numéro possède déjà un ticket actif
     const queryCheck = `
-                SELECT t.* FROM ticket t
-                JOIN Paiement p ON t.codeTicket = p.codeTicket
-                JOIN client c ON p.idClient = c.idClient
-                WHERE c.Telephone = ? AND t.statut = 'Actif' AND t.dateExpiration > NOW()
-                LIMIT 1
-            `;
+      SELECT t.* FROM ticket t
+      JOIN Paiement p ON t.codeTicket = p.codeTicket
+      JOIN client c ON p.idClient = c.idClient
+      WHERE c.Telephone = ? AND t.statut = 'Actif' AND t.dateExpiration > NOW()
+      LIMIT 1
+   `;
 
     const [ticketsActifs] = await pool.execute<RowDataPacket[]>(queryCheck, [
       telephone,
@@ -68,6 +70,7 @@ export async function POST(request: Request) {
     const montant = forfaitChoisi.prixFC;
 
     const phone = telephone.trim();
+    console.log(`Le montant est de ${montant}`);
 
     const [clientsExistants] = await pool.execute<RowDataPacket[]>(
       "SELECT idClient FROM client WHERE Telephone = ?",
@@ -106,7 +109,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const referenceVente = `VEN-${Date.now()}`;
+    const referenceVente = `VEN-${Date.now()}-${idUser.toString().padStart(3, '2')}`;
     const codeTicketUnique = `FT-${Math.floor(1000 + Math.random() * 9000)}`;
     const dureeMinutes = parseInt(forfaitChoisi.dureeMinutes) || 60;
 
@@ -135,14 +138,15 @@ export async function POST(request: Request) {
         idUser,
         referenceVente,
         montant,
-        modePaiement,
+        operateur,
         "Reussi",
       ],
     );
 
     // =========================================================================
-    // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE
+    // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE                         ||
     // =========================================================================
+
     try {
       const rawHost = (process.env.ROUTER_HOST || "10.5.5.1")
         .replace("http://", "")
@@ -207,9 +211,6 @@ export async function POST(request: Request) {
     );
   }
 }
-
-
-const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
 
 export async function GET(request: Request) {
   try {
@@ -281,7 +282,7 @@ export async function GET(request: Request) {
     console.error("Erreur API Ventes:", error);
     return NextResponse.json(
       { message: "Erreur lors de la récupération des ventes." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

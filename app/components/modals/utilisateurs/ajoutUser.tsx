@@ -26,6 +26,7 @@ export const AjouterUtilisateur = ({
     setModalAjouterUtilisateur,
 }: AjouterUtilisateurProps) => {
     const queryClient = useQueryClient();
+    
     const [formData, setFormData] = useState<UserPayload>({
         nom: "",
         prenom: "",

@@ -1,7 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { VendeurPage } from '@/app/components/modals/VenteTickets';
 import {
@@ -30,65 +31,36 @@ interface TypeForfait {
 
 export default function MesVentesPage() {
   const [modalVenteTicket, setModalVenteTicket] = useState(false);
-  const [ventes, setVentes] = useState<Vente[]>([]);
-  const [typesForfait, setTypesForfait] = useState<TypeForfait[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // États des filtres
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedForfait, setSelectedForfait] = useState("ALL");
-  const [codeTicketFilter, setCodeTicketFilter] = useState(""); // Nouveau filtre Code Ticket
+  const [codeTicketFilter, setCodeTicketFilter] = useState("");
 
-  // Récupération des types de forfaits pour le filtre <select>
-  useEffect(() => {
-    const fetchTypes = async () => {
-      try {
-        const res = await axios.get("/api/typeForfait");
-        setTypesForfait(res.data.typesForfait || []);
-      } catch (err) {
-        console.error("Erreur chargement types forfaits:", err);
-      }
-    };
-    fetchTypes();
-  }, []);
+  // Récupération des types de forfaits
+  const { data: typesForfait = [] } = useQuery<TypeForfait[]>({
+    queryKey: ["typeForfaits-list"],
+    queryFn: async () => {
+      const res = await axios.get("/api/typeForfait");
+      return res.data.typesForfait || [];
+    },
+  });
 
-  // Chargement des ventes filtrées
-  const fetchVentes = useCallback(async () => {
-    try {
+  // Récupération des ventes via React Query avec gestion automatique des filtres
+  const { data: ventes = [], isLoading: loading } = useQuery<Vente[]>({
+    queryKey: ["ventes", startDate, endDate, selectedForfait, codeTicketFilter],
+    queryFn: async () => {
       const params = new URLSearchParams();
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);
-      if (selectedForfait !== "ALL")
-        params.append("codeTypeForfait", selectedForfait);
-      if (codeTicketFilter.trim() !== "")
-        params.append("codeTicket", codeTicketFilter.trim());
+      if (selectedForfait !== "ALL") params.append("codeTypeForfait", selectedForfait);
+      if (codeTicketFilter.trim() !== "") params.append("codeTicket", codeTicketFilter.trim());
 
       const res = await axios.get(`/api/vente?${params.toString()}`);
-      setVentes(res.data.ventes || []);
-    } catch (err) {
-      console.error("Erreur chargement ventes:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [startDate, endDate, selectedForfait, codeTicketFilter]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadData = async () => {
-      setLoading(true);
-      if (isMounted) {
-        await fetchVentes();
-      }
-    };
-
-    loadData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [fetchVentes]);
+      return res.data.ventes || [];
+    },
+  });
 
   // Réinitialiser les filtres
   const resetFilters = () => {
@@ -98,7 +70,7 @@ export default function MesVentesPage() {
     setCodeTicketFilter("");
   };
 
-  // Calcul du montant total des ventes affichées
+  // Calcul du montant total
   const totalMontant = ventes.reduce(
     (sum, item) => sum + Number(item.montantPaye || 0),
     0
@@ -107,7 +79,8 @@ export default function MesVentesPage() {
   return (
     <div className="space-y-6">
       {modalVenteTicket && <VendeurPage setModalVenteTicket={setModalVenteTicket} />}
-      {/* En-tête de la page */}
+      
+      {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Ventes</h1>
@@ -115,7 +88,6 @@ export default function MesVentesPage() {
             Consultez et filtrez l'historique de vos tickets vendus.
           </p>
         </div>
-
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
@@ -136,25 +108,17 @@ export default function MesVentesPage() {
             <FiFilter size={16} className="text-blue-600" />
             <span>Filtres de recherche</span>
           </div>
-          {/* Badge Total */}
           <div className="bg-blue-600 text-white px-3 py-1 rounded-lg shadow-sm flex items-center gap-3">
             <div>
-              <p className="text-xs uppercase font-medium opacity-80">
-                Total Filtré
-              </p>
-              <p className="text-lg font-bold">
-                {totalMontant.toLocaleString()} FC
-              </p>
+              <p className="text-xs uppercase font-medium opacity-80">Total Filtré</p>
+              <p className="text-lg font-bold">{totalMontant.toLocaleString()} FC</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Code Ticket */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Code Ticket
-            </label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Code Ticket</label>
             <div className="relative">
               <input
                 type="text"
@@ -163,18 +127,12 @@ export default function MesVentesPage() {
                 onChange={(e) => setCodeTicketFilter(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
-              <FiHash
-                className="absolute left-3 top-2.5 text-gray-400"
-                size={16}
-              />
+              <FiHash className="absolute left-3 top-2.5 text-gray-400" size={16} />
             </div>
           </div>
 
-          {/* Date de début */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Date de début
-            </label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Date de début</label>
             <div className="relative">
               <input
                 type="date"
@@ -182,18 +140,12 @@ export default function MesVentesPage() {
                 onChange={(e) => setStartDate(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
-              <FiCalendar
-                className="absolute left-3 top-2.5 text-gray-400"
-                size={16}
-              />
+              <FiCalendar className="absolute left-3 top-2.5 text-gray-400" size={16} />
             </div>
           </div>
 
-          {/* Date de fin */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Date de fin
-            </label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Date de fin</label>
             <div className="relative">
               <input
                 type="date"
@@ -201,18 +153,12 @@ export default function MesVentesPage() {
                 onChange={(e) => setEndDate(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
-              <FiCalendar
-                className="absolute left-3 top-2.5 text-gray-400"
-                size={16}
-              />
+              <FiCalendar className="absolute left-3 top-2.5 text-gray-400" size={16} />
             </div>
           </div>
 
-          {/* Type de forfait */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Type de forfait
-            </label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Type de forfait</label>
             <div className="relative">
               <select
                 value={selectedForfait}
@@ -226,14 +172,10 @@ export default function MesVentesPage() {
                   </option>
                 ))}
               </select>
-              <FiTag
-                className="absolute left-3 top-2.5 text-gray-400"
-                size={16}
-              />
+              <FiTag className="absolute left-3 top-2.5 text-gray-400" size={16} />
             </div>
           </div>
 
-          {/* Bouton Réinitialiser */}
           <div className="flex items-end">
             <button
               onClick={resetFilters}
@@ -263,34 +205,21 @@ export default function MesVentesPage() {
             <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                     Chargement des ventes...
                   </td>
                 </tr>
               ) : ventes.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                     Aucune vente ne correspond aux critères sélectionnés.
                   </td>
                 </tr>
               ) : (
                 ventes.map((item, idx) => (
-                  <tr
-                    key={item.idPaiement}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
-                    <td className="px-6 py-4 text-gray-400 text-xs">
-                      {idx + 1}
-                    </td>
-                    <td className="px-6 py-4 font-mono font-medium text-gray-900">
-                      {item.codeTicket}
-                    </td>
+                  <tr key={item.idPaiement} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 text-gray-400 text-xs">{idx + 1}</td>
+                    <td className="px-6 py-4 font-mono font-medium text-gray-900">{item.codeTicket}</td>
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
                         {item.designation || "N/A"}
@@ -308,9 +237,7 @@ export default function MesVentesPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">
-                      {item.Telephone}
-                    </td>
+                    <td className="px-6 py-4 font-semibold text-gray-900">{item.Telephone}</td>
                   </tr>
                 ))
               )}
