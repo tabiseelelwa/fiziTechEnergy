@@ -109,7 +109,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const referenceVente = `VEN-${Date.now()}-${idUser.toString().padStart(3, '2')}`;
+    const referenceVente = `VEN-${Date.now()}-${idUser.toString().padStart(3, "2")}`;
     const codeTicketUnique = `FT-${Math.floor(1000 + Math.random() * 9000)}`;
     const dureeMinutes = parseInt(forfaitChoisi.dureeMinutes) || 60;
 
@@ -239,10 +239,12 @@ export async function GET(request: Request) {
         p.datePaiement,
         p.idClient,
         tf.designation,
-        c.Telephone
+        c.Telephone,
+        t.dateExpiration
       FROM paiement p
       LEFT JOIN typeForfait tf ON p.codeTypeForfait = tf.codeTypeForfait
       LEFT JOIN client c ON p.idClient = c.idClient
+      LEFT JOIN ticket t ON p.codeTicket = t.codeTicket
       WHERE p.idUser = ?
     `;
 

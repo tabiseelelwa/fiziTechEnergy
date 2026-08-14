@@ -254,7 +254,6 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                 type="button"
                 onClick={() => {
                   setTicketGenere(null);
-                  setModalVenteTicket(false); // Ferme tout après affichage du ticket
                 }}
                 className="mt-[20px] w-full p-[12px] bg-[#2563eb] text-white border-0 rounded-[8px] text-[15px] font-bold cursor-pointer hover:bg-blue-700 transition"
               >

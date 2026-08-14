@@ -208,7 +208,6 @@ export default function ProfilPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 3. FORMULAIRES (2/3 de l'écran) */}
         <div className="lg:col-span-2 space-y-6">
           {/* INFORMATIONS GÉNÉRALES */}
           <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-6">

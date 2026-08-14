@@ -20,6 +20,7 @@ interface Vente {
   montantPaye: number;
   Telephone: string;
   datePaiement: string;
+  dateExpiration: string;
   codetypeForfait: number;
   designation: string;
 }
@@ -199,6 +200,7 @@ export default function MesVentesPage() {
                 <th className="px-6 py-3.5">Type Forfait</th>
                 <th className="px-6 py-3.5">Prix</th>
                 <th className="px-6 py-3.5">Date de vente</th>
+                <th className="px-6 py-3.5">Date d'expiration</th>
                 <th className="px-6 py-3.5">Téléphone client</th>
               </tr>
             </thead>
@@ -230,6 +232,15 @@ export default function MesVentesPage() {
                     </td>
                     <td className="px-6 py-4 text-gray-500 text-xs">
                       {new Date(item.datePaiement).toLocaleString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 text-xs">
+                      {new Date(item.dateExpiration).toLocaleString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
