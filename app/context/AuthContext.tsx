@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
@@ -28,6 +29,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const initializeAuth = () => {
@@ -60,6 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
+
     try {
       // Supprime le cookie côté serveur
       await axios.post('/api/logout');
@@ -71,6 +75,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setToken(null);
       localStorage.removeItem('Empire-Lab_user');
       localStorage.removeItem('Empire-Lab_token');
+      queryClient.clear();
+      window.location.href = '/login';
     }
   };
 

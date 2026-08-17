@@ -37,7 +37,7 @@ export default function PortailCaptifEmpireLab() {
                     <div>
                         <h3 className='font-bold text-[16px]'>Forfait 3 Heures</h3>
                         <p className='text-[12px] text-[#6b7280]'>Idéal pour une vérification rapide</p>
-                        <span className='text-[22px] font-extrabold block'>2 500 FC</span>
+                        <span className='text-[22px] font-extrabold block'>1 000 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(1)}
@@ -53,9 +53,9 @@ export default function PortailCaptifEmpireLab() {
                         Le plus vendu
                     </span>
                     <div className="inline gap-16">
-                        <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 8 Heures</h3>
+                        <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 24 Heures</h3>
                         <p className='text-[12px] text-[#6b7280]'>Le meilleur compromis vitesse/prix</p>
-                        <span className='text-[22px] font-extrabold block'>3 500 FC</span>
+                        <span className='text-[22px] font-extrabold block'>2 500 FC</span>
                     </div>
                     <button
                         onClick={() => selectionnerForfait(2)}
@@ -68,8 +68,8 @@ export default function PortailCaptifEmpireLab() {
                 {/* Forfait 3 : 24 Heures */}
                 <div className="flex justify-between items-center relative gap-2 rounded-[14px] bg-white shadow-[0_4px_12px_rgba(0,112,243,0.1)] shadow-[0_2px_4px_rgba(0,0,0,0.2)] border-[1px] border-[#e5e7eb] py-[1.25rem] px-[10px]">
                     <div className="inline gap-8">
-                        <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 24 Heures</h3>
-                        <p className='text-[12px] text-[#6b7280]'>Tranquillité totale toute la journée</p>
+                        <h3 className='text-[16px] font-bold mt-0 mr-0 mb-[4px] ml-0'>Forfait 3 jours</h3>
+                        <p className='text-[12px] text-[#6b7280]'>Tranquillité totale pendant 3 jours</p>
                         <span className='text-[22px] font-extrabold block'>5 000 FC</span>
                     </div>
                     <button

@@ -80,7 +80,7 @@ export default function MesVentesPage() {
   return (
     <div className="space-y-6">
       {modalVenteTicket && <VendeurPage setModalVenteTicket={setModalVenteTicket} />}
-      
+
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
