@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (ville) {
-      whereConditions.push("s.idVille = ?");
+      whereConditions.push("s.designVille = ?");
       queryParams.push(ville);
     }
 

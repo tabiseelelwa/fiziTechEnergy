@@ -52,3 +52,8 @@ export const modifUser = async (user: UserData): Promise<void> => {
 export const suppriUser = async (idUser: number): Promise<void> => {
   await axios.delete(`/api/users/${idUser}`);
 };
+
+// Fonction pour réinitialiser le mot de passe à '12345'
+export const resetUserPassword = async (idUser: number | string): Promise<void> => {
+  await axios.put(`/api/users/${idUser}/reset-password`);
+}

@@ -415,9 +415,10 @@ export default function VendeurDashboard() {
                       data={data.repartitionForfaits}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={75}
+                      innerRadius={75}
+                      outerRadius={80}
                       paddingAngle={4}
+                      cornerRadius={5}
                       dataKey="value"
                     >
                       {data.repartitionForfaits.map((entry) => (

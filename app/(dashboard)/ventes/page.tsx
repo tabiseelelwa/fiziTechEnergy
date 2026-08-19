@@ -195,13 +195,13 @@ export default function MesVentesPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold text-xs uppercase">
               <tr>
-                <th className="px-6 py-3.5">#</th>
-                <th className="px-6 py-3.5">Code Ticket</th>
-                <th className="px-6 py-3.5">Type Forfait</th>
-                <th className="px-6 py-3.5">Prix</th>
-                <th className="px-6 py-3.5">Date de vente</th>
-                <th className="px-6 py-3.5">Date d'expiration</th>
-                <th className="px-6 py-3.5">Téléphone client</th>
+                <th className="px-4 py-3.5">#</th>
+                <th className="px-4 py-3.5">Code Ticket</th>
+                <th className="px-4 py-3.5">Type Forfait</th>
+                <th className="px-4 py-3.5">Prix</th>
+                <th className="px-4 py-3.5">Date de vente</th>
+                <th className="px-4 py-3.5">Date d'expiration</th>
+                <th className="px-4 py-3.5">Téléphone client</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -220,17 +220,17 @@ export default function MesVentesPage() {
               ) : (
                 ventes.map((item, idx) => (
                   <tr key={item.idPaiement} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 text-gray-400 text-xs">{idx + 1}</td>
-                    <td className="px-6 py-4 font-mono font-medium text-gray-900">{item.codeTicket}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2 text-gray-400 text-xs">{idx + 1}</td>
+                    <td className="px-4 py-2 font-mono font-medium text-gray-900">{item.codeTicket}</td>
+                    <td className="px-4 py-2">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
                         {item.designation || "N/A"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">
+                    <td className="px-4 py-2 font-semibold text-gray-900">
                       {Number(item.montantPaye).toLocaleString()} FC
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-xs">
+                    <td className="px-4 py-2 text-gray-500 text-xs">
                       {new Date(item.datePaiement).toLocaleString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
@@ -239,7 +239,7 @@ export default function MesVentesPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-xs">
+                    <td className="px-4 py-2 text-gray-500 text-xs">
                       {new Date(item.dateExpiration).toLocaleString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
@@ -248,7 +248,7 @@ export default function MesVentesPage() {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">{item.Telephone}</td>
+                    <td className="px-4 py-2 font-semibold text-gray-900">{item.Telephone}</td>
                   </tr>
                 ))
               )}

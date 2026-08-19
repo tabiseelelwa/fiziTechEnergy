@@ -14,9 +14,7 @@ import {
   HiTrash,
   HiServer,
   HiUsers,
-  HiLocationMarker,
   HiCheckCircle,
-  HiExclamationCircle,
   HiRefresh
 } from 'react-icons/hi';
 
@@ -148,68 +146,6 @@ export default function SitesPage() {
           </div>
         </div>
 
-        {/* CARTES DES SITES (Aperçu temps réel) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {sites.map((site) => (
-            <div
-              key={site.idSite}
-              className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-lg font-bold text-gray-900">{site.designSite}</h3>
-
-                  </div>
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <HiLocationMarker className="w-4 h-4 text-gray-400" />
-                    {site.localisation}
-                  </p>
-                </div>
-                <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${site.statut === 'en_ligne'
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-red-50 text-red-600 border border-red-200'
-                  }`}>
-                  {site.statut === 'en_ligne' ? (
-                    <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      En ligne
-                    </>
-                  ) : (
-                    <>
-                      <HiExclamationCircle className="w-3.5 h-3.5" />
-                      Hors ligne
-                    </>
-                  )}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl text-xs">
-                <div>
-                  <span className="text-gray-400 block">Adresse RouterOS</span>
-                  <span className="font-mono font-semibold text-gray-800">{site.equipement}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400 block">Bande passante actuelle</span>
-                  <span className="font-semibold text-gray-800">{"18 Mbps"}</span>
-                  {/* <span className="font-semibold text-gray-800">{site.consommation}</span> */}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-2 text-xs text-gray-500 border-t border-gray-100">
-                <span className="flex items-center gap-1">
-                  <HiServer className="w-4 h-4 text-gray-400" />
-                  {site.equipement}
-                </span>
-                <span className="flex items-center gap-1 font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
-                  <HiUsers className="w-4 h-4" />
-                  {/* {site.clientsActifs} clients */}
-                  {58} clients
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
 
         {/* TABLEAU DES SITES */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
@@ -222,30 +158,30 @@ export default function SitesPage() {
             <table className="w-full text-left text-sm text-gray-600">
               <thead className="bg-gray-50 text-gray-500 uppercase text-[11px] font-semibold tracking-wider border-b border-gray-100">
                 <tr>
-                  <th className="py-3.5 px-4">Nom du Site</th>
-                  <th className="py-3.5 px-4">Passerelle IP</th>
-                  <th className="py-3.5 px-4">Matériel</th>
-                  <th className="py-3.5 px-4">Connectés</th>
-                  <th className="py-3.5 px-4">Statut</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  <th className="py-2 px-4">Nom du Site</th>
+                  <th className="py-2 px-4">Passerelle IP</th>
+                  <th className="py-2 px-4">Matériel</th>
+                  <th className="py-2 px-4">Connectés</th>
+                  <th className="py-2 px-4">Statut</th>
+                  <th className="py-2 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {sites.map((site) => (
                   <tr key={site.idSite} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="py-3.5 px-4">
+                    <td className="py-2 px-4">
                       <div className="font-semibold text-gray-900">{site.designSite}</div>
                       <div className="text-xs text-gray-400">{site.localisation}</div>
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-xs text-gray-800">
+                    <td className="py-2 px-4 font-mono text-xs text-gray-800">
                       {site.equipement}
                     </td>
-                    <td className="py-3.5 px-4 text-xs">{'198.162.1.2/26'}</td>
-                    {/* <td className="py-3.5 px-4 text-xs">{site.equipements}</td> */}
-                    <td className="py-3.5 px-4 font-bold text-gray-900">
+                    <td className="py-2 px-4 text-xs">{'198.162.1.2/26'}</td>
+                    {/* <td className="py-2 px-4 text-xs">{site.equipements}</td> */}
+                    <td className="py-2 px-4 font-bold text-gray-900">
                       {58}
                     </td>
-                    <td className="py-3.5 px-4">
+                    <td className="py-2 px-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${site.statut === 'en_ligne'
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         : 'bg-red-50 text-red-600 border border-red-200'
@@ -254,7 +190,7 @@ export default function SitesPage() {
                         {site.statut === 'en_ligne' ? 'En ligne' : 'Hors ligne'}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-2 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           aria-label="Modifier"
