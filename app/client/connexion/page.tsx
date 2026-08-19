@@ -1,18 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { validerTicketSecours } from '@/app/services/ticket/ticketService';
-import { BeatLoader } from 'react-spinners';
-import { HiTicket, HiPhone, HiCheckCircle, HiExclamationCircle } from 'react-icons/hi';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { validerTicketSecours } from "@/app/services/ticket/ticketService";
+import { BeatLoader } from "react-spinners";
+import {
+    HiTicket,
+    HiPhone,
+    HiCheckCircle,
+    HiExclamationCircle,
+    HiArrowCircleLeft,
+} from "react-icons/hi";
+import { useRouter } from "next/navigation";
 
 export default function ConnexionTicketForm() {
-    const [telephone, setTelephone] = useState('');
-    const [codeTicket, setCodeTicket] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [telephone, setTelephone] = useState("");
+    const [codeTicket, setCodeTicket] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const router = useRouter();
 
@@ -23,40 +29,37 @@ export default function ConnexionTicketForm() {
     const ticketMutation = useMutation({
         mutationFn: validerTicketSecours,
         onSuccess: (data) => {
-            alert('Connexion réussie ! Redirection vers internet...');
+            alert("Connexion réussie ! Redirection vers internet...");
             // Redirection automatique pour valider le captive portal MikroTik
             if (data.redirectUrl) {
                 window.location.href = `${data.redirectUrl}?username=${codeTicket}&password=${codeTicket}`;
             }
         },
         onError: (err: any) => {
-            setErrorMessage(err.response?.data?.message || 'Erreur de connexion avec ce ticket.');
+            setErrorMessage(
+                err.response?.data?.message || "Erreur de connexion avec ce ticket.",
+            );
         },
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setErrorMessage('');
+        setErrorMessage("");
         if (!telephone || !codeTicket) {
-            setErrorMessage('Veuillez remplir tous les champs.');
+            setErrorMessage("Veuillez remplir tous les champs.");
             return;
         }
         ticketMutation.mutate({ telephone, codeTicket });
     };
 
-
-
     return (
-        <div className="min-h-screen flex flex-center items-center justify-center px-3">
+        <div className="min-h-screen flex flex-center items-center justify-center px-2">
             <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
-                <div className="flex items-center gap-3 mb-4 text-emerald-600">
-                    <HiTicket className="w-8 h-8" />
-                    <h2 className="text-xl font-bold text-gray-900">Se connecter avec un Ticket</h2>
+                <div className="mb-4 text-emerald-600">
+                    <h2 className="text-xl font-bold text-gray-900">
+                        Se connecter avec un Ticket
+                    </h2>
                 </div>
-
-                <p className="text-xs text-gray-500 mb-6">
-                    Utilisez cette méthode en cas de perturbation du réseau Mobile Money ou si vous disposez déjà d'un ticket physique.
-                </p>
 
                 {errorMessage && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl flex items-center gap-2">
@@ -116,9 +119,10 @@ export default function ConnexionTicketForm() {
                         )}
                     </button>
                     <button
-                        className="w-full bg-[#64748B] p-2 text-white rounded-lg"
+                        className="w-full bg-[#64748B] p-2 text-white rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                         onClick={() => retAcc()}
                     >
+                        <HiArrowCircleLeft color="#fff" size={22}/>
                         Retour à l'accueil
                     </button>
                 </form>
