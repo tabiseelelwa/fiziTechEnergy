@@ -45,10 +45,7 @@ export default function ConnexionTicketForm() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage("");
-        if (!telephone || !codeTicket) {
-            setErrorMessage("Veuillez remplir tous les champs.");
-            return;
-        }
+
         ticketMutation.mutate({ telephone, codeTicket });
     };
 
