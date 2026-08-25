@@ -17,7 +17,7 @@ export interface TarifData {
     codeTypeForfait: number;
     designation: string;
     dureeMinutes: number;
-    prixFC: number;
+    prix: number;
 }
 
 interface ModifierTarifProps {
@@ -33,14 +33,15 @@ export const ModifierTarif = ({
         codeTypeForfait: tarif.codeTypeForfait,
         designation: tarif.designation,
         dureeMinutes: tarif.dureeMinutes,
-        prixFC: tarif.prixFC,
+        prix: tarif.prix,
     });
 
     const queryClient = useQueryClient();
 
     // Mutation React Query pour la Modification
     const { mutate, isPending, isError, error } = useMutation({
-        mutationFn: (data: TarifData) => updateTarif(data),
+        mutationFn: (data: TarifData) =>
+            updateTarif({ ...data, description: data.designation }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['tarifs'] });
             setModalModifierTarif(false);
@@ -128,8 +129,8 @@ export const ModifierTarif = ({
                                 type="number"
                                 required
                                 step="50"
-                                value={formData.prixFC}
-                                onChange={(e) => setFormData({ ...formData, prixFC: parseInt(e.target.value) })}
+                                value={formData.prix}
+                                onChange={(e) => setFormData({ ...formData, prix: parseInt(e.target.value) })}
                                 className="w-full pl-10 pr-12 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono"
                             />
                             <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-400">

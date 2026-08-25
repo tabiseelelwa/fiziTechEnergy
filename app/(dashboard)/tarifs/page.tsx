@@ -159,7 +159,7 @@ export default function TarifsPage() {
                   <h3 className="text-lg font-bold text-gray-900">{tarif.designation}</h3>
 
                   <div className="text-2xl font-extrabold text-gray-900">
-                    {tarif.prixFC.toLocaleString('fr-FR')}{' '}
+                    {tarif.prix.toLocaleString('fr-FR')}{' '}
                     <span className="text-sm font-normal text-gray-500">FC</span>
                   </div>
                 </div>
@@ -207,7 +207,7 @@ export default function TarifsPage() {
                           </span>
                         </td>
                         <td className="py-2 px-3 font-bold text-gray-900 font-mono">
-                          {item.prixFC.toLocaleString('fr-FR')} FC
+                          {item.prix.toLocaleString('fr-FR')} FC
                         </td>
                         {currentRoleNormalized === 'Admin' ?
                           <td className="py-2 px-3 text-right">

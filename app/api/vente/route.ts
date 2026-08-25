@@ -121,16 +121,6 @@ export async function POST(request: Request) {
       dateExpirationFrontend.getMinutes() + dureeMinutes,
     );
 
-    console.log(`
-      idClient: ${idClient}
-      codeTypeForfait: ${codeTypeForfait}
-      codeUnique: ${codeTicketUnique}
-      user: ${idUser}
-      ref. vente: ${referenceVente}
-      montant: ${montant}
-      operateur: ${operateur}      
-      `);
-
     const queryInsertTicket = `
       INSERT INTO ticket (codeTicket, dateExpiration, statut) 
       VALUES (?, DATE_ADD(NOW(), INTERVAL ? MINUTE), ?)
