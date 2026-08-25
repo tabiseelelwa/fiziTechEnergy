@@ -89,7 +89,7 @@ export const SupprimerTarif = ({
             <div className="flex items-center justify-between">
               <span className="text-gray-400">Prix :</span>
               <span className="font-mono font-bold text-red-600">
-                {tarif.prixFC.toLocaleString('fr-FR')} FC
+                {tarif.prix.toLocaleString('fr-FR')} FC
               </span>
             </div>
           </div>
