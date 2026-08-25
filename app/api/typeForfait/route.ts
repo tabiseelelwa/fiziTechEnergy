@@ -6,7 +6,11 @@ export async function GET() {
   try {
     const pool = getConnection();
     const [rows] = await pool.execute<RowDataPacket[]>(
-      "SELECT codeTypeForfait, designation, dureeMinutes, prixFC FROM typeforfait ORDER BY codeTypeForfait DESC",
+      `SELECT tf.codeTypeForfait, tf.designation, tf.dureeMinutes, pr.montant as prix
+       FROM typeforfait tf
+       LEFT JOIN prix pr ON tf.idPrix = pr.idPrix
+       ORDER BY codeTypeForfait DESC
+      `,
     );
     return NextResponse.json({ typesForfait: rows }, { status: 200 });
   } catch (error) {

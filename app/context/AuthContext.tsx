@@ -47,13 +47,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.error('Erreur de lecture du localStorage :', e);
         localStorage.removeItem('Empire-Lab_user');
         localStorage.removeItem('Empire-Lab_token');
+        window.location.href = ('/login')
       } finally {
         setLoading(false);
       }
     };
 
     initializeAuth();
-  }, []);
+  },[]);
 
   const login = (userData: User, userToken: string) => {
     setUser(userData);
@@ -70,7 +71,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (e) {
       console.error('Erreur de déconnexion serveur', e);
     } finally {
-      // Nettoie l'état local et le localStorage
       setUser(null);
       setToken(null);
       localStorage.removeItem('Empire-Lab_user');

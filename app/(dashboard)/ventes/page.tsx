@@ -78,6 +78,7 @@ export default function MesVentesPage() {
   );
 
   return (
+    
     <div className="space-y-6">
       {modalVenteTicket && <VendeurPage setModalVenteTicket={setModalVenteTicket} />}
 

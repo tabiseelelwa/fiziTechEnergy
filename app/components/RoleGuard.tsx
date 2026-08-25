@@ -48,7 +48,7 @@ export default function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
     if (!isLoading && !isError) {
 
       if (!user || !isAuthorized) {
-        router.replace('/ventes');
+        router.replace('/');
       }
     }
   }, [isLoading, isError, user, isAuthorized, router]);

@@ -11,7 +11,7 @@ interface Forfait {
   codeTypeForfait: number;
   designation: string;
   dureeMinutes: number;
-  prixFC: number;
+  prix: number;
 }
 
 interface VenteTickets {
@@ -44,10 +44,9 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
     code: string;
     telephone: string;
     designation: string;
-    prixFC: string;
+    prix: string;
   } | null>(null);
 
-  // 2. Chargement des forfaits
   const {
     data: forfaits = [],
     isLoading: isLoadingForfaits,
@@ -64,24 +63,24 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
     (f) => Number(f.codeTypeForfait) === Number(effectiveForfaitId)
   );
 
- const { mutate, isError, error, isPending } = useMutation({
-  mutationFn: createVente,
-  onSuccess: (data) => {
-    queryClient.invalidateQueries({ 
-      queryKey: ["ventes"],
-      exact: false 
-    });
-
-    if (selectedForfait && data?.ticket) {
-      setTicketGenere({
-        code: data.ticket.code,
-        telephone: formdata.telephone,
-        designation: selectedForfait.designation,
-        prixFC: `${selectedForfait.prixFC.toLocaleString()} FC`,
+  const { mutate, isError, error, isPending } = useMutation({
+    mutationFn: createVente,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["ventes"],
+        exact: false
       });
-    }
-  },
-});
+
+      if (selectedForfait && data?.ticket) {
+        setTicketGenere({
+          code: data.ticket.code,
+          telephone: formdata.telephone,
+          designation: selectedForfait.designation,
+          prix: `${selectedForfait.prix.toLocaleString()} FC`,
+        });
+      }
+    },
+  });
 
   const handleVendreTicket = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,7 +161,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                     ) : (
                       forfaits.map((f) => (
                         <option key={f.codeTypeForfait} value={f.codeTypeForfait}>
-                          {f.designation} — {f.prixFC.toLocaleString()} FC
+                          {f.designation} — {f.prix.toLocaleString()} FC
                         </option>
                       ))
                     )}
@@ -206,7 +205,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                   {isPending ? (
                     <BeatLoader color="#fff" size={8} />
                   ) : selectedForfait ? (
-                    `Valider la vente (${selectedForfait.prixFC.toLocaleString()} FC)`
+                    `Valider la vente (${selectedForfait.prix.toLocaleString()} FC)`
                   ) : (
                     "Valider la vente"
                   )}
@@ -246,7 +245,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
                   <strong>Forfait :</strong> {ticketGenere.designation}
                 </div>
                 <div className="mt-[6px]">
-                  <strong>Montant payé :</strong> {ticketGenere.prixFC}
+                  <strong>Montant payé :</strong> {ticketGenere.prix}
                 </div>
               </div>
 

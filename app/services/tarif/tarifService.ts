@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export interface CreateTarifPayload {
   nom: string;
@@ -10,16 +10,19 @@ export interface TarifData {
   codeTypeForfait: number;
   designation: string;
   dureeMinutes: number;
-  prixFC: number;
+  prix: number;
+  description: string;
 }
 
-export const createTarif = async (payload: CreateTarifPayload): Promise<TarifData> => {
-  const response = await axios.post<TarifData>('/api/tarif', payload);
+export const createTarif = async (
+  payload: CreateTarifPayload,
+): Promise<TarifData> => {
+  const response = await axios.post<TarifData>("/api/tarif", payload);
   return response.data;
 };
 
 export const getTarifs = async (): Promise<TarifData[]> => {
-  const response = await axios.get<TarifData[]>('/api/tarif');
+  const response = await axios.get<TarifData[]>("/api/tarif");
   return response.data;
 };
 
@@ -32,9 +35,6 @@ export const updateTarif = async (tarif: TarifData): Promise<void> => {
   await axios.put(`/api/tarif/${tarif.codeTypeForfait}`, {
     designation: tarif.designation,
     dureeMinutes: tarif.dureeMinutes,
-    prixFC: tarif.prixFC,
+    prixFC: tarif.prix,
   });
 };
-
-
-

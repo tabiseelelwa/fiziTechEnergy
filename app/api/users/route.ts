@@ -32,8 +32,8 @@ export async function POST(request: Request) {
 
     // Insertion en base de données avec le mot de passe haché
     const [result] = await getConnection().execute(
-      `INSERT INTO user(nom, prenom, telephone, email, pass, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?, ?)`,
-      [nom, prenom, telephone, email, hashedPass, idRole, idSite],
+      `INSERT INTO user(nom, prenom, telephone, email, pass, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?,?,?)`,
+      [nom, prenom, telephone, email, hashedPass, "Actif", idRole, idSite],
     );
 
     return NextResponse.json(
@@ -58,13 +58,14 @@ export async function GET() {
         u.prenom, 
         u.telephone, 
         u.email, 
-        u.idRole, 
+        u.idRole,
         u.idSite, 
         r.designRole, 
         s.designSite 
        FROM user u 
        LEFT JOIN site s ON u.idSite = s.idSite 
-       LEFT JOIN role r ON u.idRole = r.idRole 
+       LEFT JOIN role r ON u.idRole = r.idRole
+       WHERE u.statut = 'Actif'
        ORDER BY u.idUser ASC`,
     );
 

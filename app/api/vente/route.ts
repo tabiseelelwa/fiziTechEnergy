@@ -55,7 +55,10 @@ export async function POST(request: Request) {
     }
 
     const [forfaits] = await pool.execute<RowDataPacket[]>(
-      "SELECT * FROM typeForfait WHERE codeTypeForfait = ?",
+      `SELECT tf.*, pr.montant as prix
+       FROM typeForfait tf 
+       LEFT JOIN prix pr ON tf.idPrix = pr.idPrix
+       WHERE tf.codeTypeForfait = ?`,
       [codeTypeForfait],
     );
 
@@ -67,7 +70,7 @@ export async function POST(request: Request) {
     }
 
     const forfaitChoisi = forfaits[0];
-    const montant = forfaitChoisi.prixFC;
+    const montant = forfaitChoisi.prix;
 
     const phone = telephone.trim();
     console.log(`Le montant est de ${montant}`);
@@ -109,14 +112,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const referenceVente = `VEN-${Date.now()}-${idUser.toString().padStart(3, "2")}`;
-    const codeTicketUnique = `FT-${Math.floor(1000 + Math.random() * 9000)}`;
+    const referenceVente = `TXN-${Date.now()}-${idUser.toString().padStart(3, "2")}`;
+    const codeTicketUnique = `EH-${Math.floor(1000 + Math.random() * 9000)}`;
     const dureeMinutes = parseInt(forfaitChoisi.dureeMinutes) || 60;
 
     const dateExpirationFrontend = new Date();
     dateExpirationFrontend.setMinutes(
       dateExpirationFrontend.getMinutes() + dureeMinutes,
     );
+
+    console.log(`
+      idClient: ${idClient}
+      codeTypeForfait: ${codeTypeForfait}
+      codeUnique: ${codeTicketUnique}
+      user: ${idUser}
+      ref. vente: ${referenceVente}
+      montant: ${montant}
+      operateur: ${operateur}      
+      `);
 
     const queryInsertTicket = `
       INSERT INTO ticket (codeTicket, dateExpiration, statut) 
@@ -191,7 +204,7 @@ export async function POST(request: Request) {
         ticket: {
           code: codeTicketUnique,
           forfait: forfaitChoisi.designation,
-          prixFC: montant,
+          prix: montant,
           dureeMinutes: dureeMinutes,
           expiration: dateExpirationFrontend,
           dateVente: new Date().toISOString(),

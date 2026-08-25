@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -51,7 +50,7 @@ export default function ConnexionTicketForm() {
 
     return (
         <div className="min-h-screen flex flex-center items-center justify-center px-2">
-            <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <div className="max-w-md mx-auto bg-white  w-[500px] border border-gray-200 rounded-2xl p-6 shadow-md">
                 <div className="mb-4 text-emerald-600">
                     <h2 className="text-xl font-bold text-gray-900">
                         Se connecter avec un Ticket
@@ -77,7 +76,7 @@ export default function ConnexionTicketForm() {
                                 placeholder="0810000000"
                                 value={telephone}
                                 onChange={(e) => setTelephone(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500"
                             />
                         </div>
                     </div>
@@ -93,35 +92,37 @@ export default function ConnexionTicketForm() {
                                 placeholder="EX: FT-98214"
                                 value={codeTicket}
                                 onChange={(e) => setCodeTicket(e.target.value.toUpperCase())}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
                             />
                         </div>
                     </div>
+                    <div className="flex gap-4">
+                        <button
+                            className="w-full bg-[#64748B] p-2 text-white rounded-lg flex items-center justify-center gap-2 cursor-pointer"
+                            onClick={() => retAcc()}
+                        >
+                            <HiArrowCircleLeft color="#fff" size={22} />
+                            Accueil
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={ticketMutation.isPending}
+                            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                            {ticketMutation.isPending ? (
+                                <>
+                                    <BeatLoader color="#ffffff" size={8} />
+                                    <span>Vérification...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <HiCheckCircle className="w-5 h-5" />
+                                    <span>Se connecter</span>
+                                </>
+                            )}
+                        </button>
 
-                    <button
-                        type="submit"
-                        disabled={ticketMutation.isPending}
-                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                    >
-                        {ticketMutation.isPending ? (
-                            <>
-                                <BeatLoader color="#ffffff" size={8} />
-                                <span>Vérification...</span>
-                            </>
-                        ) : (
-                            <>
-                                <HiCheckCircle className="w-5 h-5" />
-                                <span>Activer ma connexion</span>
-                            </>
-                        )}
-                    </button>
-                    <button
-                        className="w-full bg-[#64748B] p-2 text-white rounded-lg flex items-center justify-center gap-2 cursor-pointer"
-                        onClick={() => retAcc()}
-                    >
-                        <HiArrowCircleLeft color="#fff" size={22}/>
-                        Retour à l'accueil
-                    </button>
+                    </div>
                 </form>
             </div>
         </div>

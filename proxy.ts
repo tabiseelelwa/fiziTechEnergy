@@ -2,26 +2,31 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  // Récupération du token stocké dans le cookie HTTP-Only
   const token = request.cookies.get("Empire-Lab_token")?.value;
-  const pathname = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
 
-  // Routes protégées du dashboard
-  const isProtectedPath =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/sites") ||
-    pathname.startsWith("/tarifs") ||
-    pathname.startsWith("/utilisateurs") ||
-    pathname.startsWith("/profil");
+  const protectedPaths = [
+    "/ventes",
+    "/sites",
+    "/tarifs",
+    "/utilisateurs",
+    "/profil",
+  ];
 
-  // Si l'utilisateur non connecté tente d'accéder à une route protégée -> Redirection /login
+  const isProtectedPath = protectedPaths.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  // Redirection vers /login si non connecté sur une route protégée
   if (isProtectedPath && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("from", pathname); // Optionnel : enregistre la page voulue
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Si l'utilisateur est déjà connecté et tente d'aller sur /login -> Redirection /dashboard
+  // Redirection vers l'accueil si déjà connecté et tente d'accéder à /login
   if (pathname === "/login" && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
@@ -29,11 +34,9 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/sites/:path*",
-    "/tarifs/:path*",
-    "/utilisateurs/:path*",
-    "/profil/:path*",
-    "/login",
+    /*
+     * Intercepte toutes les routes sauf les fichiers statiques (_next, images, favicon, etc.)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

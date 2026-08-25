@@ -4,7 +4,7 @@ import { getConnection } from "@/app/lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2/promise";
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
 
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       designRole: user.designRole,
     };
 
-    const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "8h" });
+    const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "1h" });
 
     const response = NextResponse.json(
       {
@@ -115,15 +115,17 @@ export async function POST(request: Request) {
   }
 }
 
-export async function getUserIdFromSession(request: Request): Promise<number | string | null> {
+export async function getUserIdFromSession(
+  request: Request,
+): Promise<number | string | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('Empire-Lab_token')?.value;
+  const token = cookieStore.get("Empire-Lab_token")?.value;
 
   if (!token) return null;
 
   try {
-    const decoded = jwt.verify(token,JWT_SECRET) as {idUser : number};
-    return decoded.idUser
+    const decoded = jwt.verify(token, JWT_SECRET) as { idUser: number };
+    return decoded.idUser;
   } catch (err) {
     return null;
   }

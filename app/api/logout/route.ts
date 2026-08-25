@@ -9,7 +9,7 @@ export async function POST() {
   // Suppression du cookie HTTP-Only
   response.cookies.set("Empire-Lab_token", "", {
     httpOnly: true,
-    expires: new Date(0), // Expire immédiatement
+    expires: new Date(0),
     path: "/",
   });
 
