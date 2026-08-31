@@ -3,16 +3,16 @@
 
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { validerTicketSecours } from "@/app/services/ticket/ticketService";
+import { validerTicket } from "@/app/services/ticket/ticketService";
 import { BeatLoader } from "react-spinners";
 import {
     HiTicket,
     HiPhone,
     HiCheckCircle,
     HiExclamationCircle,
-    HiArrowCircleLeft,
 } from "react-icons/hi";
 import { useRouter } from "next/navigation";
+import {HiOutlineHome } from "react-icons/hi2";
 
 export default function ConnexionTicketForm() {
     const [telephone, setTelephone] = useState("");
@@ -26,10 +26,9 @@ export default function ConnexionTicketForm() {
     };
 
     const ticketMutation = useMutation({
-        mutationFn: validerTicketSecours,
+        mutationFn: validerTicket,
         onSuccess: (data) => {
             alert("Connexion réussie ! Redirection vers internet...");
-            // Redirection automatique pour valider le captive portal MikroTik
             if (data.redirectUrl) {
                 window.location.href = `${data.redirectUrl}?username=${codeTicket}&password=${codeTicket}`;
             }
@@ -89,7 +88,7 @@ export default function ConnexionTicketForm() {
                             <HiTicket className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
-                                placeholder="EX: FT-98214"
+                                placeholder="EX: EH-98214"
                                 value={codeTicket}
                                 onChange={(e) => setCodeTicket(e.target.value.toUpperCase())}
                                 className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
@@ -101,7 +100,7 @@ export default function ConnexionTicketForm() {
                             className="w-full bg-[#64748B] p-2 text-white rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                             onClick={() => retAcc()}
                         >
-                            <HiArrowCircleLeft color="#fff" size={22} />
+                            <HiOutlineHome color="#fff" size={22} />
                             Accueil
                         </button>
                         <button

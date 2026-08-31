@@ -57,7 +57,6 @@ export default function UtilisateursPage() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setModalResetPass(false);
       setUserAReset(null);
-      alert('Le mot de passe a été réinitialisé à "12345" avec succès.');
     },
     onError: (err: any) => {
       const errorMessage = err.response?.data?.message || err.message || 'Erreur lors de la réinitialisation';
@@ -140,7 +139,6 @@ export default function UtilisateursPage() {
                 Voulez-vous vraiment réinitialiser le mot de passe de{' '}
                 <span className="font-semibold text-gray-900">{userAReset.nom} {userAReset.prenom}</span> ?
                 <br />
-                Le nouveau mot de passe par défaut sera : <code className="bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-200 font-mono font-bold">12345</code>
               </p>
               <div className="flex justify-end gap-3">
                 <button
@@ -163,7 +161,7 @@ export default function UtilisateursPage() {
                       <span>Réinitialisation...</span>
                     </>
                   ) : (
-                    <span>Réinitialiser à '12345'</span>
+                    <span>Réinitialiser</span>
                   )}
                 </button>
               </div>
@@ -322,13 +320,12 @@ export default function UtilisateursPage() {
                         </td>
 
                         <td className="py-2 px-4">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
-                            roleLower === 'admin'
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${roleLower === 'admin'
                               ? 'bg-purple-50 text-purple-700 border border-purple-200'
                               : roleLower === 'gerant'
                                 ? 'bg-blue-50 text-blue-700 border border-blue-200'
                                 : 'bg-gray-100 text-gray-700 border border-gray-200'
-                          }`}>
+                            }`}>
                             {u.designRole || 'Non attribué'}
                           </span>
                         </td>

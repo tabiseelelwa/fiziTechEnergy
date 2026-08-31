@@ -6,29 +6,29 @@ import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BeatLoader } from 'react-spinners';
 import { BsArrowLeft, BsX } from 'react-icons/bs';
+import { getTarifs, TarifData } from '@/app/services/tarif/tarifService';
+import { useQuery } from '@tanstack/react-query';
 
-// Base de données locale temporaire des forfaits pour l'affichage Front-End rapide
-const FORFAITS_CONFIG = {
-    '1': { designation: 'Forfait 3 Heure', prix: '2 500 FC', description: 'Idéal pour une vérification rapide' },
-    '2': { designation: 'Forfait 8 Heures', prix: '3 500 FC', description: 'Le meilleur compromis vitesse/prix' },
-    '3': { designation: 'Forfait 24 Heures', prix: '5 000 FC', description: 'Tranquillité totale toute la journée' },
-};
 
-type ForfaitKey = keyof typeof FORFAITS_CONFIG;
+
 
 function FormulaireAchat() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
     // Récupération de l'ID depuis l'URL (par défaut le forfait 2 s'il n'y a rien)
-    const forfaitId = (searchParams.get('forfait') || '2') as ForfaitKey;
-    const infoForfait = FORFAITS_CONFIG[forfaitId] || FORFAITS_CONFIG['2'];
+    const forfaitId = (searchParams.get('forfait') || '2');
 
     // États du formulaire
     const [telephone, setTelephone] = useState('');
     const [operateur, setOperateur] = useState('M-Pesa');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const { data: forfaits = [], isLoading, isError } = useQuery<TarifData[]>({
+        queryKey: ["forfaits-publics"],
+        queryFn: getTarifs,
+    });
 
     const handleSoumissionPaiement = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,6 +65,11 @@ function FormulaireAchat() {
 
     return (
         <div className='min-h-screen max-w-[500px] text-[#1f2937] mx-auto flex flex-col items-center gap-2 justify-center px-4'>
+            {isError && (
+                <p className="text-red-500 text-sm text-center py-4">
+                    Impossible de charger les forfaits. Veuillez réinventer votre connexion.
+                </p>
+            )}
             <div className="w-full flex flex-col gap-4">
                 {/* Bouton Retour */}
                 <div className="flex items-center gap-2 text-[16px] font-semibold text-[#2563eb] cursor-pointer" onClick={() => router.push('/client')}>
@@ -77,9 +82,9 @@ function FormulaireAchat() {
                 {/* Récapitulatif du forfait sélectionné */}
                 <div className="bg-[#eff6ff] border-[1px] border-[#bfdbfe] p-2 rounded-[14px]">
                     <span className='text-[11px] font-bold tracking-wide-[0.5px]'>Forfait sélectionné</span>
-                    <h2 className='font-extrabold text-[20px] mt-[5px] mr-0 mb-[2px] ml-0 text-[#1e40af] '>{infoForfait.designation}</h2>
-                    <p className='mt-0 mb-[5px] text-[12px] text-[#0070f3]'>{infoForfait.description}</p>
-                    <div className="text-[24px] text-[#0070f3] font-[900]">{infoForfait.prix}</div>
+                    <h2 className='font-extrabold text-[20px] mt-[5px] mr-0 mb-[2px] ml-0 text-[#1e40af] '>{forfaits.desi}</h2>
+                    <p className='mt-0 mb-[5px] text-[12px] text-[#0070f3]'>{forfaits.description}</p>
+                    <div className="text-[24px] text-[#0070f3] font-[900]">{forfaits.prix}</div>
                 </div>
 
                 {error && (
@@ -127,7 +132,7 @@ function FormulaireAchat() {
                             cursor: loading ? 'not-allowed' : 'pointer',
                         }}
                     >
-                        {loading ? <BeatLoader color={"#fff"} /> : `Payer ${infoForfait.prix}`}
+                        {loading ? <BeatLoader color={"#fff"} /> : `Payer ${forfaits.prix}`}
                     </button>
                 </form>
             </div>

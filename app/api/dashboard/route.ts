@@ -105,6 +105,7 @@ export async function GET(request: NextRequest) {
         p.operateur,
         p.datePaiement,
         u.email,
+        u.prenom,
         s.idVille,
         s.designSite
       ${baseJoins}

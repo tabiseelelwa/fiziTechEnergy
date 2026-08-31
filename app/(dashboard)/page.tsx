@@ -129,6 +129,7 @@ const fetchDashboardData = async (
         operateur: string;
         datePaiement: string;
         email?: string;
+        prenom: string;
         designVille?: string;
         designSite?: string;
       }) => ({
@@ -138,7 +139,7 @@ const fetchDashboardData = async (
         montant: `${(Number(item.montantPaye) || 0).toLocaleString()} FC`,
         mode: item.operateur || "Cash",
         date: formatDateTime(item.datePaiement),
-        utilisateur: item.email || "N/A",
+        utilisateur: item.prenom || "Non défini",
         ville: item.designVille || "N/A",
         site: item.designSite || "Non défini",
         statut: "Réussi",
@@ -511,7 +512,7 @@ export default function VendeurDashboard() {
                         {tx.montant}
                       </td>
                       <td className="py-4 px-6 text-slate-500">
-                        {tx.utilisateur}
+                        {tx.utilisateur ? tx.utilisateur: "Non défini"}
                       </td>
                       <td className="py-4 px-6 text-slate-500">
                         <div className="text-[10px] text-slate-400">{tx.site}</div>

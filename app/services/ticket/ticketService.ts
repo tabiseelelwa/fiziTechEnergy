@@ -20,7 +20,7 @@ export const createTicket = async (): Promise<ticketData> => {
 
 
 
-export const validerTicketSecours = async (payload: TicketPayload) => {
+export const validerTicket = async (payload: TicketPayload) => {
   const response = await axios.post("/api/verif-ticket", payload);
   return response.data;
 };
