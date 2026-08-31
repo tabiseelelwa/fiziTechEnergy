@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     // Insertion en base de données avec le mot de passe haché
     const [result] = await getConnection().execute(
-      `INSERT INTO user(nom, prenom, telephone, email, pass, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?,?,?)`,
+      `INSERT INTO user(nom, prenom, telephone, email, pass, statut, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?,?,?)`,
       [nom, prenom, telephone, email, hashedPass, "Actif", idRole, idSite],
     );
 
