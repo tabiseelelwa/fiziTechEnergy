@@ -70,13 +70,13 @@ export default function MesVentesPage() {
   });
 
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ["tickets-stats"],
+    queryKey: ["tickets"],
     queryFn: fetchTicketStats,
   });
 
   const { data: ventesData, isLoading: loading } = useQuery<VentesApiResponse>({
     queryKey: [
-      "ventes",
+      "tickets",
       page,
       startDate,
       endDate,
@@ -115,7 +115,7 @@ export default function MesVentesPage() {
 
   return (
     <RoleGuard allowedRoles={["Caissier"]}>
-      <div className="space-y-6 p-4">
+      <div className="space-y-6 px-4">
         {modalVenteTicket && (
           <VendeurPage setModalVenteTicket={setModalVenteTicket} />
         )}

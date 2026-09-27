@@ -7,7 +7,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { nom, prix, duree } = body;
 
-    // 1. Validation de base
     if (!nom || prix === undefined || !duree) {
       return NextResponse.json(
         { message: "Tous les champs obligatoires doivent être remplis." },
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const parsedPrix = parseInt(prix, 10);
-    // On convertit la durée (ex: si reçue en heures, ajustez avec * 60 si nécessaire)
+    
     const parsedDureeMinutes = parseInt(duree, 10);
 
     if (isNaN(parsedPrix) || isNaN(parsedDureeMinutes)) {
@@ -26,14 +25,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Insertion en base de données (codeTypeForfait est auto-incrémenté)
     const [result]: any = await getConnection().execute(
       `INSERT INTO typeforfait (designation, dureeMinutes, prixFC) 
        VALUES (?, ?, ?)`,
       [nom, parsedDureeMinutes, parsedPrix],
     );
 
-    // 3. Réponse avec l'ID généré par MySQL (insertId)
     const createdTarif = {
       codeTypeForfait: result.insertId,
       designation: nom,

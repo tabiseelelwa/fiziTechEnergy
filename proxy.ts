@@ -1,7 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
-export function proxy(request: NextRequest) {
+const JWT_SECRET = process.env.JWT_SECRET;
+
+async function isTokenValid(token: string | undefined): Promise<boolean> {
+  if (!token || !JWT_SECRET) return false;
+
+  try {
+    await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
+    return true;
+  } catch {
+    // Signature invalide OU expiré (jose lève dans les deux cas)
+    return false;
+  }
+}
+
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get("Empire-Lab_token")?.value;
   const { pathname } = request.nextUrl;
 
@@ -17,15 +32,19 @@ export function proxy(request: NextRequest) {
     pathname.startsWith(path)
   );
 
-  // Redirection vers /login si non connecté sur une route protégée
-  if (isProtectedPath && !token) {
+  const tokenValid = await isTokenValid(token);
+
+  // Redirection vers /login si non connecté (ou token expiré/invalide)
+  // sur une route protégée.
+  if (isProtectedPath && !tokenValid) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("from", pathname); // Optionnel : enregistre la page voulue
     return NextResponse.redirect(loginUrl);
   }
 
-  // Redirection vers l'accueil si déjà connecté et tente d'accéder à /login
-  if (pathname === "/login" && token) {
+  // Redirection vers l'accueil seulement si le token est réellement
+  // valide — un cookie expiré ne doit jamais empêcher l'accès à /login,
+  // sous peine de boucle avec la détection d'expiration côté client.
+  if (pathname === "/login" && tokenValid) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -34,9 +53,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Intercepte toutes les routes sauf les fichiers statiques (_next, images, favicon, etc.)
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

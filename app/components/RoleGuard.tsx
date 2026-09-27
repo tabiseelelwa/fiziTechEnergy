@@ -1,20 +1,12 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import axios from 'axios';
+import { useAuth } from '@/app/context/AuthContext';
 
 interface RoleGuardProps {
   children: React.ReactNode;
   allowedRoles: string[];
-}
-
-interface UserProfile {
-  idUser: number;
-  nom: string;
-  email: string;
-  designRole: string;
 }
 
 const normalize = (str: string = '') =>
@@ -24,37 +16,38 @@ const normalize = (str: string = '') =>
     .replace(/[\u0300-\u036f]/g, '')
     .trim();
 
+const DEFAULT_FALLBACK_ROUTES: Record<string, string> = {
+  admin: '/',
+  gerant: '/',
+  caissier: '/ventes',
+};
+
 export default function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
   const router = useRouter();
-
-  const { data: user, isLoading, isError } = useQuery<UserProfile>({
-    queryKey: ['user-profile'],
-    queryFn: async () => {
-      const response = await axios.get('/api/users/profile');
-      return response.data.user;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { user, loading } = useAuth();
 
   const userRole = user?.designRole || '';
   const currentRoleNormalized = normalize(userRole);
 
-  const isAuthorized = allowedRoles.some(
-    (role) => normalize(role) === currentRoleNormalized
-  );
+  const isAdmin = currentRoleNormalized === 'admin';
+  const isAuthorized =
+    isAdmin || allowedRoles.some((role) => normalize(role) === currentRoleNormalized);
 
   useEffect(() => {
+    if (loading) return;
 
-    if (!isLoading && !isError) {
-
-      if (!user || !isAuthorized) {
-        router.replace('/');
-      }
+    if (!user) {
+      router.replace('/login');
+      return;
     }
-  }, [isLoading, isError, user, isAuthorized, router]);
 
+    if (!isAuthorized) {
+      const fallbackRoute = DEFAULT_FALLBACK_ROUTES[currentRoleNormalized] || '/login';
+      router.replace(fallbackRoute);
+    }
+  }, [loading, user, isAuthorized, currentRoleNormalized, router]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-2 text-sm text-gray-500">
@@ -65,7 +58,7 @@ export default function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
     );
   }
 
-  if (!user || !isAuthorized || isError) {
+  if (!user || !isAuthorized) {
     return null;
   }
 

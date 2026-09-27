@@ -124,12 +124,10 @@ export async function POST(request) {
     // =========================================================================
 
     try {
-      const rawHost = process.env.ROUTER_HOST || "10.5.5.1";
-
       const client = new RouterOSClient({
-        host: rawHost,
-        user: process.env.ROUTER_USER || "admin",
-        password: process.env.ROUTER_PASS || "192.168.175.96",
+        host: "10.5.5.1",
+        user: "admin",
+        password: "admin",
         timeout: 5000,
       });
 

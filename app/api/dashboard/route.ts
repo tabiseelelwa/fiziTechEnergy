@@ -1,150 +1,69 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextRequest, NextResponse } from "next/server";
-import { RowDataPacket } from "mysql2";
+import { NextResponse } from "next/server";
 import { getConnection } from "@/app/lib/db";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
+    const [[statsResult], evolutionSeptJours, repartitionForfaits]: any =
+      await Promise.all([
+        // A. Requete pour les 4 cartes KPI (Jour, Semaine, Mois, Année)
+        getConnection().query(`
+        SELECT 
+          COALESCE(SUM(CASE WHEN DATE(datePaiement) = CURDATE() THEN montantPaye ELSE 0 END), 0) AS ventesJour,
+          COALESCE(SUM(CASE WHEN YEARWEEK(datePaiement, 1) = YEARWEEK(CURDATE(), 1) THEN montantPaye ELSE 0 END), 0) AS ventesSemaine,
+          COALESCE(SUM(CASE WHEN MONTH(datePaiement) = MONTH(CURDATE()) AND YEAR(datePaiement) = YEAR(CURDATE()) THEN montantPaye ELSE 0 END), 0) AS ventesMois,
+          COALESCE(SUM(CASE WHEN YEAR(datePaiement) = YEAR(CURDATE()) THEN montantPaye ELSE 0 END), 0) AS ventesAnnee
+        FROM paiement
+        WHERE statutPaiement = 'Succès' OR statutPaiement = 'Réussi'
+      `),
 
-    const dateDebut = searchParams.get("dateDebut");
-    const dateFin = searchParams.get("dateFin");
-    const userEmail = searchParams.get("userEmail");
-    const ville = searchParams.get("ville");
-    const site = searchParams.get("site");
+        // B. Requete pour l'évolution des 7 derniers jours (du plus ancien au plus récent)
+        getConnection().query(`
+        SELECT 
+          DATE_FORMAT(datePaiement, '%d/%m') AS jour,
+          COALESCE(SUM(montantPaye), 0) AS ventes
+        FROM paiement
+        WHERE datePaiement >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+          AND (statutPaiement = 'Succès' OR statutPaiement = 'Réussi')
+        GROUP BY DATE(datePaiement), DATE_FORMAT(datePaiement, '%d/%m')
+        ORDER BY DATE(datePaiement) ASC
+      `),
 
-    const pool = getConnection();
+        // C. Requete pour la répartition des forfaits (Top forfaits vendus)
+        getConnection().query(`
+        SELECT 
+          f.designation AS designation,
+          COUNT(p.idPaiement) AS total
+        FROM paiement p
+        JOIN typeForfait f ON p.codeTypeForfait = f.codeTypeForfait
+        WHERE p.statutPaiement = 'Succès' OR p.statutPaiement = 'Réussi'
+        GROUP BY f.codeTypeForfait, f.designation
+        ORDER BY total DESC
+        LIMIT 6
+      `),
+      ]);
 
-    const whereConditions: string[] = ["1=1"];
-    const queryParams: any[] = [];
-
-    if (dateDebut) {
-      whereConditions.push("p.datePaiement >= ?");
-      queryParams.push(`${dateDebut} 00:00:00`);
-    }
-
-    if (dateFin) {
-      whereConditions.push("p.datePaiement <= ?");
-      queryParams.push(`${dateFin} 23:59:59`);
-    }
-
-    if (userEmail) {
-      whereConditions.push("u.email LIKE ?");
-      queryParams.push(`%${userEmail}%`);
-    }
-
-    if (ville) {
-      whereConditions.push("s.designVille = ?");
-      queryParams.push(ville);
-    }
-
-    if (site) {
-      whereConditions.push("s.designSite = ?");
-      queryParams.push(site);
-    }
-
-    const whereClause = whereConditions.join(" AND ");
-
-    const baseJoins = `
-      FROM paiement p
-      LEFT JOIN typeforfait tf ON p.codeTypeForfait = tf.codeTypeForfait
-      LEFT JOIN client c ON p.idClient = c.idClient
-      LEFT JOIN user u ON p.idUser = u.idUser
-      LEFT JOIN site s ON u.idSite = s.idSite
-    `;
-
-    // 1. Stats Globales
-    const [statsRows] = await pool.execute<RowDataPacket[]>(
-      `SELECT COALESCE(SUM(p.montantPaye), 0) AS totalEncaisse, COUNT(p.idPaiement) AS ticketsGeneres ${baseJoins} WHERE ${whereClause}`,
-      queryParams,
-    );
-
-    // 2. Mode de paiement principal
-    const [modeRows] = await pool.execute<RowDataPacket[]>(
-      `SELECT p.operateur, COUNT(*) as count ${baseJoins} WHERE ${whereClause} GROUP BY p.operateur ORDER BY count DESC LIMIT 1`,
-      queryParams,
-    );
-
-    // 3. Évolution des recettes
-    const [evolutionRows] = await pool.execute<RowDataPacket[]>(
-      `
-      SELECT 
-        DATE_FORMAT(p.datePaiement, '%d/%m %H:00') AS heure,
-        SUM(p.montantPaye) AS ventes
-      ${baseJoins}
-      WHERE ${whereClause}
-      GROUP BY DATE_FORMAT(p.datePaiement, '%d/%m %H:00')
-      ORDER BY MIN(p.datePaiement) ASC
-      `,
-      queryParams,
-    );
-
-    // 4. Répartition des forfaits
-    const [repartitionRows] = await pool.execute<RowDataPacket[]>(
-      `
-      SELECT 
-        COALESCE(tf.designation, 'Inconnu') AS designation,
-        COUNT(p.idPaiement) AS total
-      ${baseJoins}
-      WHERE ${whereClause}
-      GROUP BY tf.codeTypeForfait, tf.designation
-      ORDER BY total DESC
-      `,
-      queryParams,
-    );
-
-    // 5. Historique des transactions récentes
-    const [recentRows] = await pool.execute<RowDataPacket[]>(
-      `
-      SELECT 
-        p.idPaiement,
-        p.codeTicket,
-        c.Telephone,
-        tf.designation,
-        p.montantPaye,
-        p.operateur,
-        p.datePaiement,
-        u.email,
-        u.prenom,
-        s.idVille,
-        s.designSite
-      ${baseJoins}
-      WHERE ${whereClause}
-      ORDER BY p.datePaiement DESC
-      `,
-      queryParams,
-    );
-
-    // 6. Options Villes et Sites
-    const [villesRows] = await pool.execute<RowDataPacket[]>(
-      "SELECT DISTINCT idVille FROM site WHERE idVille IS NOT NULL AND idVille != '' ORDER BY idVille ASC",
-    );
-    const [sitesRows] = await pool.execute<RowDataPacket[]>(
-      "SELECT DISTINCT designSite AS site FROM site WHERE designSite IS NOT NULL AND designSite != '' ORDER BY designSite ASC",
-    );
-
-    return NextResponse.json(
-      {
-        stats: {
-          totalEncaisse: statsRows[0]?.totalEncaisse || 0,
-          ticketsGeneres: statsRows[0]?.ticketsGeneres || 0,
-          modePrincipal: modeRows[0]?.operateur || "Cash",
-        },
-        evolutionHeures: evolutionRows,
-        repartitionForfaits: repartitionRows,
-        recentVentes: recentRows,
-        villesOptions: villesRows.map((r) => r.idVille).filter(Boolean),
-        sitesOptions: sitesRows.map((r) => r.site).filter(Boolean),
+    // Formatage et retour de la réponse JSON
+    return NextResponse.json({
+      stats: {
+        ventesJour: Number(statsResult[0]?.ventesJour || 0),
+        ventesSemaine: Number(statsResult[0]?.ventesSemaine || 0),
+        ventesMois: Number(statsResult[0]?.ventesMois || 0),
+        ventesAnnee: Number(statsResult[0]?.ventesAnnee || 0),
       },
-      { status: 200 },
-    );
-  } catch (error: any) {
-    console.error("Erreur Backend Dashboard:", error);
+      evolutionSeptJours: (evolutionSeptJours[0] || []).map((item: any) => ({
+        jour: item.jour,
+        ventes: Number(item.ventes),
+      })),
+      repartitionForfaits: (repartitionForfaits[0] || []).map((item: any) => ({
+        designation: item.designation,
+        total: Number(item.total),
+      })),
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération du dashboard:", error);
     return NextResponse.json(
-      {
-        message: "Erreur lors du chargement des données filtrées",
-        error: error?.message || String(error),
-      },
+      { message: "Erreur serveur lors du chargement des statistiques." },
       { status: 500 },
     );
   }

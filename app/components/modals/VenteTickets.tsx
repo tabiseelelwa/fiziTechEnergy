@@ -67,7 +67,7 @@ export const VendeurPage = ({ setModalVenteTicket }: VenteTickets) => {
     mutationFn: createVente,
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ["ventes"],
+        queryKey: ["tickets"],
         exact: false
       });
 

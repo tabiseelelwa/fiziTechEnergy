@@ -46,11 +46,9 @@ function FormulaireAchat() {
             });
 
             if (response.status === 200 || response.status === 201) {
-                // Redirection avec le paramètre du site
                 router.push(`/client/succes?site=${siteId}`);
             }
         } catch (err: any) {
-            // Capture propre du message d'erreur retourné par Axios / backend
             const messageErreur = 
                 err.response?.data?.message || 
                 err.message || 
@@ -75,7 +73,6 @@ function FormulaireAchat() {
                 </div>
             ) : (
                 <div className="w-full flex flex-col gap-4">
-                    {/* Bouton Retour */}
                     <div 
                         className="flex items-center gap-2 text-[16px] font-semibold text-[#2563eb] cursor-pointer" 
                         onClick={() => router.push(`/client?site=${siteId}`)}
@@ -83,8 +80,6 @@ function FormulaireAchat() {
                         <BsArrowLeft />
                         <div>Modifier le forfait</div>
                     </div>
-
-                    {/* Récapitulatif du forfait sélectionné */}
                     <div className="bg-[#eff6ff] border-[1px] border-[#bfdbfe] p-4 rounded-[14px]">
                         <span className='text-[11px] font-bold tracking-wide uppercase text-[#1e40af]'>
                             Forfait sélectionné
@@ -105,8 +100,6 @@ function FormulaireAchat() {
                             <BsX className='text-[22px] font-extrabold' /> {error}
                         </div>
                     )}
-
-                    {/* Formulaire de paiement */}
                     <h3 className='text-center text-[18px] font-bold text-[#0070f3]'>Finaliser votre paiement</h3>
 
                     <form onSubmit={handleSoumissionPaiement} className='flex flex-col gap-4'>

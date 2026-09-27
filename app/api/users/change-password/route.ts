@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { getConnection } from "@/app/lib/db";
 import { RowDataPacket } from "mysql2";
-import { getUserIdFromSession } from "../../login/route";
+import { getUserIdFromSession } from "@/app/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const idUser = await getUserIdFromSession(request);
+    const idUser = await getUserIdFromSession();
 
     if (!idUser) {
       return NextResponse.json(

@@ -3,6 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import '@/app/lib/axios';
 
 export interface User {
   idUser: number;
@@ -17,9 +18,8 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
   loading: boolean;
-  login: (userData: User, userToken: string) => void;
+  login: (userData: User) => void;
   logout: () => void;
 }
 
@@ -27,61 +27,54 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       try {
-        const storedUser = localStorage.getItem('Empire-Lab_user');
-        const storedToken = localStorage.getItem('Empire-Lab_token');
+        const response = await axios.get('/api/me');
+        setUser(response.data.user);
+      } catch {
+        setUser(null);
 
-        if (storedUser && storedToken) {
-          const parsedUser: User = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setToken(storedToken);
+        // Redirection centralisée : que la page courante ait ou non
+        // son propre garde (RoleGuard, useEffect local...), l'échec
+        // de /api/me — la source de vérité de la session — suffit
+        // à lui seul à renvoyer vers /login.
+        if (
+          typeof window !== 'undefined' &&
+          !window.location.pathname.startsWith('/login')
+        ) {
+          window.location.href = '/login';
         }
-      } catch (e) {
-        console.error('Erreur de lecture du localStorage :', e);
-        localStorage.removeItem('Empire-Lab_user');
-        localStorage.removeItem('Empire-Lab_token');
-        window.location.href = ('/login')
       } finally {
         setLoading(false);
       }
     };
 
     initializeAuth();
-  },[]);
+  }, []);
 
-  const login = (userData: User, userToken: string) => {
+  const login = (userData: User) => {
     setUser(userData);
-    setToken(userToken);
-    localStorage.setItem('Empire-Lab_user', JSON.stringify(userData));
-    localStorage.setItem('Empire-Lab_token', userToken);
   };
 
   const logout = async () => {
-
     try {
-      // Supprime le cookie côté serveur
       await axios.post('/api/logout');
     } catch (e) {
       console.error('Erreur de déconnexion serveur', e);
     } finally {
       setUser(null);
-      setToken(null);
-      localStorage.removeItem('Empire-Lab_user');
-      localStorage.removeItem('Empire-Lab_token');
       queryClient.clear();
       window.location.href = '/login';
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

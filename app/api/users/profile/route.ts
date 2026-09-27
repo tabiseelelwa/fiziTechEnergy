@@ -1,11 +1,11 @@
 import { getConnection } from "@/app/lib/db";
 import { RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
-import { getUserIdFromSession } from "../../login/route";
+import { getUserIdFromSession } from "@/app/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const idUser = await getUserIdFromSession(request);
+    const idUser = await getUserIdFromSession();
 
     if (!idUser) {
       return NextResponse.json(
@@ -14,15 +14,12 @@ export async function GET(request: Request) {
       );
     }
 
-    // Exemple de requête SQL native (à adapter à votre ORM ou DB helper)
     const [rows] = await getConnection().execute<RowDataPacket[]>(
       `SELECT  
         u.nom, 
         u.prenom, 
         u.email, 
         u.telephone, 
-        u.idRole, 
-        u.idSite, 
         s.designSite, 
         r.designRole
        FROM user u
@@ -49,10 +46,10 @@ export async function GET(request: Request) {
   }
 }
 
-// PUT: Mettre à jour les informations du profil
+// Mettre à jour les informations du profil
 export async function PUT(request: Request) {
   try {
-    const idUser = getUserIdFromSession(request);
+    const idUser = getUserIdFromSession();
 
     if (!idUser) {
       return NextResponse.json(

@@ -3,35 +3,33 @@ import { getConnection } from "@/app/lib/db";
 import { NextResponse } from "next/server";
 import { RouterOSClient } from "routeros-client";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
-import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { getSessionUser } from "@/app/lib/auth";
 
-const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
+const normalize = (str: string = "") =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 
 export async function POST(request: Request) {
+  const session = await getSessionUser();
+
+  if (!session) {
+    return NextResponse.json(
+      { message: "Session expirée ou invalide. Veuillez vous reconnecter." },
+      { status: 401 },
+    );
+  }
+
+  const idUser = session.idUser;
+
   try {
     const { codeTypeForfait, operateur, telephone, nomClient } =
       await request.json();
-    const cookieStore = await cookies();
-    const token = cookieStore.get("Empire-Lab_token")?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: "Non autorisé." }, { status: 401 });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as { idUser: number };
-    const idUser = decoded.idUser;
-
-    if (!idUser) {
-      return NextResponse.json(
-        { message: "L'identifiant du vendeur (idUser) est requis." },
-        { status: 400 },
-      );
-    }
 
     const pool = getConnection();
 
-    // Anti-cumul : vérifier si le numéro possède déjà un ticket actif
     const queryCheck = `
       SELECT t.* FROM ticket t
       JOIN Paiement p ON t.codeTicket = p.codeTicket
@@ -73,7 +71,6 @@ export async function POST(request: Request) {
     const montant = forfaitChoisi.prix;
 
     const phone = telephone.trim();
-    console.log(`Le montant est de ${montant}`);
 
     const [clientsExistants] = await pool.execute<RowDataPacket[]>(
       "SELECT idClient FROM client WHERE Telephone = ?",
@@ -84,7 +81,6 @@ export async function POST(request: Request) {
 
     if (clientsExistants.length > 0) {
       idClient = clientsExistants[0].idClient;
-      console.log("Client existant trouvé, ID : " + idClient);
 
       if (nomClient) {
         await pool.execute(
@@ -99,7 +95,6 @@ export async function POST(request: Request) {
       );
 
       idClient = resultatInsert.insertId;
-      console.log("Nouveau client créé avec succès, ID : " + idClient);
     }
 
     if (!idClient) {
@@ -112,7 +107,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const referenceVente = `TXN-${Date.now()}-${idUser.toString().padStart(3, "2")}`;
+    const referenceVente = `TXN-${Date.now()}-${idUser.toString().padStart(3, "0")}`;
     const codeTicketUnique = `EH-${Math.floor(1000 + Math.random() * 9000)}`;
     const dureeMinutes = parseInt(forfaitChoisi.dureeMinutes) || 60;
 
@@ -146,28 +141,15 @@ export async function POST(request: Request) {
       ],
     );
 
-    // =========================================================================
-    // ENVOI AU MIKROTIK VIA L'API BINAIRE COMPATIBLE                         ||
-    // =========================================================================
-
     try {
-      const rawHost = (process.env.ROUTER_HOST || "10.5.5.1")
-        .replace("http://", "")
-        .replace("https://", "")
-        .split("/")[0]
-        .split(":")[0];
-
       const client = new RouterOSClient({
-        host: rawHost,
-        user: process.env.ROUTER_USER || "admin",
-        password: process.env.ROUTER_PASS || "192.168.175.96",
+        host: "192.168.175.96",
+        user: "admin",
+        password: "admin",
         timeout: 5000,
       });
 
       const api = await client.connect();
-      console.log(
-        `[MIKROTIK API] 🔌 Connecté avec succès pour la vente Vendeur #${idUser}`,
-      );
 
       await api.menu("/ip/hotspot/user").add({
         name: codeTicketUnique,
@@ -176,13 +158,10 @@ export async function POST(request: Request) {
         "limit-uptime": `${dureeMinutes}m`,
       });
 
-      console.log(
-        `[MIKROTIK API] ✅ Ticket ${codeTicketUnique} créé sur le routeur.`,
-      );
       await client.close();
     } catch (mikrotikError) {
       console.error(
-        "[MIKROTIK API] ⚠️ Erreur d'enregistrement MikroTik :",
+        "[MIKROTIK API] Erreur d'enregistrement MikroTik :",
         mikrotikError,
       );
     }
@@ -206,9 +185,10 @@ export async function POST(request: Request) {
     console.error("Erreur API vente-vendeur :", error);
     return NextResponse.json(
       {
-        message:
-          "Erreur serveur lors du traitement de la vente : " +
-          (error?.message || error),
+        message: "Erreur serveur lors du traitement de la vente.",
+        ...(process.env.NODE_ENV !== "production" && {
+          details: error?.message,
+        }),
       },
       { status: 500 },
     );
@@ -216,24 +196,69 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const session = await getSessionUser();
+
+  if (!session) {
+    return NextResponse.json({ message: "Non autorisé." }, { status: 401 });
+  }
+
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("Empire-Lab_token")?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: "Non autorisé." }, { status: 401 });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as { idUser: number };
-    const idUser = Number(decoded.idUser);
-
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
     const codeTypeForfait = searchParams.get("codeTypeForfait");
     const codeTicket = searchParams.get("codeTicket");
 
-    let query = `
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.max(1, parseInt(searchParams.get("limit") || "6", 10));
+    const offset = (page - 1) * limit;
+
+    const conditions: string[] = [];
+    const params: any[] = [];
+
+    const isCaissier = normalize(session.designRole) === "caissier";
+    if (isCaissier) {
+      conditions.push(`p.idUser = ?`);
+      params.push(session.idUser);
+    }
+
+    if (codeTicket && codeTicket.trim() !== "") {
+      conditions.push(`p.codeTicket LIKE ?`);
+      params.push(`%${codeTicket.trim()}%`);
+    }
+
+    if (startDate && startDate.trim() !== "") {
+      conditions.push(`DATE(p.datePaiement) >= ?`);
+      params.push(startDate.trim());
+    }
+
+    if (endDate && endDate.trim() !== "") {
+      conditions.push(`DATE(p.datePaiement) <= ?`);
+      params.push(endDate.trim());
+    }
+
+    if (codeTypeForfait && codeTypeForfait !== "ALL") {
+      conditions.push(`p.codeTypeForfait = ?`);
+      params.push(Number(codeTypeForfait));
+    }
+
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const [countResult]: any = await getConnection().query(
+      `
+        SELECT COUNT(*) as total 
+        FROM paiement p
+        ${whereClause}
+      `,
+      params,
+    );
+
+    const totalTickets = countResult[0]?.total || 0;
+    const totalPages = Math.ceil(totalTickets / limit);
+
+    const [rows]: any = await getConnection().query(
+      `
       SELECT 
         p.idPaiement,
         p.codeTicket,
@@ -248,41 +273,22 @@ export async function GET(request: Request) {
       LEFT JOIN typeForfait tf ON p.codeTypeForfait = tf.codeTypeForfait
       LEFT JOIN client c ON p.idClient = c.idClient
       LEFT JOIN ticket t ON p.codeTicket = t.codeTicket
-      WHERE p.idUser = ?
-    `;
+      ${whereClause}
+      ORDER BY p.datePaiement DESC
+      LIMIT ? OFFSET ?
+      `,
+      [...params, limit, offset],
+    );
 
-    const queryParams: (string | number)[] = [idUser];
-
-    // Filtre par Code Ticket (Recherche partielle avec LIKE)
-    if (codeTicket && codeTicket.trim() !== "") {
-      query += ` AND p.codeTicket LIKE ?`;
-      queryParams.push(`%${codeTicket.trim()}%`);
-    }
-
-    // Filtre par Date de début
-    if (startDate && startDate.trim() !== "") {
-      query += ` AND DATE(p.datePaiement) >= ?`;
-      queryParams.push(startDate);
-    }
-
-    // Filtre par Date de fin
-    if (endDate && endDate.trim() !== "") {
-      query += ` AND DATE(p.datePaiement) <= ?`;
-      queryParams.push(endDate);
-    }
-
-    // Filtre par Type de forfait
-    if (codeTypeForfait && codeTypeForfait !== "ALL") {
-      query += ` AND p.codeTypeForfait = ?`;
-      queryParams.push(Number(codeTypeForfait));
-    }
-
-    query += ` ORDER BY p.datePaiement DESC`;
-
-    const pool = getConnection();
-    const [rows] = await pool.execute<RowDataPacket[]>(query, queryParams);
-
-    return NextResponse.json({ ventes: rows }, { status: 200 });
+    return NextResponse.json(
+      {
+        ventes: rows,
+        totalTickets,
+        totalPages,
+        currentPage: page,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Erreur API Ventes:", error);
     return NextResponse.json(

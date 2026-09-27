@@ -8,7 +8,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { nom, prenom, telephone, email, idRole, idSite } = body;
 
-    // Validation des champs requis
     if (
       !nom ||
       !prenom ||
@@ -27,10 +26,8 @@ export async function POST(request: Request) {
 
     const rawPassword = "12345";
 
-    // Hachage du mot de passe avec un salt factor de 10
     const hashedPass = await bcrypt.hash(rawPassword, 10);
 
-    // Insertion en base de données avec le mot de passe haché
     const [result] = await getConnection().execute(
       `INSERT INTO user(nom, prenom, telephone, email, pass, statut, idRole, idSite) VALUES(?, ?, ?, ?, ?, ?,?,?)`,
       [nom, prenom, telephone, email, hashedPass, "Actif", idRole, idSite],

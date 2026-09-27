@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
+import { useSearchParams } from 'next/navigation';
 import { PulseLoader } from 'react-spinners';
 import axios from 'axios';
 
@@ -14,6 +15,9 @@ export default function LoginPage() {
 
   const { login } = useAuth();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const sessionExpired = searchParams.get('expired') === '1';
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,10 +34,10 @@ export default function LoginPage() {
         pass,
       });
 
-      const { user, token } = response.data;
 
-      // Enregistrement de l'utilisateur dans le contexte
-      login(user, token);
+      const { user } = response.data;
+      login(user);
+      router.push('/');
 
       // Redirection vers le dashboard
       router.push('/');
@@ -45,6 +49,10 @@ export default function LoginPage() {
             ? `Erreur: ${serverDetails}`
             : err.response?.data?.message || 'Erreur lors de la connexion.'
         );
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Une erreur inattendue est survenue.');
       }
     } finally {
       setIsSubmitting(false);
@@ -53,6 +61,7 @@ export default function LoginPage() {
 
   return (
     <div className="w-full flex h-full items-center justify-center bg-gray-50 p-4 font-sans overflow-y-auto">
+
       <div className="w-full max-w-sm bg-white border border-gray-200 rounded-xl p-6 shadow-sm my-auto space-y-4">
 
         {/* En-tête */}
@@ -66,6 +75,12 @@ export default function LoginPage() {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 text-xs text-center p-2.5 rounded-lg">
             {error}
+          </div>
+        )}
+
+        {sessionExpired && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-700 text-xs text-center p-2.5 rounded-lg">
+            Votre session a expiré. Veuillez vous reconnecter.
           </div>
         )}
 

@@ -16,7 +16,7 @@ function ContenuSucces() {
                 formulaireMikrotik.method = 'POST';
 
                 //La redirection Hotspot
-                const targetHost = process.env.NEXT_PUBLIC_ROUTER_HOST;
+                const targetHost = "http://10.5.5.1/login";
                 formulaireMikrotik.action = targetHost && targetHost.trim() !== "" ? targetHost : 'http://10.5.5.1/login';
 
                 const inputUser = document.createElement('input');

@@ -43,6 +43,7 @@ export default function TarifsPage() {
 
   const userRole = user?.designRole || '';
   const currentRoleNormalized = normalize(userRole);
+  const isAdmin = currentRoleNormalized === normalize('Admin');
 
   // Récupération dynamique depuis l'API MySQL
   const { data: tarifs = [], isLoading, isError, refetch } = useQuery({
@@ -108,7 +109,7 @@ export default function TarifsPage() {
             Configurez les forfaits Hotspot, les durées et les tarifs associés.
           </p>
         </div>
-        {currentRoleNormalized === "Admin" ?
+        {isAdmin ?
           <button
             className="flex items-center cursor-pointer justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
             onClick={() => setModalAjoutTarif(true)}
@@ -181,7 +182,7 @@ export default function TarifsPage() {
                     <th className="py-2 px-3">Nom du Forfait</th>
                     <th className="py-2 px-3">Durée</th>
                     <th className="py-2 px-3">Prix (FC)</th>
-                    {currentRoleNormalized === 'Admin' ?
+                    {isAdmin ?
                       <th className="py-2 px-3 text-right">Actions</th>
                       : null
                     }
@@ -209,7 +210,7 @@ export default function TarifsPage() {
                         <td className="py-2 px-3 font-bold text-gray-900 font-mono">
                           {item.prix.toLocaleString('fr-FR')} FC
                         </td>
-                        {currentRoleNormalized === 'Admin' ?
+                        {isAdmin ?
                           <td className="py-2 px-3 text-right">
                             <div className="flex items-center justify-end gap-1">
                               <button

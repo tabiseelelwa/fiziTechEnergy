@@ -4,8 +4,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useAuth } from '@/app/context/AuthContext';
 import {
   HiUser,
   HiMail,
@@ -31,6 +33,16 @@ interface UserProfile {
 
 export default function ProfilPage() {
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const { user: authUser, loading: authLoading, login } = useAuth();
+
+  // Protection de la route : on attend la confirmation de session,
+  // et on redirige si aucun utilisateur n'est authentifié.
+  useEffect(() => {
+    if (!authLoading && !authUser) {
+      router.replace('/login');
+    }
+  }, [authLoading, authUser, router]);
 
   // Messages de retour UI
   const [profileSuccessMsg, setProfileSuccessMsg] = useState(false);
@@ -54,14 +66,18 @@ export default function ProfilPage() {
   });
 
   // 1. Récupération du profil utilisateur via React Query
+  // `enabled: !!authUser` évite d'appeler l'API avant que la session
+  // soit confirmée par AuthContext (et évite un appel inutile juste
+  // avant la redirection vers /login le cas échéant).
   const { data: userProfile, isLoading: isUserLoading } = useQuery<UserProfile>({
     queryKey: ['user-profile'],
     queryFn: async () => {
       const res = await axios.get('/api/users/profile');
       return res.data.user || res.data;
     },
+    enabled: !!authUser,
+    retry: false
   });
-
 
   // Remplissage initial des champs du formulaire lorsque les données sont chargées
   useEffect(() => {
@@ -83,8 +99,21 @@ export default function ProfilPage() {
       const res = await axios.put('/api/users/profile', updatedData);
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+      // Resynchronise AuthContext pour que le reste de l'app (header,
+      // sidebar...) reflète immédiatement les changements, sans
+      // attendre un rechargement complet de la page.
+      if (authUser) {
+        login({
+          ...authUser,
+          nom: data?.user?.nom ?? formData.nom,
+          prenom: data?.user?.prenom ?? formData.prenom,
+          email: data?.user?.email ?? formData.email,
+        });
+      }
+
       setProfileSuccessMsg(true);
       setTimeout(() => setProfileSuccessMsg(false), 2000);
     },
@@ -154,12 +183,19 @@ export default function ProfilPage() {
       .slice(0, 2);
   };
 
-  if (isUserLoading) {
+  // Chargement combiné : confirmation de session + chargement du profil détaillé
+  if (authLoading || isUserLoading) {
     return (
       <div className="flex justify-center items-center py-20 text-gray-500 text-sm">
         Chargement des informations du profil...
       </div>
     );
+  }
+
+  // Le useEffect ci-dessus redirige déjà vers /login ; ceci évite un
+  // flash de contenu vide pendant la redirection.
+  if (!authUser) {
+    return null;
   }
 
   return (

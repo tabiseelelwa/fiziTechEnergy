@@ -5,6 +5,7 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import RoleGuard from "@/app/components/RoleGuard";
+import { useRouter } from "next/navigation";
 import {
   BsCalendarDay,
   BsCalendarWeek,
@@ -21,62 +22,60 @@ import {
   Pie,
   Cell,
   BarChart,
-  CartesianGrid,
   Bar,
+  CartesianGrid,
 } from "recharts";
 
-interface StatsData {
-  ventesJour: number;
-  ventesSemaine: number;
-  ventesMois: number;
-  ventesAnnee: number;
+interface StatsDepensesData {
+  depensesJour: number;
+  depensesSemaine: number;
+  depensesMois: number;
+  depensesAnnee: number;
 }
 
-interface VenteJourSeptDerniers {
-  jour: string; // Ex: "10/09"
-  ventes: number;
+interface DepenseJourSeptDerniers {
+  jour: string;
+  depenses: number;
 }
 
-interface ForfaitChart {
+interface MotifChart {
   name: string;
   value: number;
   color: string;
 }
 
-interface DashboardApiResponse {
-  stats: StatsData;
-  evolutionSeptJours: VenteJourSeptDerniers[];
-  repartitionForfaits: ForfaitChart[];
+interface DashboardDepensesApiResponse {
+  stats: StatsDepensesData;
+  evolutionSeptJours: DepenseJourSeptDerniers[];
+  repartitionMotifs: MotifChart[];
 }
 
 const COLOR_PALETTE = [
-  "#3b82f6",
-  "#10b981",
-  "#f59e0b",
+  "#ef4444",
   "#8b5cf6",
-  "#ec4899",
   "#06b6d4",
+  "#ad764f",
 ];
 
-const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
-  const { data } = await axios.get("/api/dashboard");
+const fetchDashboardDepensesData = async (): Promise<DashboardDepensesApiResponse> => {
+  const { data } = await axios.get("/api/depenses");
 
   return {
     stats: {
-      ventesJour: Number(data.stats?.ventesJour) || 0,
-      ventesSemaine: Number(data.stats?.ventesSemaine) || 0,
-      ventesMois: Number(data.stats?.ventesMois) || 0,
-      ventesAnnee: Number(data.stats?.ventesAnnee) || 0,
+      depensesJour: Number(data.stats?.depensesJour) || 0,
+      depensesSemaine: Number(data.stats?.depensesSemaine) || 0,
+      depensesMois: Number(data.stats?.depensesMois) || 0,
+      depensesAnnee: Number(data.stats?.depensesAnnee) || 0,
     },
     evolutionSeptJours: (data.evolutionSeptJours || []).map(
-      (item: { jour: string; ventes: number }) => ({
+      (item: { jour: string; depenses: number }) => ({
         jour: item.jour || "",
-        ventes: Number(item.ventes) || 0,
+        depenses: Number(item.depenses) || 0,
       })
     ),
-    repartitionForfaits: (data.repartitionForfaits || []).map(
-      (item: { designation: string; total: number }, idx: number) => ({
-        name: item.designation || "Inconnu",
+    repartitionMotifs: (data.repartitionMotifs || []).map(
+      (item: { motif: string; total: number }, idx: number) => ({
+        name: item.motif || "Autre",
         value: Number(item.total) || 0,
         color: COLOR_PALETTE[idx % COLOR_PALETTE.length],
       })
@@ -84,34 +83,42 @@ const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
   };
 };
 
-export default function VentesDashboard() {
+export default function DepensesDashboard() {
+  const router = useRouter()
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["dashboard-ventes-kpi"],
-    queryFn: fetchDashboardData,
+    queryKey: ["dashboard-depenses-kpi"],
+    queryFn: fetchDashboardDepensesData,
     refetchInterval: 30000,
     staleTime: 5000,
   });
 
+  const redirListDepenses = () => {
+    router.push('/dashboard/finances/list-depenses')
+  }
+
+  const redirListBenef = () => {
+    router.push('/dashboard/finances/benefs')
+  }
   return (
     <RoleGuard allowedRoles={["Admin", "Gerant"]}>
-      <div className="w-full bg-slate-50 px-2 text-slate-800">
-        <div className="w-full mb-6">
+      <div className="w-full flex flex-col gap-4 bg-slate-50 px-2 text-slate-800">
+        <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            Tableau de bord des ventes
+            Tableau de bord des dépenses
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Aperçu des performances financières et tendance des 7 derniers jours
+            Suivi et aperçu des sorties de caisse
           </p>
         </div>
 
         {isError && (
           <div className="p-4 mb-6 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
-            Impossible de charger les données du tableau de bord.
+            Impossible de charger les données des dépenses depuis la base de données.
           </div>
         )}
 
         {/* 4 CARTES KPI */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
           {/* Aujourd'hui */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
@@ -121,13 +128,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesJour || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.depensesJour || 0).toLocaleString()} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
-                Ventes du jour
+              <span className="inline-block mt-2 text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md">
+                Dépenses du jour
               </span>
             </div>
-            <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
+            <div className="p-4 bg-rose-50 text-rose-600 rounded-2xl">
               <BsCalendarDay size={26} />
             </div>
           </div>
@@ -141,13 +148,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesSemaine || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.depensesSemaine || 0).toLocaleString()} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+              <span className="inline-block mt-2 text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
                 Semaine en cours
               </span>
             </div>
-            <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl">
+            <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl">
               <BsCalendarWeek size={26} />
             </div>
           </div>
@@ -161,7 +168,7 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesMois || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.depensesMois || 0).toLocaleString()} FC`}
               </h3>
               <span className="inline-block mt-2 text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">
                 Mois en cours
@@ -181,13 +188,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesAnnee || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.depensesAnnee || 0).toLocaleString()} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+              <span className="inline-block mt-2 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
                 Année en cours
               </span>
             </div>
-            <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl">
+            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl">
               <BsCalendarCheck size={26} />
             </div>
           </div>
@@ -195,12 +202,12 @@ export default function VentesDashboard() {
 
         {/* GRAPHIQUES */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* GRAPHIQUE 7 DERNIERS JOURS */}
+          {/* GRAPHIQUE BARRES 7 DERNIERS JOURS */}
           <div className="lg:col-span-2 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-base font-bold text-slate-900">
-                  Aperçu des ventes
+                  Évolution des dépenses
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
                   Performance sur les 7 derniers jours
@@ -234,7 +241,7 @@ export default function VentesDashboard() {
                       axisLine={false}
                     />
                     <Tooltip
-                      formatter={(value: any) => [`${Number(value).toLocaleString()} FC`, "Ventes"]}
+                      formatter={(value: any) => [`${Number(value).toLocaleString()} FC`, "Dépenses"]}
                       contentStyle={{
                         backgroundColor: "#fff",
                         borderRadius: "12px",
@@ -243,8 +250,8 @@ export default function VentesDashboard() {
                       }}
                     />
                     <Bar
-                      dataKey="ventes"
-                      fill="#3b82f6"
+                      dataKey="depenses"
+                      fill="#ef4444"
                       radius={[6, 6, 0, 0]}
                       barSize={5}
                     />
@@ -254,25 +261,25 @@ export default function VentesDashboard() {
             </div>
           </div>
 
-          {/* RÉPARTITION DES FORFAITS */}
+          {/* RÉPARTITION DES MOTIFS DE DÉPENSES */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <h2 className="text-base font-bold text-slate-900 mb-2">
-              Répartition des Forfaits
+              Répartition par motif
             </h2>
             <div className="h-48 w-full">
               {isLoading ? (
                 <div className="h-full flex items-center justify-center text-slate-400 text-xs">
                   Chargement...
                 </div>
-              ) : !data?.repartitionForfaits.length ? (
+              ) : !data?.repartitionMotifs.length ? (
                 <div className="h-full flex items-center justify-center text-slate-400 text-xs">
-                  Aucune donnée
+                  Aucune dépense enregistrée
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={data.repartitionForfaits}
+                      data={data.repartitionMotifs}
                       cx="50%"
                       cy="50%"
                       innerRadius={73}
@@ -281,35 +288,40 @@ export default function VentesDashboard() {
                       cornerRadius={5}
                       dataKey="value"
                     >
-                      {data.repartitionForfaits.map((entry) => (
+                      {data.repartitionMotifs.map((entry) => (
                         <Cell key={`cell-${entry.name}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(val: any) => [`${val} vente(s)`, "Total"]} />
+                    <Tooltip formatter={(val: any) => [`${Number(val).toLocaleString()} FC`, "Total"]} />
                   </PieChart>
                 </ResponsiveContainer>
               )}
             </div>
             <div className="space-y-2 mt-4 max-h-36 overflow-y-auto">
-              {data?.repartitionForfaits.map((f) => (
+              {data?.repartitionMotifs.map((m) => (
                 <div
-                  key={f.name}
+                  key={m.name}
                   className="flex justify-between items-center text-xs"
                 >
                   <div className="flex items-center gap-2">
                     <span
                       className="w-3 h-3 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: f.color }}
+                      style={{ backgroundColor: m.color }}
                     />
-                    <span className="text-slate-600 font-medium truncate max-w-[120px]">
-                      {f.name}
+                    <span className="text-slate-600 font-medium truncate max-w-[120px]" title={m.name}>
+                      {m.name}
                     </span>
                   </div>
-                  <span className="font-bold text-slate-800">{f.value}</span>
+                  <span className="font-bold text-slate-800">{m.value.toLocaleString()} FC</span>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center gap-8 mt-3">
+          <button onClick={() => redirListDepenses()} className="bg-emerald-700 text-white px-2.5 py-1.5 rounded-[0.5rem] cursor-pointer">Charges</button>
+          <button onClick={() => redirListBenef()} className="bg-blue-700 text-white px-2.5 py-1.5 rounded-[0.5rem] cursor-pointer">Marges</button>
         </div>
       </div>
     </RoleGuard>

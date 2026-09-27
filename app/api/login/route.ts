@@ -1,12 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import { getConnection } from "@/app/lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2/promise";
-import { cookies } from "next/headers";
 
-const JWT_SECRET = process.env.JWT_SECRET || "cle_secrete_empire_lab";
+const JWT_SECRET: string =
+  process.env.JWT_SECRET ??
+  (() => {
+    throw new Error(
+      "JWT_SECRET n'est pas défini dans les variables d'environnement.",
+    );
+  })();
 
 interface UserRow extends RowDataPacket {
   idUser: number;
@@ -79,13 +83,12 @@ export async function POST(request: Request) {
       designRole: user.designRole,
     };
 
-    const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(payloadUser, JWT_SECRET, { expiresIn: "8h" });
 
     const response = NextResponse.json(
       {
         message: "Connexion réussie",
         user: payloadUser,
-        token,
       },
       { status: 200 },
     );
@@ -112,21 +115,5 @@ export async function POST(request: Request) {
       },
       { status: 500 },
     );
-  }
-}
-
-export async function getUserIdFromSession(
-  request: Request,
-): Promise<number | string | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("Empire-Lab_token")?.value;
-
-  if (!token) return null;
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { idUser: number };
-    return decoded.idUser;
-  } catch (err) {
-    return null;
   }
 }

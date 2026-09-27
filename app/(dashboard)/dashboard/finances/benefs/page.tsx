@@ -21,62 +21,61 @@ import {
   Pie,
   Cell,
   BarChart,
-  CartesianGrid,
   Bar,
+  CartesianGrid,
 } from "recharts";
 
-interface StatsData {
-  ventesJour: number;
-  ventesSemaine: number;
-  ventesMois: number;
-  ventesAnnee: number;
+interface StatsBeneficesData {
+  beneficesJour: number;
+  beneficesSemaine: number;
+  beneficesMois: number;
+  beneficesAnnee: number;
 }
 
-interface VenteJourSeptDerniers {
-  jour: string; // Ex: "10/09"
-  ventes: number;
+interface BeneficeJourSeptDerniers {
+  jour: string;
+  benefices: number;
 }
 
-interface ForfaitChart {
+interface SourceChart {
   name: string;
   value: number;
   color: string;
 }
 
-interface DashboardApiResponse {
-  stats: StatsData;
-  evolutionSeptJours: VenteJourSeptDerniers[];
-  repartitionForfaits: ForfaitChart[];
+interface DashboardBeneficesApiResponse {
+  stats: StatsBeneficesData;
+  evolutionSeptJours: BeneficeJourSeptDerniers[];
+  repartitionSources: SourceChart[];
 }
 
+// Palette de couleurs axée sur les teintes émeraude/vert/bleu (symbole de bénéfices)
 const COLOR_PALETTE = [
-  "#3b82f6",
-  "#10b981",
-  "#f59e0b",
-  "#8b5cf6",
-  "#ec4899",
-  "#06b6d4",
+  "#10b981", // Emerald
+  "#3b82f6", // Blue
+  "#8b5cf6", // Purple
+  "#f59e0b", // Amber
 ];
 
-const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
-  const { data } = await axios.get("/api/dashboard");
+const fetchDashboardBeneficesData = async (): Promise<DashboardBeneficesApiResponse> => {
+  const { data } = await axios.get("/api/benefices");
 
   return {
     stats: {
-      ventesJour: Number(data.stats?.ventesJour) || 0,
-      ventesSemaine: Number(data.stats?.ventesSemaine) || 0,
-      ventesMois: Number(data.stats?.ventesMois) || 0,
-      ventesAnnee: Number(data.stats?.ventesAnnee) || 0,
+      beneficesJour: Number(data.stats?.beneficesJour) || 0,
+      beneficesSemaine: Number(data.stats?.beneficesSemaine) || 0,
+      beneficesMois: Number(data.stats?.beneficesMois) || 0,
+      beneficesAnnee: Number(data.stats?.beneficesAnnee) || 0,
     },
     evolutionSeptJours: (data.evolutionSeptJours || []).map(
-      (item: { jour: string; ventes: number }) => ({
+      (item: { jour: string; benefices: number }) => ({
         jour: item.jour || "",
-        ventes: Number(item.ventes) || 0,
+        benefices: Number(item.benefices) || 0,
       })
     ),
-    repartitionForfaits: (data.repartitionForfaits || []).map(
-      (item: { designation: string; total: number }, idx: number) => ({
-        name: item.designation || "Inconnu",
+    repartitionSources: (data.repartitionSources || []).map(
+      (item: { source: string; total: number }, idx: number) => ({
+        name: item.source || "Autre",
         value: Number(item.total) || 0,
         color: COLOR_PALETTE[idx % COLOR_PALETTE.length],
       })
@@ -84,34 +83,34 @@ const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
   };
 };
 
-export default function VentesDashboard() {
+export default function BeneficesDashboard() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["dashboard-ventes-kpi"],
-    queryFn: fetchDashboardData,
+    queryKey: ["dashboard-benefices-kpi"],
+    queryFn: fetchDashboardBeneficesData,
     refetchInterval: 30000,
     staleTime: 5000,
   });
 
   return (
     <RoleGuard allowedRoles={["Admin", "Gerant"]}>
-      <div className="w-full bg-slate-50 px-2 text-slate-800">
-        <div className="w-full mb-6">
+      <div className="w-full flex flex-col gap-4 bg-slate-50 px-2 text-slate-800">
+        <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            Tableau de bord des ventes
+            Tableau de bord des marges
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Aperçu des performances financières et tendance des 7 derniers jours
+            Suivi et aperçu des marges et revenus nets
           </p>
         </div>
 
         {isError && (
           <div className="p-4 mb-6 text-sm text-red-600 bg-red-50 rounded-xl border border-red-200">
-            Impossible de charger les données du tableau de bord.
+            Impossible de charger les données des bénéfices depuis la base de données.
           </div>
         )}
 
         {/* 4 CARTES KPI */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
           {/* Aujourd'hui */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
@@ -121,10 +120,10 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesJour || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.beneficesJour || 0).toLocaleString("fr-FR")} FC`}
               </h3>
               <span className="inline-block mt-2 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
-                Ventes du jour
+                Bénéfices du jour
               </span>
             </div>
             <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl">
@@ -141,13 +140,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesSemaine || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.beneficesSemaine || 0).toLocaleString("fr-FR")} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+              <span className="inline-block mt-2 text-xs font-medium text-teal-600 bg-teal-50 px-2 py-0.5 rounded-md">
                 Semaine en cours
               </span>
             </div>
-            <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl">
+            <div className="p-4 bg-teal-50 text-teal-600 rounded-2xl">
               <BsCalendarWeek size={26} />
             </div>
           </div>
@@ -161,13 +160,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesMois || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.beneficesMois || 0).toLocaleString("fr-FR")} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">
+              <span className="inline-block mt-2 text-xs font-medium text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md">
                 Mois en cours
               </span>
             </div>
-            <div className="p-4 bg-purple-50 text-purple-600 rounded-2xl">
+            <div className="p-4 bg-sky-50 text-sky-600 rounded-2xl">
               <BsCalendarMonth size={26} />
             </div>
           </div>
@@ -181,13 +180,13 @@ export default function VentesDashboard() {
               <h3 className="text-2xl font-extrabold text-slate-900">
                 {isLoading
                   ? "..."
-                  : `${(data?.stats.ventesAnnee || 0).toLocaleString()} FC`}
+                  : `${(data?.stats.beneficesAnnee || 0).toLocaleString("fr-FR")} FC`}
               </h3>
-              <span className="inline-block mt-2 text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+              <span className="inline-block mt-2 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
                 Année en cours
               </span>
             </div>
-            <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl">
+            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl">
               <BsCalendarCheck size={26} />
             </div>
           </div>
@@ -195,12 +194,12 @@ export default function VentesDashboard() {
 
         {/* GRAPHIQUES */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* GRAPHIQUE 7 DERNIERS JOURS */}
+          {/* GRAPHIQUE BARRES 7 DERNIERS JOURS */}
           <div className="lg:col-span-2 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-base font-bold text-slate-900">
-                  Aperçu des ventes
+                  Évolution des marges
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
                   Performance sur les 7 derniers jours
@@ -234,7 +233,10 @@ export default function VentesDashboard() {
                       axisLine={false}
                     />
                     <Tooltip
-                      formatter={(value: any) => [`${Number(value).toLocaleString()} FC`, "Ventes"]}
+                      formatter={(value: any) => [
+                        `${Number(value).toLocaleString("fr-FR")} FC`,
+                        "Bénéfices",
+                      ]}
                       contentStyle={{
                         backgroundColor: "#fff",
                         borderRadius: "12px",
@@ -243,36 +245,43 @@ export default function VentesDashboard() {
                       }}
                     />
                     <Bar
-                      dataKey="ventes"
-                      fill="#3b82f6"
+                      dataKey="benefices"
                       radius={[6, 6, 0, 0]}
-                      barSize={5}
-                    />
+                      barSize={18}
+                    >
+                      {/* Attribution dynamique de la couleur par barre */}
+                      {data.evolutionSeptJours.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.benefices < 0 ? "#ef4444" : "#10b981"} // Rouge si perte (< 0), Vert si gain (>= 0)
+                        />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               )}
             </div>
           </div>
 
-          {/* RÉPARTITION DES FORFAITS */}
+          {/* RÉPARTITION DES BÉNÉFICES PAR SOURCE */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <h2 className="text-base font-bold text-slate-900 mb-2">
-              Répartition des Forfaits
+              Répartition par source
             </h2>
             <div className="h-48 w-full">
               {isLoading ? (
                 <div className="h-full flex items-center justify-center text-slate-400 text-xs">
                   Chargement...
                 </div>
-              ) : !data?.repartitionForfaits.length ? (
+              ) : !data?.repartitionSources.length ? (
                 <div className="h-full flex items-center justify-center text-slate-400 text-xs">
-                  Aucune donnée
+                  Aucun bénéfice enregistré
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={data.repartitionForfaits}
+                      data={data.repartitionSources}
                       cx="50%"
                       cy="50%"
                       innerRadius={73}
@@ -281,31 +290,41 @@ export default function VentesDashboard() {
                       cornerRadius={5}
                       dataKey="value"
                     >
-                      {data.repartitionForfaits.map((entry) => (
+                      {data.repartitionSources.map((entry) => (
                         <Cell key={`cell-${entry.name}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(val: any) => [`${val} vente(s)`, "Total"]} />
+                    <Tooltip
+                      formatter={(val: any) => [
+                        `${Number(val).toLocaleString("fr-FR")} FC`,
+                        "Total",
+                      ]}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               )}
             </div>
             <div className="space-y-2 mt-4 max-h-36 overflow-y-auto">
-              {data?.repartitionForfaits.map((f) => (
+              {data?.repartitionSources.map((s) => (
                 <div
-                  key={f.name}
+                  key={s.name}
                   className="flex justify-between items-center text-xs"
                 >
                   <div className="flex items-center gap-2">
                     <span
                       className="w-3 h-3 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: f.color }}
+                      style={{ backgroundColor: s.color }}
                     />
-                    <span className="text-slate-600 font-medium truncate max-w-[120px]">
-                      {f.name}
+                    <span
+                      className="text-slate-600 font-medium truncate max-w-[120px]"
+                      title={s.name}
+                    >
+                      {s.name}
                     </span>
                   </div>
-                  <span className="font-bold text-slate-800">{f.value}</span>
+                  <span className="font-bold text-slate-800">
+                    {s.value.toLocaleString("fr-FR")} FC
+                  </span>
                 </div>
               ))}
             </div>
@@ -315,3 +334,4 @@ export default function VentesDashboard() {
     </RoleGuard>
   );
 }
+

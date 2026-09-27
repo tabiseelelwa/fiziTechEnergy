@@ -1,13 +1,13 @@
 import { AuthProvider } from "@/app/context/AuthContext";
 import Providers from "./providers";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Titillium_Web } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
+const font = Titillium_Web({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["400", "600", "700"],
+  variable: "--font-titillium-web",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${poppins.variable} h-full antialiased`}
+      className={`${font.variable} h-full antialiased`}
     >
       <body className="font-poppins h-full min-h-screen w-full bg-gray-50 text-gray-900">
         <Providers>

@@ -78,7 +78,7 @@ export default function SitesPage() {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Sites</h1>
             <p className="text-sm text-gray-500 mt-4">
-              Supervisez vos points d'accès HotSpot, équipements MikroTik et routeurs Starlink.
+              Les points d'accès HotSpot et équipements MikroTik
             </p>
           </div>
 
@@ -115,7 +115,7 @@ export default function SitesPage() {
 
         {/* STATISTIQUES RAPIDES */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Sites</p>
               <p className="text-2xl font-extrabold text-gray-900 mt-1">{sites.length}</p>
@@ -125,7 +125,7 @@ export default function SitesPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Sites Opérationnels</p>
               <p className="text-2xl font-extrabold text-emerald-600 mt-1">{sitesEnLigne} / {sites.length}</p>
@@ -135,7 +135,7 @@ export default function SitesPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Utilisateurs Connectés</p>
               <p className="text-2xl font-extrabold text-gray-900 mt-1">{totalClients} utilisateurs</p>
@@ -182,7 +182,7 @@ export default function SitesPage() {
                       {58}
                     </td>
                     <td className="py-2 px-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${site.statut === 'en_ligne'
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-medium ${site.statut === 'en_ligne'
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         : 'bg-red-50 text-red-600 border border-red-200'
                         }`}>

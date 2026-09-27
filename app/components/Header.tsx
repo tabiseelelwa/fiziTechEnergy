@@ -12,7 +12,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
   const { user, logout } = useAuth();
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 px-4 sm:px-6 py-3 flex justify-between items-center">
+    <header className="w-full bg-white border-b border-gray-200 px-2 sm:px-4 py-3 flex justify-between items-center">
       <div className="flex items-center gap-3">
         {/* Bouton Toggle Mobile */}
         <button
