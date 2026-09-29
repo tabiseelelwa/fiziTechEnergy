@@ -7,10 +7,6 @@ import { getSessionUser } from "@/app/lib/auth";
 const ALLOWED_ROLES = ["Admin", "Gerant"];
 
 export async function GET() {
-  // Vérification de la session et du rôle : cette route expose des
-  // données financières, elle ne doit jamais être accessible sans
-  // authentification ni à un rôle non autorisé, même si le frontend
-  // masque déjà la page via RoleGuard.
   const session = await getSessionUser();
 
   if (!session) {
@@ -38,9 +34,11 @@ export async function GET() {
         DATE_FORMAT(d.date_jour, '%d/%m') AS jour,
         COALESCE(SUM(dep.montantDepense), 0) AS depenses
       FROM (
-        SELECT CURDATE() - INTERVAL (a.a + (10 * b.a)) DAY AS date_jour
-        FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) AS a
-        CROSS JOIN (SELECT 0 AS a) AS b
+        SELECT DATE_SUB(CURDATE(), INTERVAL n.a DAY) AS date_jour
+        FROM (
+          SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+          UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+        ) AS n
       ) AS d
       LEFT JOIN depense dep ON DATE(dep.dateDepense) = d.date_jour
       GROUP BY d.date_jour
@@ -79,10 +77,13 @@ export async function GET() {
       evolutionSeptJours,
       repartitionMotifs,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erreur MySQL dépense:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la récupération des statistiques de dépenses" },
+      {
+        message: "Erreur lors de la récupération des statistiques de dépenses",
+        errorDetails: error?.message || String(error),
+      },
       { status: 500 },
     );
   }
