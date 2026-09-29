@@ -19,15 +19,22 @@ export async function GET() {
 
         // B. Requete pour l'évolution des 7 derniers jours (du plus ancien au plus récent)
         getConnection().query(`
-        SELECT 
-          DATE_FORMAT(datePaiement, '%d/%m') AS jour,
-          COALESCE(SUM(montantPaye), 0) AS ventes
-        FROM paiement
-        WHERE datePaiement >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-          AND (statutPaiement = 'Succès' OR statutPaiement = 'Réussi')
-        GROUP BY DATE(datePaiement), DATE_FORMAT(datePaiement, '%d/%m')
-        ORDER BY DATE(datePaiement) ASC
-      `),
+          SELECT 
+            DATE_FORMAT(d.date_jour, '%d/%m') AS jour,
+            COALESCE(SUM(p.montantPaye), 0) AS ventes
+          FROM (
+            SELECT DATE_SUB(CURDATE(), INTERVAL n.a DAY) AS date_jour
+            FROM (
+              SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+              UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+            ) AS n
+          ) AS d
+          LEFT JOIN paiement p 
+            ON DATE(p.datePaiement) = d.date_jour 
+          AND (p.statutPaiement = 'Succès' OR p.statutPaiement = 'Réussi')
+          GROUP BY d.date_jour
+          ORDER BY d.date_jour ASC;
+        `),
 
         // C. Requete pour la répartition des forfaits (Top forfaits vendus)
         getConnection().query(`

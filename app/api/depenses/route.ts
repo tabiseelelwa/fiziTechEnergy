@@ -30,20 +30,20 @@ export async function GET() {
 
     // Évolution sur les 7 derniers jours
     const evolutionQuery = `
-      SELECT 
-        DATE_FORMAT(d.date_jour, '%d/%m') AS jour,
-        COALESCE(SUM(dep.montantDepense), 0) AS depenses
+    SELECT 
+      DATE_FORMAT(d.date_jour, '%d/%m') AS jour,
+      COALESCE(SUM(dep.montantDepense), 0) AS depenses
+    FROM (
+      SELECT DATE_SUB(CURDATE(), INTERVAL n.a DAY) AS date_jour
       FROM (
-        SELECT DATE_SUB(CURDATE(), INTERVAL n.a DAY) AS date_jour
-        FROM (
-          SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
-          UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
-        ) AS n
-      ) AS d
-      LEFT JOIN depense dep ON DATE(dep.dateDepense) = d.date_jour
-      GROUP BY d.date_jour
-      ORDER BY d.date_jour ASC;
-    `;
+        SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+        UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+      ) AS n
+    ) AS d
+    LEFT JOIN depense dep ON DATE(dep.dateDepense) = d.date_jour
+    GROUP BY d.date_jour
+    ORDER BY d.date_jour ASC;
+  `;
 
     const repartitionQuery = `
       SELECT 

@@ -5,6 +5,7 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import RoleGuard from "@/app/components/RoleGuard";
+import { useRouter } from "next/navigation";
 import {
   BsCalendarDay,
   BsCalendarWeek,
@@ -85,6 +86,8 @@ const fetchDashboardData = async (): Promise<DashboardApiResponse> => {
 };
 
 export default function VentesDashboard() {
+  const router = useRouter();
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard-ventes-kpi"],
     queryFn: fetchDashboardData,
@@ -92,10 +95,14 @@ export default function VentesDashboard() {
     staleTime: 5000,
   });
 
+  const redirListVentes = () => {
+    router.push("/ventes-admin");
+  };
+
   return (
     <RoleGuard allowedRoles={["Admin", "Gerant"]}>
-      <div className="w-full bg-slate-50 px-2 text-slate-800">
-        <div className="w-full mb-6">
+      <div className="w-full flex flex-col gap-4 bg-slate-50 px-2 text-slate-800">
+        <div>
           <h1 className="text-2xl font-bold text-slate-900">
             Tableau de bord des ventes
           </h1>
@@ -111,7 +118,7 @@ export default function VentesDashboard() {
         )}
 
         {/* 4 CARTES KPI */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
           {/* Aujourd'hui */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
@@ -281,8 +288,8 @@ export default function VentesDashboard() {
                       cornerRadius={5}
                       dataKey="value"
                     >
-                      {data.repartitionForfaits.map((entry) => (
-                        <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                      {data.repartitionForfaits.map((entry, idx) => (
+                        <Cell key={`cell-${entry.name}-${idx}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip formatter={(val: any) => [`${val} vente(s)`, "Total"]} />
@@ -291,9 +298,9 @@ export default function VentesDashboard() {
               )}
             </div>
             <div className="space-y-2 mt-4 max-h-36 overflow-y-auto">
-              {data?.repartitionForfaits.map((f) => (
+              {data?.repartitionForfaits.map((f, idx) => (
                 <div
-                  key={f.name}
+                  key={`${f.name}-${idx}`}
                   className="flex justify-between items-center text-xs"
                 >
                   <div className="flex items-center gap-2">
@@ -301,7 +308,7 @@ export default function VentesDashboard() {
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: f.color }}
                     />
-                    <span className="text-slate-600 font-medium truncate max-w-[120px]">
+                    <span className="text-slate-600 font-medium truncate max-w-[120px]" title={f.name}>
                       {f.name}
                     </span>
                   </div>
@@ -310,6 +317,15 @@ export default function VentesDashboard() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center gap-8 mt-3">
+          <button
+            onClick={redirListVentes}
+            className="bg-blue-700 text-white px-2.5 py-1.5 rounded-[0.5rem] cursor-pointer"
+          >
+            Voir toutes les ventes
+          </button>
         </div>
       </div>
     </RoleGuard>
