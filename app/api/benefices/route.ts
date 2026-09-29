@@ -78,10 +78,11 @@ export async function GET(): Promise<NextResponse> {
           COALESCE((SELECT SUM(d.montantDepense) FROM depense d WHERE DATE(d.dateDepense) = dates.jour_date), 0)
         ) AS benefices
       FROM (
-        SELECT CURDATE() - INTERVAL (a.a + b.a * 10) DAY AS jour_date
-        FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) AS a
-        CROSS JOIN (SELECT 0 AS a) AS b
-        WHERE (CURDATE() - INTERVAL (a.a + b.a * 10) DAY) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+        SELECT DATE_SUB(CURDATE(), INTERVAL n.a DAY) AS jour_date
+        FROM (
+          SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+          UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6
+        ) AS n
       ) dates
       ORDER BY dates.jour_date ASC
     `);
@@ -125,7 +126,7 @@ export async function GET(): Promise<NextResponse> {
         message: "Erreur lors du calcul des bénéfices",
         error: errorMessage,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
