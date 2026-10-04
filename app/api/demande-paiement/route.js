@@ -125,9 +125,9 @@ export async function POST(request) {
 
     try {
       const client = new RouterOSClient({
-        host: "10.5.5.1",
+        host: "126.0.1.1",
         user: "admin",
-        password: "admin",
+        password: "xxlk",
         timeout: 5000,
       });
 

@@ -17,7 +17,7 @@ export async function GET() {
         WHERE statutPaiement = 'Succès' OR statutPaiement = 'Réussi'
       `),
 
-        // B. Requete pour l'évolution des 7 derniers jours (du plus ancien au plus récent)
+        //Requete pour l'évolution des 7 derniers jours (du plus ancien au plus récent)
         getConnection().query(`
           SELECT 
             DATE_FORMAT(d.date_jour, '%d/%m') AS jour,
@@ -36,7 +36,7 @@ export async function GET() {
           ORDER BY d.date_jour ASC;
         `),
 
-        // C. Requete pour la répartition des forfaits (Top forfaits vendus)
+        //Requete pour la répartition des forfaits (Top forfaits vendus)
         getConnection().query(`
         SELECT 
           f.designation AS designation,
